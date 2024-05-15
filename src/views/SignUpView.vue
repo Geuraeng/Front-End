@@ -1,20 +1,82 @@
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 
 // example components
-import DefaultNavbar from "@/examples/navbars/NavbarDefault.vue";
 import Header from "@/examples/Header.vue";
 
 //Vue Material Kit 2 components
 import MaterialInput from "@/components/MaterialInput.vue";
-import MaterialSwitch from "@/components/MaterialSwitch.vue";
 import MaterialButton from "@/components/MaterialButton.vue";
 
-// material-input
-import setMaterialInput from "@/assets/js/material-input";
-onMounted(() => {
-  setMaterialInput();
-});
+// ajax
+import {signUp} from "@/api/user";
+
+//router
+import { useRouter } from "vue-router";
+
+// memberDTO
+const member = ref({
+  userId:"",
+  userPw:"",
+  userName:"",
+  userTel:"",
+  zipCode:0,
+  userAddress:"",
+  userAddressDetail:"",
+  userProfile:""
+})
+
+const signUpSubmit = () =>{
+  postSignUp();
+}
+
+const postSignUp = () =>{
+  console.log(member.value)
+  signUp(
+    member.value,
+    (response) =>{
+      let msg = "글등록 처리시 문제 발생했습니다.";
+      if (response.status == 200) msg = "글정보 수정이 완료되었습니다.";
+      alert(msg);
+      moveList();
+    },
+    (error) => console.log(error)
+  )
+  
+}
+
+
+// router
+const router = useRouter()
+const moveList = () => {
+  router.replace({name : "main"})
+}
+// input data
+const idInput = (input) =>{
+  member.value.userId = input;
+}
+const pwInput = (input) =>{
+  member.value.userPw = input;
+}
+const nameInput = (input) =>{
+  member.value.userName = input;
+}
+const telInput = (input) =>{
+  member.value.userTel = input;
+}
+const zipInput = (input) =>{
+  member.value.zipCode = input;
+}
+const addressInput = (input) =>{
+  member.value.userAddress = input;
+}
+const detailInput = (input) =>{
+  member.value.userAddressDetail = input;
+}
+
+const profileInput = (input) =>{
+  member.value.userProfile = input;
+}
 </script>
 <template>
   <!-- <DefaultNavbar transparent /> -->
@@ -63,54 +125,70 @@ onMounted(() => {
                 </div>
               </div>
               <div class="card-body">
-                <form role="form" class="text-start">
+                <form role="form" class="text-start" method="post" @submit.prevent="signUpSubmit">
                   <MaterialInput
                     id="userId"
                     class="input-group-outline my-3"
-                    :label="{ text: 'ID', class: 'form-label' }"
+                    :label="{class: 'form-label' }"
                     type="userId"
+                    placeholder = "ID"
+                    @my-change = "idInput"
                   />
                   <MaterialInput
                     id="userPw"
                     class="input-group-outline mb-3"
-                    :label="{ text: 'Password', class: 'form-label' }"
+                    :label="{class: 'form-label' }"
                     type="userPw"
+                    placeholder = "Password"
+                    @my-change = "pwInput"
                   />
                   <MaterialInput
                     id="userName"
                     class="input-group-outline mb-3"
-                    :label="{ text: 'Name', class: 'form-label' }"
+                    :label="{class: 'form-label' }"
                     type="userName"
+                    placeholder = "Name"
+                    @my-change = "nameInput"
                   />
                   <MaterialInput
                     id="userTel"
                     class="input-group-outline mb-3"
-                    :label="{ text: 'Phone Number', class: 'form-label' }"
+                    :label="{ class: 'form-label' }"
                     type="userTel"
+                    placeholder = "Phone Number"
+                    @my-change = "telInput"
                   />
                   <MaterialInput
                     id="zipCode"
                     class="input-group-outline mb-3"
-                    :label="{ text: 'Zip Code', class: 'form-label' }"
+                    :label="{class: 'form-label' }"
                     type="zipCode"
+                    placeholder = "Zip Code"
+                    @my-change = "zipInput"
                   />
                   <MaterialInput
                     id="userAddress"
                     class="input-group-outline mb-3"
-                    :label="{ text: 'Address', class: 'form-label' }"
+                    :label="{class: 'form-label' }"
+                    placeholder="Address"
                     type="userAddress"
+                    @my-change = "addressInput"
                   />
                   <MaterialInput
                     id="userAddressDetail"
                     class="input-group-outline mb-3"
-                    :label="{ text: 'Address Detail', class: 'form-label' }"
+                    :label="{class: 'form-label' }"
                     type="userAddressDetail"
+                    placeholder = "Address Detail"
+                    @my-change = "detailInput"
                   />
                   <MaterialInput
                     id="userProfile"
                     class="input-group-outline mb-3"
-                    :label="{ text: 'Profile', class: 'form-label' }"
+                    :label="{class: 'form-label' }"
                     type="userProfile"
+                    placeholder = "Profile"
+                    @my-change = "profileInput"
                   />
                   
 
