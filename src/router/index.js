@@ -9,6 +9,8 @@ import CommunityView from "../views/CommunityView.vue";
 import CommunityWriteView from "../views/CommunityWriteView.vue";
 import CommunityDetailView from "../views/CommunityDetailView.vue";
 import CommunityAlertView from "@/views/CommunityAlertView.vue";
+import PlanListView from "@/views/PlanListView.vue"
+import PlanDetailView from "@/views/PlanDetailView.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -59,12 +61,20 @@ const router = createRouter({
       component: CommunityDetailView,
     },
     {
-      
       path: "/community/alert/:boardId",
       name: "boardAlert",
       component: CommunityAlertView,
-      
-    }
+    },
+    {
+      path: "/plan/list",
+      name: "planList",
+      component: PlanListView,
+    },
+    {
+      path: "/plan/detail",
+      name: "planDetail",
+      component: PlanDetailView,
+    },
   ],
 });
 
