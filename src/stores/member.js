@@ -5,6 +5,7 @@ import { defineStore } from "pinia"
 import { jwtDecode } from "jwt-decode"
 
 import { httpStatusCode } from "@/util/http-status"
+import { HttpStatusCode } from "axios"
 
 export const useMemberStore = defineStore("memberStore", () => {
     
@@ -107,12 +108,33 @@ export const useMemberStore = defineStore("memberStore", () => {
     )
     }
 
+    const userLogout = async () => {
+      await logout(
+        userInfo.value.userId,
+        (response) => {
+          if(response.status === HttpStatusCode.Ok){
+            isLogin.value = false
+            userInfo.value = null
+            isValidToken.value = false
+            sessionStorage.removeItem("accessToken")
+            sessionStorage.removeItem("refreshToken")
+          }else{
+            console.log("유저정보 없음")
+          }
+        },
+        (error) => {
+          console.log(error)
+        }
+      )
+    }
+
     return {
         isLogin,
         isLoginError,
         userInfo,
         isValidToken,
         userLogin,
-        getUserInfo
+        getUserInfo,
+        userLogout
     }
 })
