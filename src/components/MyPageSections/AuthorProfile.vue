@@ -1,5 +1,6 @@
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, ref} from "vue";
+import { HttpStatusCode } from "axios"
 
 //Vue Material Kit 2 components
 import MaterialAvatar from "@/components/MaterialAvatar.vue";
@@ -8,11 +9,32 @@ import MaterialButton from "@/components/MaterialButton.vue";
 // image
 import profilePic from "@/assets/img/bruce-mars.jpg";
 
-// material-input
-import setMaterialInput from "@/assets/js/material-input";
-onMounted(() => {
-  setMaterialInput();
+//api
+import {getMyPage} from "@/api/user.js"
+
+const userId = ref("")
+
+onMounted(async () => {
+  await getUserPage();
 });
+
+const getUserPage = async () => {
+  await getMyPage(
+    (response) => {
+      alert(response)
+      if(response.status === HttpStatusCode.Ok){
+        userId.value = response.data.userInfo.userId;
+      }else{
+        console.log("유저정보 없음")
+      }
+    },
+    (error) => {
+      console.log(error)
+    }
+  );
+}
+
+
 </script>
 <template>
   <section class="py-sm-7 py-5 position-relative">
@@ -36,7 +58,7 @@ onMounted(() => {
               <div
                 class="d-flex justify-content-between align-items-center mb-2"
               >
-                <h3 class="mb-0">ch0_0me</h3>
+                <h3 class="mb-0">{{ userId }}</h3>
                 <div class="d-block">
                   <MaterialButton
                     class="text-nowrap mb-0"

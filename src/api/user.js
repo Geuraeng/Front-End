@@ -24,10 +24,16 @@ async function logout(userid, success, fail) {
     await local.get(`/logout/${userid}`).then(success).catch(fail);
 }
 
+async function getMyPage(success, fail){
+    local.defaults.headers["Authorization"] = sessionStorage.getItem("accessToken");
+    await local.get(`/mypage`).then(success).catch(fail);
+}
+
 export{
     signUp,
     userConfirm,
     findById,
     tokenRegeneration,
-    logout
+    logout,
+    getMyPage
 }
