@@ -90,7 +90,7 @@ function getClasses(size, success, error) {
     ></span>
     <input
       :type="type"
-      class="form-control text-white"
+      class="form-control"
       :class="[getClasses(size, success, error), inputClass]"
       :placeholder="placeholder"
       :isRequired="isRequired"

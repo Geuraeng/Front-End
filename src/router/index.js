@@ -9,8 +9,8 @@ import CommunityView from "../views/CommunityView.vue";
 import CommunityWriteView from "../views/CommunityWriteView.vue";
 import CommunityDetailView from "../views/CommunityDetailView.vue";
 import CommunityAlertView from "@/views/CommunityAlertView.vue";
-import PlanListView from "@/views/PlanListView.vue"
-import PlanDetailView from "@/views/PlanDetailView.vue"
+import PlanListView from "@/views/PlanListView.vue";
+import PlanDetailView from "@/views/PlanDetailView.vue";
 
 
 import { storeToRefs } from "pinia";
