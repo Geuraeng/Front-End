@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, ref} from "vue";
 import { HttpStatusCode } from "axios"
+import {useRouter} from "vue-router"
 
 //Vue Material Kit 2 components
 import MaterialAvatar from "@/components/MaterialAvatar.vue";
@@ -21,7 +22,6 @@ onMounted(async () => {
 const getUserPage = async () => {
   await getMyPage(
     (response) => {
-      alert(response)
       if(response.status === HttpStatusCode.Ok){
         userId.value = response.data.userInfo.userId;
       }else{
@@ -34,7 +34,11 @@ const getUserPage = async () => {
   );
 }
 
-
+const router = useRouter()
+const updateMypage = () =>{
+  alert("페이지 이동")
+  router.push({name: 'update', params: {userId: userId.value}})
+}
 </script>
 <template>
   <section class="py-sm-7 py-5 position-relative">
@@ -86,7 +90,7 @@ const getUserPage = async () => {
               <p class="text-lg mb-0">
                 여행이 좋아
                 <br /><br><a
-                  href="/myPage/update"
+                  @click="updateMypage"
                   class="text-info icon-move-right"
                   >프로필 수정하기
                   <i class="fas fa-arrow-right text-sm ms-1"></i>
