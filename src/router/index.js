@@ -12,7 +12,6 @@ import CommunityAlertView from "@/views/CommunityAlertView.vue";
 import PlanListView from "@/views/PlanListView.vue";
 import PlanDetailView from "@/views/PlanDetailView.vue";
 
-
 import { storeToRefs } from "pinia";
 
 import { useMemberStore } from "@/stores/member";
@@ -28,7 +27,7 @@ const onlyAuthUser = async (to, from, next) => {
     await getUserInfo(token);
   }
   if (!isValidToken.value || userInfo.value === null) {
-    alert("다시 로그인을 해주세요")
+    alert("다시 로그인을 해주세요");
     next({ name: "signIn" });
   } else {
     next();
@@ -95,7 +94,7 @@ const router = createRouter({
       component: PlanListView,
     },
     {
-      path: "/plan/detail",
+      path: "/plan/detail/:planIdx",
       name: "planDetail",
       component: PlanDetailView,
     },
