@@ -46,7 +46,7 @@ const onSubmit = async() => {
   if (isLogin.value) {
     getUserInfo(token)
     // changeMenuState()
-    router.replace({name : 'home'})
+    router.replace({name : 'main'})
   }
 }
 </script>

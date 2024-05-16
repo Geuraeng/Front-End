@@ -8,6 +8,15 @@ import ArrDark from "@/assets/img/down-arrow-dark.svg";
 import downArrow from "@/assets/img/down-arrow.svg";
 import DownArrWhite from "@/assets/img/down-arrow-white.svg";
 
+//logout
+import { useMemberStore } from "@/stores/member";
+const memberStore = useMemberStore()
+const { userLogout } = memberStore
+
+// router
+import {useRouter} from "vue-router"
+import router from "@/router";
+
 const props = defineProps({
   action: {
     type: Object,
@@ -88,6 +97,14 @@ watch(
     }
   }
 );
+
+//logout
+
+const logout = () =>{
+  userLogout()
+  alert("로그아웃 완료")
+  router.replace({name : 'home'})
+}
 </script>
 <template>
   <nav
@@ -164,6 +181,18 @@ watch(
             >
               <i class="material-icons opacity-6 me-2 text-md" :class="getTextColor()">article</i>
               My Page
+            </a>
+          </li>
+
+          <li class="nav-item dropdown dropdown-hover mx-2">
+            <a
+              role="logout"
+              class="nav-link ps-2 d-flex cursor-pointer align-items-center"
+              :class="getTextColor()"
+              @click="logout"
+            >
+              <i class="material-icons opacity-6 me-2 text-md" :class="getTextColor()">article</i>
+              로그아웃
             </a>
           </li>
         </ul>
