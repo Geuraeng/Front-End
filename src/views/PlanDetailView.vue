@@ -10,6 +10,7 @@ import Header from "@/examples/Header.vue";
 import router from "@/router";
 
 import { KakaoMap, KakaoMapMarker } from "vue3-kakao-maps";
+import PlanSidebar from "@/components/PlanSections/PlanSidebar.vue";
 const { VITE_OPEN_API_SERVICE_KEY, VITE_SEARCH_TRIP_URL } = import.meta.env;
 
 //라이브러리 사용 방법을 반드시 참고하여 주시기 바랍니다.
@@ -57,7 +58,10 @@ const placesSearchCB = (data, status) => {
 
 // 마커 클릭 시 인포윈도우의 visible 값을 반전시킵니다
 const onClickMapMarker = (markerItem) => {
-  if (markerItem.infoWindow?.visible !== null && markerItem.infoWindow?.visible !== undefined) {
+  if (
+    markerItem.infoWindow?.visible !== null &&
+    markerItem.infoWindow?.visible !== undefined
+  ) {
     markerItem.infoWindow.visible = !markerItem.infoWindow.visible;
   } else {
     markerItem.infoWindow.visible = true;
@@ -220,6 +224,7 @@ const openPrompt = () => {
       loading="lazy"
     >
       <span class="mask bg-gradient-dark opacity-6"> </span>
+      <PlanSidebar />
       <section class="py-lg-9">
         <div class="container">
           <div class="row">
@@ -231,7 +236,7 @@ const openPrompt = () => {
                       class="z-index-2 text-center d-flex h-100 w-100 d-flex m-auto justify-content-center"
                     >
                       <div class="mask bg-dark opacity-8">
-                        <button class="btn btn-primary" @click="openPrompt">일정 추가하기</button>
+                        <button class="btn btn-primary">일정 추가하기</button>
                       </div>
                     </div>
                   </div>
@@ -250,19 +255,29 @@ const openPrompt = () => {
                       <p>아래 버튼을 눌러 근처 정보를 조회하세요.</p>
                       <div class="row">
                         <div class="col">
-                          <button class="btn btn-primary" @click="load1">관광</button>
+                          <button class="btn btn-primary" @click="load1">
+                            관광
+                          </button>
                         </div>
                         <div class="col">
-                          <button class="btn btn-primary" @click="load2">축제</button>
+                          <button class="btn btn-primary" @click="load2">
+                            축제
+                          </button>
                         </div>
                         <div class="col">
-                          <button class="btn btn-primary" @click="load3">숙박</button>
+                          <button class="btn btn-primary" @click="load3">
+                            숙박
+                          </button>
                         </div>
                         <div class="col">
-                          <button class="btn btn-primary" @click="load4">쇼핑</button>
+                          <button class="btn btn-primary" @click="load4">
+                            쇼핑
+                          </button>
                         </div>
                         <div class="col">
-                          <button class="btn btn-primary" @click="load5">음식</button>
+                          <button class="btn btn-primary" @click="load5">
+                            음식
+                          </button>
                         </div>
                       </div>
                       <KakaoMap
@@ -287,7 +302,11 @@ const openPrompt = () => {
             </div>
           </div>
           <div class="d-flex justify-content-end">
-            <button class="btn btn-light" style="margin-right: 10px" @click="openPrompt">
+            <button
+              class="btn btn-light"
+              style="margin-right: 10px"
+              @click="openPrompt"
+            >
               수정완료
             </button>
             <button class="btn btn-secondary" @click="openPrompt">삭제</button>
