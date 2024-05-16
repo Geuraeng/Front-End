@@ -1,5 +1,5 @@
 import { ref } from "vue"
-import {userConfirm, findById, tokenRegeneration, logout} from "@/api/user"
+import {userConfirm, findById, tokenRegeneration, logout, getMyPage} from "@/api/user"
 import {useRouter} from "vue-router"
 import { defineStore } from "pinia"
 import { jwtDecode } from "jwt-decode"
@@ -127,7 +127,6 @@ export const useMemberStore = defineStore("memberStore", () => {
         }
       )
     }
-
     return {
         isLogin,
         isLoginError,
@@ -135,6 +134,6 @@ export const useMemberStore = defineStore("memberStore", () => {
         isValidToken,
         userLogin,
         getUserInfo,
-        userLogout
+        userLogout,
     }
 })
