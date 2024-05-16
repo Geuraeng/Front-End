@@ -12,6 +12,29 @@ import CommunityAlertView from "@/views/CommunityAlertView.vue";
 import PlanListView from "@/views/PlanListView.vue"
 import PlanDetailView from "@/views/PlanDetailView.vue"
 
+
+import { storeToRefs } from "pinia";
+
+import { useMemberStore } from "@/stores/member";
+
+const onlyAuthUser = async (to, from, next) => {
+  const memberStore = useMemberStore();
+  const { userInfo, isValidToken } = storeToRefs(memberStore);
+  const { getUserInfo } = memberStore;
+
+  let token = sessionStorage.getItem("accessToken");
+
+  if (userInfo.value != null && token) {
+    await getUserInfo(token);
+  }
+  if (!isValidToken.value || userInfo.value === null) {
+    alert("다시 로그인을 해주세요")
+    next({ name: "signIn" });
+  } else {
+    next();
+  }
+};
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -53,6 +76,7 @@ const router = createRouter({
     {
       path: "/communityWrite",
       name: "communityWrite",
+      beforeEnter: onlyAuthUser,
       component: CommunityWriteView,
     },
     {
