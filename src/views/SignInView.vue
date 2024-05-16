@@ -1,56 +1,54 @@
 <script setup>
 import { onMounted, ref } from "vue";
+import { useMemberStore} from "@/stores/member"
+import { storeToRefs } from "pinia"
 
 // example components
-import DefaultNavbar from "@/examples/navbars/NavbarDefault.vue";
 import Header from "@/examples/Header.vue";
 import router from "@/router";
 
 //Vue Material Kit 2 components
 import MaterialInput from "@/components/MaterialInput.vue";
-import MaterialInputPwd from "@/components/MaterialInputPwd.vue";
 import MaterialSwitch from "@/components/MaterialSwitch.vue";
 import MaterialButton from "@/components/MaterialButton.vue";
 
 // material-input
 import setMaterialInput from "@/assets/js/material-input";
 
+const memberStore = useMemberStore()
+const { isLogin, isLoginError } = storeToRefs(memberStore)
+const {userLogin, getUserInfo} = memberStore
+
 onMounted(() => {
   setMaterialInput();
 });
 
-const loginCheck = ref([
-  { id: "ssafy", pwd: 1234 },
-  { id: "admin", pwd: 1234 },
-]);
-
-const userInfo = ref({
+const loginUser = ref({
   userId:"",
   userPw:""
 })
 
 const userIdInput = (input) =>{
-  userInfo.value.userId = input
+  loginUser.value.userId = input
 }
 
 const userPwInput = (input) =>{
-  userInfo.value.userPw = input
+  loginUser.value.userPw = input
 }
 
 const user = ref("false");
 
-const onSubmit = () => {
-  for (let i = 0; i < loginCheck.value.length; i++) {
-    if (userInfo.value.userId == loginCheck.value[i].id && userInfo.value.userPw == loginCheck.value[i].pwd) {
-      user.value = true;
-      localStorage.setItem("user", user.value);
-      alert("로그인 성공");
-      router.push("/main");
-      return;
-    }
+// jwt login
+const onSubmit = async() => {
+  await userLogin(loginUser.value)
+  let token = sessionStorage.getItem("accessToken")
+  console.log(token)
+  if (isLogin.value) {
+    getUserInfo(token)
+    // changeMenuState()
+    router.replace({name : 'main'})
   }
-  alert("로그인 실패");
-};
+}
 </script>
 <template>
   <!-- <DefaultNavbar transparent /> -->
