@@ -99,11 +99,14 @@ watch(
 );
 
 //logout
-
-const logout = () => {
-  userLogout();
+const logout = async () => {
+  await userLogout();
   alert("로그아웃 완료");
   router.replace({ name: "home" });
+};
+
+const routeCommit = () => {
+  router.push({ name: "community" });
 };
 </script>
 <template>
@@ -164,7 +167,7 @@ const logout = () => {
           </li>
           <li class="nav-item dropdown dropdown-hover mx-2">
             <a
-              href="/community"
+              @click="routeCommit"
               role="button"
               class="nav-link ps-2 d-flex cursor-pointer align-items-center"
               :class="getTextColor()"

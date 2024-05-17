@@ -1,6 +1,7 @@
 <script setup>
-import { onMounted, ref} from "vue";
-import { HttpStatusCode } from "axios"
+import { onMounted, ref } from "vue";
+import { HttpStatusCode } from "axios";
+import { useRouter } from "vue-router";
 
 //Vue Material Kit 2 components
 import MaterialAvatar from "@/components/MaterialAvatar.vue";
@@ -10,9 +11,9 @@ import MaterialButton from "@/components/MaterialButton.vue";
 import profilePic from "@/assets/img/bruce-mars.jpg";
 
 //api
-import {getMyPage} from "@/api/user.js"
+import { getMyPage } from "@/api/user.js";
 
-const userId = ref("")
+const userId = ref("");
 
 onMounted(async () => {
   await getUserPage();
@@ -21,20 +22,23 @@ onMounted(async () => {
 const getUserPage = async () => {
   await getMyPage(
     (response) => {
-      alert(response)
-      if(response.status === HttpStatusCode.Ok){
+      if (response.status === HttpStatusCode.Ok) {
         userId.value = response.data.userInfo.userId;
-      }else{
-        console.log("유저정보 없음")
+      } else {
+        console.log("유저정보 없음");
       }
     },
     (error) => {
-      console.log(error)
+      console.log(error);
     }
   );
-}
+};
 
-
+const router = useRouter();
+const updateMypage = () => {
+  alert("페이지 이동");
+  router.push({ name: "update", params: { userId: userId.value } });
+};
 </script>
 <template>
   <section class="py-sm-7 py-5 position-relative">
@@ -52,19 +56,11 @@ const getUserPage = async () => {
             </div>
           </div>
           <div class="row py-7">
-            <div
-              class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mx-auto"
-            >
-              <div
-                class="d-flex justify-content-between align-items-center mb-2"
-              >
+            <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mx-auto">
+              <div class="d-flex justify-content-between align-items-center mb-2">
                 <h3 class="mb-0">{{ userId }}</h3>
                 <div class="d-block">
-                  <MaterialButton
-                    class="text-nowrap mb-0"
-                    variant="outline"
-                    color="info"
-                    size="sm"
+                  <MaterialButton class="text-nowrap mb-0" variant="outline" color="info" size="sm"
                     >Follow</MaterialButton
                   >
                 </div>
@@ -85,9 +81,7 @@ const getUserPage = async () => {
               </div>
               <p class="text-lg mb-0">
                 여행이 좋아
-                <br /><br><a
-                  href="/myPage/update"
-                  class="text-info icon-move-right"
+                <br /><br /><a @click="updateMypage" class="text-info icon-move-right"
                   >프로필 수정하기
                   <i class="fas fa-arrow-right text-sm ms-1"></i>
                 </a>
