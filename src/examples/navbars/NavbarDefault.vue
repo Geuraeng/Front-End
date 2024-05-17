@@ -108,6 +108,10 @@ const logout = async () => {
 const routeCommit = () => {
   router.push({ name: "community" });
 };
+
+const myPage = () => {
+  router.push({ name: "myPage" });
+};
 </script>
 <template>
   <nav
@@ -178,10 +182,10 @@ const routeCommit = () => {
           </li>
           <li class="nav-item dropdown dropdown-hover mx-2">
             <a
-              href="/myPage"
               role="button"
               class="nav-link ps-2 d-flex cursor-pointer align-items-center"
               :class="getTextColor()"
+              @click="myPage"
             >
               <i class="material-icons opacity-6 me-2 text-md" :class="getTextColor()">article</i>
               My Page

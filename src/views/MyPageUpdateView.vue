@@ -1,5 +1,7 @@
 <script setup>
-import { onMounted} from "vue";
+import { onBeforeMount, onMounted, ref } from "vue";
+import { useMemberStore } from "@/stores/member";
+import { storeToRefs } from "pinia";
 
 // example components
 import DefaultNavbar from "@/examples/navbars/NavbarDefault.vue";
@@ -11,17 +13,30 @@ import MaterialInput from "@/components/MaterialInput.vue";
 import MaterialSwitch from "@/components/MaterialSwitch.vue";
 import MaterialButton from "@/components/MaterialButton.vue";
 
-// material-input
-import setMaterialInput from "@/assets/js/material-input";
-onMounted(() => {
-  setMaterialInput();
+const memberStore = useMemberStore();
+const { isDetailInfo } = storeToRefs(memberStore);
+const { userDetailInfo } = memberStore;
+const userData = ref({
+  userId: "",
 });
 
-const props = defineProps({
-  userId : Text
+onBeforeMount(() => {
+  userDetailInfo().then(() => {
+    userData.value = isDetailInfo._rawValue;
+    // userData.value.userId = isDetailInfo._rawValue.userId;
+    // userData.value.userName = isDetailInfo._rawValue.userName;
+    // userData.value.userTel = isDetailInfo._rawValue.userTel;
+    console.log(1111);
+    console.log(userData.value.userId);
+    console.log(isDetailInfo._rawValue);
+  });
 });
 
-console.log(props.userId)
+const userIdInput = (input) => {
+  // userData.value.userId = input;
+  console.log(22222);
+  console.log(input);
+};
 </script>
 <template>
   <!-- <DefaultNavbar transparent /> -->
@@ -36,77 +51,69 @@ console.log(props.userId)
         <div class="row">
           <div class="col-lg-4 col-md-8 col-12 mx-auto">
             <div class="card z-index-0 fadeIn3 fadeInBottom">
-              <div
-                class="card-header p-0 position-relative mt-n4 mx-3 z-index-2"
-              >
-                <div
-                  class="bg-gradient-info shadow-info border-radius-lg py-3 pe-1"
-                >
-                  <h4
-                    class="text-white font-weight-bolder text-center mt-2 mb-0"
-                  >
+              <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                <div class="bg-gradient-info shadow-info border-radius-lg py-3 pe-1">
+                  <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">
                     Modify Profile
                   </h4>
                 </div>
               </div>
               <div class="card-body">
                 <form role="form" class="text-start">
+                  <input type="text" v-model="userData.userId" />
+                  <!-- <input type="text" v-model="userData.userName" /> -->
                   <MaterialInput
                     id="userId"
                     class="input-group-outline my-3"
-                    :label="{ text: 'ID', class: 'form-label' }"
+                    :label="{ class: 'form-label' }"
                     type="userId"
-                  />
-                  <MaterialInput
-                    id="userPw"
-                    class="input-group-outline mb-3"
-                    :label="{ text: 'Password', class: 'form-label' }"
-                    type="userPw"
+                    @my-change="userIdInput"
                   />
                   <MaterialInput
                     id="userName"
                     class="input-group-outline mb-3"
-                    :label="{ text: 'Name', class: 'form-label' }"
+                    :label="{ class: 'form-label' }"
+                    placeholder="Name"
                     type="userName"
                   />
                   <MaterialInput
                     id="userTel"
                     class="input-group-outline mb-3"
-                    :label="{ text: 'Phone Number', class: 'form-label' }"
+                    :label="{ class: 'form-label' }"
+                    placeholder="Phone Number"
                     type="userTel"
                   />
                   <MaterialInput
                     id="zipCode"
                     class="input-group-outline mb-3"
-                    :label="{ text: 'Zip Code', class: 'form-label' }"
+                    :label="{ class: 'form-label' }"
+                    placeholder="Zip Code"
                     type="zipCode"
                   />
                   <MaterialInput
                     id="userAddress"
                     class="input-group-outline mb-3"
-                    :label="{ text: 'Address', class: 'form-label' }"
+                    :label="{ class: 'form-label' }"
+                    placeholder="Address"
                     type="userAddress"
                   />
                   <MaterialInput
                     id="userAddressDetail"
                     class="input-group-outline mb-3"
-                    :label="{ text: 'Address Detail', class: 'form-label' }"
+                    :label="{ class: 'form-label' }"
+                    placeholder="Address Detail"
                     type="userAddressDetail"
                   />
                   <MaterialInput
                     id="userProfile"
                     class="input-group-outline mb-3"
-                    :label="{ text: 'Profile', class: 'form-label' }"
+                    :label="{ class: 'form-label' }"
+                    placeholder="Profile"
                     type="userProfile"
                   />
-                  
 
                   <div class="text-center">
-                    <MaterialButton
-                      class="my-4 mb-2"
-                      variant="gradient"
-                      color="info"
-                      fullWidth
+                    <MaterialButton class="my-4 mb-2" variant="gradient" color="info" fullWidth
                       >Modify</MaterialButton
                     >
                   </div>

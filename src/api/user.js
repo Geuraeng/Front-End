@@ -29,4 +29,8 @@ async function getMyPage(success, fail) {
   await local.get(`/mypage`).then(success).catch(fail);
 }
 
-export { signUp, userConfirm, findById, tokenRegeneration, logout, getMyPage };
+async function detailInfo(userId, success, fail) {
+  await local.get(`/detail/${userId}`).then(success).catch(fail);
+}
+
+export { signUp, userConfirm, findById, tokenRegeneration, logout, getMyPage, detailInfo };
