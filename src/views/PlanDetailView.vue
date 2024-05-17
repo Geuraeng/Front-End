@@ -12,6 +12,7 @@ import Header from "@/examples/Header.vue";
 
 import { KakaoMap, KakaoMapMarker } from "vue3-kakao-maps";
 import PlanSidebar from "@/components/PlanSections/PlanSidebar.vue";
+import Invite from "@/components/PlanSections/Invite.vue";
 const { VITE_OPEN_API_SERVICE_KEY, VITE_SEARCH_TRIP_URL } = import.meta.env;
 
 //route 플랜 가져오기
@@ -315,7 +316,14 @@ const load5 = () => {
     >
       <span class="mask bg-gradient-dark opacity-6"> </span>
       <PlanSidebar />
-      <section class="py-lg-9">
+      <section class="py-lg-5">
+        <div class="container">
+          <div class="row">
+            <div class="col-12 d-flex justify-content-end">
+              <Invite class="ms-4" />
+            </div>
+          </div>
+        </div>
         <div class="container">
           <div class="row">
             <div class="col">

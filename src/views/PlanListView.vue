@@ -25,6 +25,32 @@ onMounted(() => {
   getPlanList();
 });
 
+// onMounted(async () => {
+//   // listJoin 호출하여 세션에 저장된 userId와 join 테이블에 있는 userId가 일치하는 데이터 가져오기
+//   await listJoin(
+//     (response) => {
+//       const joinList = response.data;
+//       const sessionUserId = ''; // 세션에 저장된 userId 가져오기 (예: localStorage.getItem('userId'))
+
+//       // joinList에서 세션에 저장된 userId와 일치하는 데이터만 필터링하여 userId를 포함하는 planList 가져오기
+//       const planList = joinList.filter(join => join.userId === sessionUserId).map(join => join.planIdx);
+
+//       // listPlan 호출하여 planList에 해당하는 plan 정보 가져오기
+//       listPlan(
+//         ({ data }) => {
+//           plans.value = data.planList.filter(plan => planList.includes(plan.planIdx));
+//         },
+//         (error) => {
+//           console.log(error);
+//         }
+//       );
+//     },
+//     (error) => {
+//       console.log(error);
+//     }
+//   );
+// });
+
 const getPlanList = () => {
   listPlan(
     ({ data }) => {
@@ -71,12 +97,17 @@ const writePlan = () => {
     transparent
   />
   <header class="bg-gradient-dark">
-    <div class="page-header min-vh-75" :style="{ backgroundImage: `url(${bg0})` }">
+    <div
+      class="page-header min-vh-75"
+      :style="{ backgroundImage: `url(${bg0})` }"
+    >
       <span class="mask bg-gradient-dark opacity-6"></span>
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-lg-8 text-center mx-auto my-auto">
-            <h1 class="text-white">Plan <span class="text-white" id="typed"></span></h1>
+            <h1 class="text-white">
+              Plan <span class="text-white" id="typed"></span>
+            </h1>
             <p class="lead mb-4 text-white opacity-8">
               친구들과 여행 계획을 세우고 여행을 기록하세요.
             </p>
@@ -94,12 +125,22 @@ const writePlan = () => {
   </header>
 
   <!-- 모달 -->
-  <div v-if="showModal" class="modal fade show" tabindex="-1" style="display: block">
+  <div
+    v-if="showModal"
+    class="modal fade show"
+    tabindex="-1"
+    style="display: block"
+  >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">스케줄 상세 정보</h5>
-          <button type="button" class="btn-close" aria-label="Close" @click="closeModal"></button>
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            @click="closeModal"
+          ></button>
         </div>
         <div class="modal-body">
           <!-- 수정 가능한 입력 필드 -->
@@ -119,8 +160,12 @@ const writePlan = () => {
           />
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" @click="writePlan">등록</button>
-          <button type="button" class="btn btn-secondary" @click="closeModal">취소</button>
+          <button type="button" class="btn btn-primary" @click="writePlan">
+            등록
+          </button>
+          <button type="button" class="btn btn-secondary" @click="closeModal">
+            취소
+          </button>
         </div>
       </div>
     </div>
