@@ -25,7 +25,9 @@ const bgImage =
         <div class="collapse navbar-collapse" id="navbar-header-2">
           <ul class="navbar-nav mx-auto">
             <li class="nav-item">
-              <RouterLink class="nav-link text-white" to="#"> My Schedule </RouterLink>
+              <RouterLink class="nav-link text-white" :to="{ name: 'planList' }">
+                My Plan
+              </RouterLink>
             </li>
             <li class="nav-item">
               <RouterLink class="nav-link text-white" :to="{ name: 'community' }">
