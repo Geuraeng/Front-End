@@ -1,5 +1,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { detailPlan, modifyPlan, deletePlan, registSchedule } from "@/api/plan.js";
 import axios from "axios";
 
 // example components
@@ -7,11 +9,111 @@ import DefaultNavbar from "@/examples/navbars/NavbarDefault.vue";
 import DefaultFooter from "../examples/footers/FooterDefault.vue";
 import SearchInput from "@/components/PlanSections/SearchInput.vue";
 import Header from "@/examples/Header.vue";
-import router from "@/router";
 
 import { KakaoMap, KakaoMapMarker } from "vue3-kakao-maps";
 import PlanSidebar from "@/components/PlanSections/PlanSidebar.vue";
 const { VITE_OPEN_API_SERVICE_KEY, VITE_SEARCH_TRIP_URL } = import.meta.env;
+
+//route 플랜 가져오기
+const route = useRoute();
+const { planIdx } = route.params;
+//router
+const router = useRouter();
+
+const plan = ref({
+  planTitle: "",
+  planDate: "",
+});
+
+const schedule = ref({
+  scheduleLocation: "",
+  scheduleLat: "",
+  scheduleLon: "",
+  scheduleMemo: "",
+  planIdx: route.params.planIdx,
+});
+
+onMounted(() => {
+  getPlan();
+});
+
+const getPlan = () => {
+  detailPlan(
+    planIdx,
+    ({ data }) => {
+      plan.value = data;
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
+};
+
+const updatePlan = async () => {
+  if (confirm("정말로 수정하시겠습니까?")) {
+    const updatedPlan = {
+      planIdx: planIdx,
+      planTitle: plan.value.planTitle,
+      planDate: plan.value.planDate,
+    };
+
+    try {
+      await modifyPlan(
+        updatedPlan,
+        () => {
+          alert("수정이 완료되었습니다.");
+        },
+        (error) => {
+          console.error("수정 실패:", error);
+          alert("수정에 실패했습니다.");
+        }
+      );
+    } catch (error) {
+      console.error("수정 중 오류 발생:", error);
+      alert("수정 중 오류가 발생했습니다.");
+    }
+  }
+};
+
+const deleteCurrentPlan = async () => {
+  if (confirm("정말로 삭제하시겠습니까?")) {
+    try {
+      await deletePlan(
+        planIdx,
+        () => {
+          alert("삭제가 완료되었습니다.");
+          router.push("/plan/list");
+        },
+        (error) => {
+          console.error("삭제 실패:", error);
+          alert("삭제에 실패했습니다.");
+        }
+      );
+    } catch (error) {
+      console.error("삭제 중 오류 발생:", error);
+      alert("삭제 중 오류가 발생했습니다.");
+    }
+  }
+};
+
+const addSchedule = async () => {
+  try {
+    await registSchedule(
+      schedule.value,
+      () => {
+        alert("일정이 추가되었습니다.");
+        // 추가 후 필요한 동작을 여기에 작성하세요
+      },
+      (error) => {
+        console.error("일정 추가 실패:", error);
+        alert("일정 추가에 실패했습니다.");
+      }
+    );
+  } catch (error) {
+    console.error("일정 추가 중 오류 발생:", error);
+    alert("일정 추가 중 오류가 발생했습니다.");
+  }
+};
 
 //라이브러리 사용 방법을 반드시 참고하여 주시기 바랍니다.
 const map = ref();
@@ -58,10 +160,7 @@ const placesSearchCB = (data, status) => {
 
 // 마커 클릭 시 인포윈도우의 visible 값을 반전시킵니다
 const onClickMapMarker = (markerItem) => {
-  if (
-    markerItem.infoWindow?.visible !== null &&
-    markerItem.infoWindow?.visible !== undefined
-  ) {
+  if (markerItem.infoWindow?.visible !== null && markerItem.infoWindow?.visible !== undefined) {
     markerItem.infoWindow.visible = !markerItem.infoWindow.visible;
   } else {
     markerItem.infoWindow.visible = true;
@@ -195,15 +294,6 @@ const load5 = () => {
     }));
   });
 };
-
-const openPrompt = () => {
-  const schedule = window.prompt("일정을 추가하세요:");
-  if (schedule !== null) {
-    // 사용자가 취소 버튼을 누르지 않았을 경우
-    // 여기에 일정을 추가하는 로직을 추가하세요.
-    console.log("추가된 일정:", schedule);
-  }
-};
 </script>
 <template>
   <DefaultNavbar
@@ -230,13 +320,87 @@ const openPrompt = () => {
           <div class="row">
             <div class="col">
               <div class="card box-shadow-xl overflow-hidden mb-5">
+                <div class="d-flex justify-content-center align-items-center">
+                  <div class="input-container">
+                    <div class="col-md-12 pe-2 mb-3">
+                      <input
+                        label="Title"
+                        type="text"
+                        placeholder="제목"
+                        v-model="plan.planTitle"
+                        class="form-control input-lg"
+                      />
+                    </div>
+                    <div class="col-md-12 pe-2 mb-3">
+                      <input
+                        label="PlanDate"
+                        type="text"
+                        placeholder="여행 일자"
+                        v-model="plan.planDate"
+                        class="form-control input-lg"
+                      />
+                    </div>
+                  </div>
+                </div>
+
                 <div class="row">
                   <div class="col-lg-5 position-relative px-0" loading="lazy">
                     <div
                       class="z-index-2 text-center d-flex h-100 w-100 d-flex m-auto justify-content-center"
                     >
                       <div class="mask bg-dark opacity-8">
-                        <button class="btn btn-primary">일정 추가하기</button>
+                        <form @submit.prevent="addSchedule" class="p-3">
+                          <div class="mb-3">
+                            <label for="scheduleLocation" class="form-label">장소</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="scheduleLocation"
+                              v-model="schedule.scheduleLocation"
+                              style="color: white"
+                            />
+                          </div>
+                          <div class="mb-3">
+                            <label for="scheduleLat" class="form-label">위도</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="scheduleLat"
+                              v-model="schedule.scheduleLat"
+                              style="color: white"
+                            />
+                          </div>
+                          <div class="mb-3">
+                            <label for="scheduleLon" class="form-label">경도</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="scheduleLon"
+                              v-model="schedule.scheduleLon"
+                              style="color: white"
+                            />
+                          </div>
+                          <div class="mb-3">
+                            <label for="scheduleMemo" class="form-label">메모</label>
+                            <textarea
+                              class="form-control"
+                              id="scheduleMemo"
+                              v-model="schedule.scheduleMemo"
+                              style="color: white"
+                            ></textarea>
+                          </div>
+                          <div class="mb-3">
+                            <label for="planIdx" class="form-label">플랜 넘버</label>
+                            <input
+                              class="form-control"
+                              id="scheduleMemo"
+                              :value="schedule.planIdx"
+                              style="color: white"
+                            />
+                          </div>
+                          <input type="hidden" v-model="schedule.planIdx" />
+                          <button type="submit" class="btn btn-primary">일정 추가하기</button>
+                        </form>
                       </div>
                     </div>
                   </div>
@@ -255,29 +419,19 @@ const openPrompt = () => {
                       <p>아래 버튼을 눌러 근처 정보를 조회하세요.</p>
                       <div class="row">
                         <div class="col">
-                          <button class="btn btn-primary" @click="load1">
-                            관광
-                          </button>
+                          <button class="btn btn-primary" @click="load1">관광</button>
                         </div>
                         <div class="col">
-                          <button class="btn btn-primary" @click="load2">
-                            축제
-                          </button>
+                          <button class="btn btn-primary" @click="load2">축제</button>
                         </div>
                         <div class="col">
-                          <button class="btn btn-primary" @click="load3">
-                            숙박
-                          </button>
+                          <button class="btn btn-primary" @click="load3">숙박</button>
                         </div>
                         <div class="col">
-                          <button class="btn btn-primary" @click="load4">
-                            쇼핑
-                          </button>
+                          <button class="btn btn-primary" @click="load4">쇼핑</button>
                         </div>
                         <div class="col">
-                          <button class="btn btn-primary" @click="load5">
-                            음식
-                          </button>
+                          <button class="btn btn-primary" @click="load5">음식</button>
                         </div>
                       </div>
                       <KakaoMap
@@ -302,14 +456,10 @@ const openPrompt = () => {
             </div>
           </div>
           <div class="d-flex justify-content-end">
-            <button
-              class="btn btn-light"
-              style="margin-right: 10px"
-              @click="openPrompt"
-            >
+            <button class="btn btn-light" style="margin-right: 10px" @click="updatePlan">
               수정완료
             </button>
-            <button class="btn btn-secondary" @click="openPrompt">삭제</button>
+            <button class="btn btn-secondary" @click="deleteCurrentPlan">삭제</button>
           </div>
         </div>
       </section>

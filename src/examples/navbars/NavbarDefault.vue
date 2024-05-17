@@ -10,11 +10,11 @@ import DownArrWhite from "@/assets/img/down-arrow-white.svg";
 
 //logout
 import { useMemberStore } from "@/stores/member";
-const memberStore = useMemberStore()
-const { userLogout } = memberStore
+const memberStore = useMemberStore();
+const { userLogout } = memberStore;
 
 // router
-import {useRouter} from "vue-router"
+import { useRouter } from "vue-router";
 import router from "@/router";
 
 const props = defineProps({
@@ -100,11 +100,11 @@ watch(
 
 //logout
 
-const logout = () =>{
-  userLogout()
-  alert("로그아웃 완료")
-  router.replace({name : 'home'})
-}
+const logout = () => {
+  userLogout();
+  alert("로그아웃 완료");
+  router.replace({ name: "home" });
+};
 </script>
 <template>
   <nav
@@ -153,12 +153,13 @@ const logout = () =>{
         <ul class="navbar-nav navbar-nav-hover ms-auto">
           <li class="nav-item dropdown dropdown-hover mx-2">
             <a
+              href="/plan/list"
               role="button"
               class="nav-link ps-2 d-flex cursor-pointer align-items-center"
               :class="getTextColor()"
             >
               <i class="material-icons opacity-6 me-2 text-md" :class="getTextColor()">dashboard</i>
-              My Schedule
+              My Plan
             </a>
           </li>
           <li class="nav-item dropdown dropdown-hover mx-2">
