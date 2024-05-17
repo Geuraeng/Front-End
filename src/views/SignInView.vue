@@ -40,7 +40,6 @@ const userPwInput = (input) => {
 const onSubmit = async () => {
   await userLogin(loginUser.value);
   let token = sessionStorage.getItem("accessToken");
-  console.log(token);
   if (isLogin.value) {
     getUserInfo(token);
     router.replace({ name: "main" });

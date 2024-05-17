@@ -156,12 +156,13 @@ const routeCommit = () => {
         <ul class="navbar-nav navbar-nav-hover ms-auto">
           <li class="nav-item dropdown dropdown-hover mx-2">
             <a
+              href="/plan/list"
               role="button"
               class="nav-link ps-2 d-flex cursor-pointer align-items-center"
               :class="getTextColor()"
             >
               <i class="material-icons opacity-6 me-2 text-md" :class="getTextColor()">dashboard</i>
-              My Schedule
+              My Plan
             </a>
           </li>
           <li class="nav-item dropdown dropdown-hover mx-2">

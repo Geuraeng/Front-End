@@ -41,7 +41,6 @@ export const useMemberStore = defineStore("memberStore", () => {
 
   const getUserInfo = async (token) => {
     let decodeToken = jwtDecode(token);
-    alert(decodeToken.userId);
     await findById(
       decodeToken.userId,
       (response) => {
@@ -104,7 +103,6 @@ export const useMemberStore = defineStore("memberStore", () => {
   };
 
   const userLogout = async () => {
-    alert(userInfo.value.userId);
     await logout(
       userInfo.value.userId,
       (response) => {
