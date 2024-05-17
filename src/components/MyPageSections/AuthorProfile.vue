@@ -37,7 +37,7 @@ const getUserPage = async () => {
 const router = useRouter();
 const updateMypage = () => {
   alert("페이지 이동");
-  router.push({ name: "update", params: { userId: userId.value } });
+  router.push({ name: "update" });
 };
 </script>
 <template>
