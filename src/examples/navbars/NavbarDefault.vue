@@ -10,11 +10,11 @@ import DownArrWhite from "@/assets/img/down-arrow-white.svg";
 
 //logout
 import { useMemberStore } from "@/stores/member";
-const memberStore = useMemberStore()
-const { userLogout } = memberStore
+const memberStore = useMemberStore();
+const { userLogout } = memberStore;
 
 // router
-import {useRouter} from "vue-router"
+import { useRouter } from "vue-router";
 import router from "@/router";
 
 const props = defineProps({
@@ -99,12 +99,15 @@ watch(
 );
 
 //logout
+const logout = async () => {
+  await userLogout();
+  alert("로그아웃 완료");
+  router.replace({ name: "home" });
+};
 
-const logout = () =>{
-  userLogout()
-  alert("로그아웃 완료")
-  router.replace({name : 'home'})
-}
+const routeCommit = () => {
+  router.push({ name: "community" });
+};
 </script>
 <template>
   <nav
@@ -163,7 +166,7 @@ const logout = () =>{
           </li>
           <li class="nav-item dropdown dropdown-hover mx-2">
             <a
-              href="/community"
+              @click="routeCommit"
               role="button"
               class="nav-link ps-2 d-flex cursor-pointer align-items-center"
               :class="getTextColor()"
