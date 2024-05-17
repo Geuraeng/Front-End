@@ -1,5 +1,5 @@
 import { ref } from "vue";
-import { userConfirm, findById, tokenRegeneration, logout, detailInfo } from "@/api/user";
+import { userConfirm, findById, tokenRegeneration, logout, detailInfo, updateUserdata } from "@/api/user";
 import { useRouter } from "vue-router";
 import { defineStore } from "pinia";
 import { jwtDecode } from "jwt-decode";
@@ -128,7 +128,6 @@ export const useMemberStore = defineStore("memberStore", () => {
       userInfo.value.userId,
       (response) => {
         if (response.status === HttpStatusCode.Ok) {
-          console.log(response.data.userInfo);
           isDetailInfo.value = response.data.userInfo;
         } else {
           console.log("유저정보 없음");
@@ -140,6 +139,24 @@ export const useMemberStore = defineStore("memberStore", () => {
     );
   };
 
+  const updateUserInfo = async (userData) => {
+    userInfo.value = userData
+    await updateUserdata(
+      userInfo.value.userId, JSON.stringify(userInfo.value),
+      (response) => {
+        if (response.status === HttpStatusCode.Ok) {
+          isDetailInfo.value = response.data.userInfo;
+        } else {
+          console.log("유저정보 없음");
+        }
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  };
+
+
   return {
     isLogin,
     isLoginError,
@@ -150,5 +167,6 @@ export const useMemberStore = defineStore("memberStore", () => {
     getUserInfo,
     userLogout,
     userDetailInfo,
+    updateUserInfo,
   };
 });

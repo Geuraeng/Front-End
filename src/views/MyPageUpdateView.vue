@@ -1,42 +1,33 @@
 <script setup>
 import { onBeforeMount, onMounted, ref } from "vue";
+import {useRouter} from "vue-router"
 import { useMemberStore } from "@/stores/member";
 import { storeToRefs } from "pinia";
 
 // example components
-import DefaultNavbar from "@/examples/navbars/NavbarDefault.vue";
 import Header from "@/examples/Header.vue";
 import image from "@/assets/img/city-profile.jpg";
 
 //Vue Material Kit 2 components
-import MaterialInput from "@/components/MaterialInput.vue";
-import MaterialSwitch from "@/components/MaterialSwitch.vue";
 import MaterialButton from "@/components/MaterialButton.vue";
 
 const memberStore = useMemberStore();
 const { isDetailInfo } = storeToRefs(memberStore);
-const { userDetailInfo } = memberStore;
-const userData = ref({
-  userId: "",
-});
+const { userDetailInfo, updateUserInfo } = memberStore;
+const userData = ref("");
+const router = useRouter()
 
 onBeforeMount(() => {
   userDetailInfo().then(() => {
     userData.value = isDetailInfo._rawValue;
-    // userData.value.userId = isDetailInfo._rawValue.userId;
-    // userData.value.userName = isDetailInfo._rawValue.userName;
-    // userData.value.userTel = isDetailInfo._rawValue.userTel;
-    console.log(1111);
-    console.log(userData.value.userId);
-    console.log(isDetailInfo._rawValue);
   });
 });
 
-const userIdInput = (input) => {
-  // userData.value.userId = input;
-  console.log(22222);
-  console.log(input);
-};
+const updateInfo = () =>{
+  updateUserInfo(userData.value)
+  alert("수정 완료 되었습니다")
+  router.replace({name: 'myPage'})
+}
 </script>
 <template>
   <!-- <DefaultNavbar transparent /> -->
@@ -59,58 +50,46 @@ const userIdInput = (input) => {
                 </div>
               </div>
               <div class="card-body">
-                <form role="form" class="text-start">
-                  <input type="text" v-model="userData.userId" />
-                  <!-- <input type="text" v-model="userData.userName" /> -->
-                  <MaterialInput
-                    id="userId"
-                    class="input-group-outline my-3"
-                    :label="{ class: 'form-label' }"
-                    type="userId"
-                    @my-change="userIdInput"
-                  />
-                  <MaterialInput
-                    id="userName"
-                    class="input-group-outline mb-3"
-                    :label="{ class: 'form-label' }"
-                    placeholder="Name"
-                    type="userName"
-                  />
-                  <MaterialInput
-                    id="userTel"
-                    class="input-group-outline mb-3"
-                    :label="{ class: 'form-label' }"
-                    placeholder="Phone Number"
-                    type="userTel"
-                  />
-                  <MaterialInput
-                    id="zipCode"
-                    class="input-group-outline mb-3"
-                    :label="{ class: 'form-label' }"
-                    placeholder="Zip Code"
-                    type="zipCode"
-                  />
-                  <MaterialInput
-                    id="userAddress"
-                    class="input-group-outline mb-3"
-                    :label="{ class: 'form-label' }"
-                    placeholder="Address"
-                    type="userAddress"
-                  />
-                  <MaterialInput
-                    id="userAddressDetail"
-                    class="input-group-outline mb-3"
-                    :label="{ class: 'form-label' }"
-                    placeholder="Address Detail"
-                    type="userAddressDetail"
-                  />
-                  <MaterialInput
-                    id="userProfile"
-                    class="input-group-outline mb-3"
-                    :label="{ class: 'form-label' }"
-                    placeholder="Profile"
-                    type="userProfile"
-                  />
+                <form role="form" class="text-start" @submit.prevent="updateInfo">
+                  <label for="name" style="display: block; margin-bottom: 0;">Name</label>
+                  <input type="text" id="name" style="background-color: #eee;
+                    border: none;
+                    padding: 7px 8px;
+                    margin: -2px 0 8px 0;
+                    width: 100%;
+                    border-radius: 10px;" v-model="userData.userName">
+
+                  <label for="name" style="display: block; margin-bottom: 0;">Tel</label>
+                  <input type="text" id="name" style="background-color: #eee;
+                    border: none;
+                    padding: 7px 8px;
+                    margin: -2px 0 8px 0;
+                    width: 100%;
+                    border-radius: 10px;" v-model="userData.userTel">
+                    
+                  <label for="name" style="display: block; margin-bottom: 0;">Zip</label>
+                  <input type="text" id="name" style="background-color: #eee;
+                    border: none;
+                    padding: 7px 8px;
+                    margin: -2px 0 8px 0;
+                    width: 100%;
+                    border-radius: 10px;" v-model="userData.zipCode">
+
+                  <label for="name" style="display: block; margin-bottom: 0;">Address</label>
+                  <input type="text" id="name" style="background-color: #eee;
+                    border: none;
+                    padding: 7px 8px;
+                    margin: -2px 0 8px 0;
+                    width: 100%;
+                    border-radius: 10px;" v-model="userData.userAddress">
+
+                  <label for="name" style="display: block; margin-bottom: 0;">Detail Address</label>
+                  <input type="text" id="name" style="background-color: #eee;
+                    border: none;
+                    padding: 7px 8px;
+                    margin: -2px 0 8px 0;
+                    width: 100%;
+                    border-radius: 10px;" v-model="userData.userAddressDetail">
 
                   <div class="text-center">
                     <MaterialButton class="my-4 mb-2" variant="gradient" color="info" fullWidth

@@ -11,12 +11,14 @@ async function userConfirm(param, success, fail) {
 }
 
 async function findById(userid, success, fail) {
-  local.defaults.headers["Authorization"] = sessionStorage.getItem("accessToken");
+  local.defaults.headers["Authorization"] =
+    sessionStorage.getItem("accessToken");
   await local.get(`/info/${userid}`).then(success).catch(fail);
 }
 
 async function tokenRegeneration(user, success, fail) {
-  local.defaults.headers["refreshToken"] = sessionStorage.getItem("refreshToken"); //axios header에 refresh-token 셋팅
+  local.defaults.headers["refreshToken"] =
+    sessionStorage.getItem("refreshToken"); //axios header에 refresh-token 셋팅
   await local.post(`/refresh`, user).then(success).catch(fail);
 }
 
@@ -25,7 +27,8 @@ async function logout(userId, success, fail) {
 }
 
 async function getMyPage(success, fail) {
-  local.defaults.headers["Authorization"] = sessionStorage.getItem("accessToken");
+  local.defaults.headers["Authorization"] =
+    sessionStorage.getItem("accessToken");
   await local.get(`/mypage`).then(success).catch(fail);
 }
 
@@ -33,4 +36,22 @@ async function detailInfo(userId, success, fail) {
   await local.get(`/detail/${userId}`).then(success).catch(fail);
 }
 
-export { signUp, userConfirm, findById, tokenRegeneration, logout, getMyPage, detailInfo };
+async function listUser(success, fail) {
+  await local.get("/list").then(success).catch(fail);
+}
+
+async function updateUserdata(userId, user, success, fail){
+  await local.post(`/update/${userId}`, user).then(success).catch(fail)
+}
+
+export {
+  signUp,
+  userConfirm,
+  findById,
+  tokenRegeneration,
+  logout,
+  getMyPage,
+  detailInfo,
+  listUser,
+  updateUserdata,
+};
