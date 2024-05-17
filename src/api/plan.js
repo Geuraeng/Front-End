@@ -27,7 +27,10 @@ function detailSchedule(scheduleIdx, success, fail) {
 }
 
 function modifySchedule(scheduleIdx, success, fail) {
-  plan.post(`update_schedule`, JSON.stringify(scheduleIdx)).then(success).catch(fail);
+  plan
+    .post(`update_schedule`, JSON.stringify(scheduleIdx))
+    .then(success)
+    .catch(fail);
 }
 
 function deleteSchedule(scheduleIdx, success, fail) {
@@ -35,7 +38,10 @@ function deleteSchedule(scheduleIdx, success, fail) {
 }
 
 function registSchedule(scheduleIdx, success, fail) {
-  plan.post("write_schedule", JSON.stringify(scheduleIdx)).then(success).catch(fail);
+  plan
+    .post("write_schedule", JSON.stringify(scheduleIdx))
+    .then(success)
+    .catch(fail);
 }
 
 export {

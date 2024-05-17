@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from "vue";
+import { onMounted} from "vue";
 
 // example components
 import DefaultNavbar from "@/examples/navbars/NavbarDefault.vue";
@@ -16,6 +16,12 @@ import setMaterialInput from "@/assets/js/material-input";
 onMounted(() => {
   setMaterialInput();
 });
+
+const props = defineProps({
+  userId : Text
+});
+
+console.log(props.userId)
 </script>
 <template>
   <!-- <DefaultNavbar transparent /> -->

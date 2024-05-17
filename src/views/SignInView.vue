@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
-import { useMemberStore} from "@/stores/member"
-import { storeToRefs } from "pinia"
+import { useMemberStore } from "@/stores/member";
+import { storeToRefs } from "pinia";
 
 // example components
 import Header from "@/examples/Header.vue";
@@ -15,40 +15,36 @@ import MaterialButton from "@/components/MaterialButton.vue";
 // material-input
 import setMaterialInput from "@/assets/js/material-input";
 
-const memberStore = useMemberStore()
-const { isLogin, isLoginError } = storeToRefs(memberStore)
-const {userLogin, getUserInfo} = memberStore
+const memberStore = useMemberStore();
+const { isLogin, isLoginError } = storeToRefs(memberStore);
+const { userLogin, getUserInfo } = memberStore;
 
 onMounted(() => {
   setMaterialInput();
 });
 
 const loginUser = ref({
-  userId:"",
-  userPw:""
-})
+  userId: "",
+  userPw: "",
+});
 
-const userIdInput = (input) =>{
-  loginUser.value.userId = input
-}
+const userIdInput = (input) => {
+  loginUser.value.userId = input;
+};
 
-const userPwInput = (input) =>{
-  loginUser.value.userPw = input
-}
-
-const user = ref("false");
+const userPwInput = (input) => {
+  loginUser.value.userPw = input;
+};
 
 // jwt login
-const onSubmit = async() => {
-  await userLogin(loginUser.value)
-  let token = sessionStorage.getItem("accessToken")
-  console.log(token)
+const onSubmit = async () => {
+  await userLogin(loginUser.value);
+  let token = sessionStorage.getItem("accessToken");
   if (isLogin.value) {
-    getUserInfo(token)
-    // changeMenuState()
-    router.replace({name : 'main'})
+    getUserInfo(token);
+    router.replace({ name: "main" });
   }
-}
+};
 </script>
 <template>
   <!-- <DefaultNavbar transparent /> -->
@@ -100,7 +96,7 @@ const onSubmit = async() => {
                     class="input-group-outline mb-3"
                     :label="{ text: 'Password', class: 'form-label' }"
                     type="password"
-                    @my-change = "userPwInput"
+                    @my-change="userPwInput"
                   />
                   <MaterialSwitch
                     class="d-flex align-items-center mb-3"

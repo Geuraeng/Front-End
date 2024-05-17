@@ -9,74 +9,71 @@ import MaterialInput from "@/components/MaterialInput.vue";
 import MaterialButton from "@/components/MaterialButton.vue";
 
 // ajax
-import {signUp} from "@/api/user";
+import { signUp } from "@/api/user";
 
 //router
 import { useRouter } from "vue-router";
 
 // memberDTO
 const member = ref({
-  userId:"",
-  userPw:"",
-  userName:"",
-  userTel:"",
-  zipCode:0,
-  userAddress:"",
-  userAddressDetail:"",
-  userProfile:""
-})
+  userId: "",
+  userPw: "",
+  userName: "",
+  userTel: "",
+  zipCode: 0,
+  userAddress: "",
+  userAddressDetail: "",
+  userProfile: "",
+});
 
-const signUpSubmit = () =>{
+const signUpSubmit = () => {
   postSignUp();
-}
+};
 
-const postSignUp = () =>{
-  console.log(member.value)
+const postSignUp = () => {
   signUp(
     member.value,
-    (response) =>{
+    (response) => {
       let msg = "글등록 처리시 문제 발생했습니다.";
-      if (response.status == 200) msg = "글정보 수정이 완료되었습니다.";
+      if (response.status == 200) msg = "회원 가입이 완료되었습니다.";
       alert(msg);
       moveList();
     },
     (error) => console.log(error)
-  )
-  
-}
-
+  );
+};
 
 // router
-const router = useRouter()
+const router = useRouter();
 const moveList = () => {
-  router.replace({name : "main"})
-}
+  router.replace({ name: "home" });
+};
 // input data
-const idInput = (input) =>{
+const idInput = (input) => {
   member.value.userId = input;
-}
-const pwInput = (input) =>{
+};
+const pwInput = (input) => {
   member.value.userPw = input;
-}
-const nameInput = (input) =>{
+};
+const nameInput = (input) => {
   member.value.userName = input;
-}
-const telInput = (input) =>{
+};
+const telInput = (input) => {
   member.value.userTel = input;
-}
-const zipInput = (input) =>{
+};
+const zipInput = (input) => {
   member.value.zipCode = input;
-}
-const addressInput = (input) =>{
+};
+const addressInput = (input) => {
   member.value.userAddress = input;
-}
-const detailInput = (input) =>{
+};
+const detailInput = (input) => {
   member.value.userAddressDetail = input;
-}
+};
 
-const profileInput = (input) =>{
+const profileInput = (input) => {
   member.value.userProfile = input;
-}
+};
 </script>
 <template>
   <!-- <DefaultNavbar transparent /> -->
@@ -85,7 +82,7 @@ const profileInput = (input) =>{
       class="page-header align-items-start min-vh-100"
       :style="{
         backgroundImage:
-          'url(https://images.unsplash.com/photo-1497294815431-9365093b7331?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80)'
+          'url(https://images.unsplash.com/photo-1497294815431-9365093b7331?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80)',
       }"
       loading="lazy"
     >
@@ -94,17 +91,9 @@ const profileInput = (input) =>{
         <div class="row">
           <div class="col-lg-4 col-md-8 col-12 mx-auto">
             <div class="card z-index-0 fadeIn3 fadeInBottom">
-              <div
-                class="card-header p-0 position-relative mt-n4 mx-3 z-index-2"
-              >
-                <div
-                  class="bg-gradient-info shadow-info border-radius-lg py-3 pe-1"
-                >
-                  <h4
-                    class="text-white font-weight-bolder text-center mt-2 mb-0"
-                  >
-                    Sign Up
-                  </h4>
+              <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                <div class="bg-gradient-info shadow-info border-radius-lg py-3 pe-1">
+                  <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">Sign Up</h4>
                   <div class="row mt-3">
                     <div class="col-2 text-center ms-auto">
                       <a class="btn btn-link px-3" href="javascript:;">
@@ -129,85 +118,76 @@ const profileInput = (input) =>{
                   <MaterialInput
                     id="userId"
                     class="input-group-outline my-3"
-                    :label="{class: 'form-label' }"
+                    :label="{ class: 'form-label' }"
                     type="userId"
-                    placeholder = "ID"
-                    @my-change = "idInput"
+                    placeholder="ID"
+                    @my-change="idInput"
                   />
                   <MaterialInput
                     id="userPw"
                     class="input-group-outline mb-3"
-                    :label="{class: 'form-label' }"
+                    :label="{ class: 'form-label' }"
                     type="userPw"
-                    placeholder = "Password"
-                    @my-change = "pwInput"
+                    placeholder="Password"
+                    @my-change="pwInput"
                   />
                   <MaterialInput
                     id="userName"
                     class="input-group-outline mb-3"
-                    :label="{class: 'form-label' }"
+                    :label="{ class: 'form-label' }"
                     type="userName"
-                    placeholder = "Name"
-                    @my-change = "nameInput"
+                    placeholder="Name"
+                    @my-change="nameInput"
                   />
                   <MaterialInput
                     id="userTel"
                     class="input-group-outline mb-3"
                     :label="{ class: 'form-label' }"
                     type="userTel"
-                    placeholder = "Phone Number"
-                    @my-change = "telInput"
+                    placeholder="Phone Number"
+                    @my-change="telInput"
                   />
                   <MaterialInput
                     id="zipCode"
                     class="input-group-outline mb-3"
-                    :label="{class: 'form-label' }"
+                    :label="{ class: 'form-label' }"
                     type="zipCode"
-                    placeholder = "Zip Code"
-                    @my-change = "zipInput"
+                    placeholder="Zip Code"
+                    @my-change="zipInput"
                   />
                   <MaterialInput
                     id="userAddress"
                     class="input-group-outline mb-3"
-                    :label="{class: 'form-label' }"
+                    :label="{ class: 'form-label' }"
                     placeholder="Address"
                     type="userAddress"
-                    @my-change = "addressInput"
+                    @my-change="addressInput"
                   />
                   <MaterialInput
                     id="userAddressDetail"
                     class="input-group-outline mb-3"
-                    :label="{class: 'form-label' }"
+                    :label="{ class: 'form-label' }"
                     type="userAddressDetail"
-                    placeholder = "Address Detail"
-                    @my-change = "detailInput"
+                    placeholder="Address Detail"
+                    @my-change="detailInput"
                   />
                   <MaterialInput
                     id="userProfile"
                     class="input-group-outline mb-3"
-                    :label="{class: 'form-label' }"
+                    :label="{ class: 'form-label' }"
                     type="userProfile"
-                    placeholder = "Profile"
-                    @my-change = "profileInput"
+                    placeholder="Profile"
+                    @my-change="profileInput"
                   />
-                  
 
                   <div class="text-center">
-                    <MaterialButton
-                      class="my-4 mb-2"
-                      variant="gradient"
-                      color="info"
-                      fullWidth
+                    <MaterialButton class="my-4 mb-2" variant="gradient" color="info" fullWidth
                       >Sign Up</MaterialButton
                     >
                   </div>
                   <p class="mt-4 text-sm text-center">
                     Already have an account?
-                    <a
-                      href="/signIn"
-                      class="text-info text-gradient font-weight-bold"
-                      >Sign In</a
-                    >
+                    <a href="/signIn" class="text-info text-gradient font-weight-bold">Sign In</a>
                   </p>
                 </form>
               </div>
@@ -219,49 +199,27 @@ const profileInput = (input) =>{
         <div class="container">
           <div class="row align-items-center justify-content-lg-between">
             <div class="col-12 col-md-6 my-auto">
-              <div
-                class="copyright text-center text-sm text-white text-lg-start"
-              >
+              <div class="copyright text-center text-sm text-white text-lg-start">
                 © {{ new Date().getFullYear() }}, made with SSAFY 11th
-                <i class="fa fa-heart" aria-hidden="true"></i> 
+                <i class="fa fa-heart" aria-hidden="true"></i>
                 조영서, 최태민
               </div>
             </div>
             <div class="col-12 col-md-6">
-              <ul
-                class="nav nav-footer justify-content-center justify-content-lg-end"
-              >
+              <ul class="nav nav-footer justify-content-center justify-content-lg-end">
                 <li class="nav-item">
-                  <a
-                    href="https://www.ssafy.com/"
-                    class="nav-link text-white"
-                    target="_blank"
+                  <a href="https://www.ssafy.com/" class="nav-link text-white" target="_blank"
                     >SSAFY</a
                   >
                 </li>
                 <li class="nav-item">
-                  <a
-                    href="#"
-                    class="nav-link text-white"
-                    target="_blank"
-                    >About Us</a
-                  >
+                  <a href="#" class="nav-link text-white" target="_blank">About Us</a>
                 </li>
                 <li class="nav-item">
-                  <a
-                    href="#"
-                    class="nav-link text-white"
-                    target="_blank"
-                    >YoungSeo GitHub</a
-                  >
+                  <a href="#" class="nav-link text-white" target="_blank">YoungSeo GitHub</a>
                 </li>
                 <li class="nav-item">
-                  <a
-                    href="#"
-                    class="nav-link pe-0 text-white"
-                    target="_blank"
-                    >TaeMin GitHub</a
-                  >
+                  <a href="#" class="nav-link pe-0 text-white" target="_blank">TaeMin GitHub</a>
                 </li>
               </ul>
             </div>
