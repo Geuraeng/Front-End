@@ -15,7 +15,7 @@ import Typed from "typed.js";
 import Information from "../components/Sections/AboutInformation.vue";
 import AboutTeam from "../components/Sections/AboutTeam.vue";
 import PresentationInformation from "@/components/Sections/PresentationInformation.vue";
-import PresentationTestimonials from "@/components/Sections/PresentationTestimonials.vue"
+import PresentationTestimonials from "@/components/Sections/PresentationTestimonials.vue";
 
 const body = document.getElementsByTagName("body")[0];
 //hooks
@@ -51,49 +51,36 @@ onUnmounted(() => {
     transparent
   />
   <header class="bg-gradient-dark">
-    <div
-      class="page-header min-vh-75"
-      :style="{ backgroundImage: `url(${bg0})` }"
-    >
+    <div class="page-header min-vh-75" :style="{ backgroundImage: `url(${bg0})` }">
       <span class="mask bg-gradient-dark opacity-6"></span>
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-lg-8 text-center mx-auto my-auto">
-            <h1 class="text-white">
-              Trip <span class="text-white" id="typed"></span>
-            </h1>
+            <h1 class="text-white">Trip <span class="text-white" id="typed"></span></h1>
             <div id="typed-strings">
               <h1>Log</h1>
               <h1>History</h1>
               <h1>Record</h1>
             </div>
             <p class="lead mb-4 text-white opacity-8">
-                친구들과 여행 계획을 세우고 여행을 기록하세요.
+              친구들과 여행 계획을 세우고 여행을 기록하세요.
             </p>
-            <button type="submit" class="btn bg-white text-dark">
-              Create New Schedule
-            </button>
+            <RouterLink class="nav-link text-white" :to="{ name: 'planList' }">
+              <button type="submit" class="btn bg-white text-dark">Create New Schedule</button>
+            </RouterLink>
             <h6 class="text-white mb-2 mt-5">Invite</h6>
             <div class="d-flex justify-content-center">
-              <a href="javascript:;"
-                ><i class="fab fa-facebook text-lg text-white me-4"></i
-              ></a>
-              <a href="javascript:;"
-                ><i class="fab fa-instagram text-lg text-white me-4"></i
-              ></a>
-              <a href="javascript:;"
-                ><i class="fab fa-twitter text-lg text-white me-4"></i
-              ></a>
-              <a href="javascript:;"
-                ><i class="fab fa-google-plus text-lg text-white"></i
-              ></a>
+              <a href="javascript:;"><i class="fab fa-facebook text-lg text-white me-4"></i></a>
+              <a href="javascript:;"><i class="fab fa-instagram text-lg text-white me-4"></i></a>
+              <a href="javascript:;"><i class="fab fa-twitter text-lg text-white me-4"></i></a>
+              <a href="javascript:;"><i class="fab fa-google-plus text-lg text-white"></i></a>
             </div>
           </div>
         </div>
       </div>
     </div>
   </header>
-  
+
   <div class="card card-body shadow-xl mx-3 mx-md-4 mt-n6">
     <PresentationInformation />
     <Information />
