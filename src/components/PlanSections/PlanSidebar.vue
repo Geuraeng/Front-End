@@ -8,18 +8,30 @@
         <button v-if="count < 10" @click="addButton" class="btn btn-success">+</button>
       </div>
       <div v-for="n in count" :key="n" :id="'day-' + n">{{ n }}일차</div>
-      <div
-        v-for="schedule in filteredSchedules"
-        :key="schedule.scheduleIdx"
-        class="card mb-3 text-dark"
-        @click="showScheduleModal(schedule)"
-        style="cursor: pointer"
-      >
-        <h5 class="card-title">
-          {{ schedule.scheduleLocation }}
-        </h5>
-        <p class="card-text">메모 : {{ schedule.scheduleMemo }}</p>
+      <div v-for="(schedule, index) in schedules" 
+           :key="schedule.scheduleIdx" 
+           class="card mb-3 text-dark" 
+           :draggable="true" 
+           @dragstart="dragStart(index)" 
+           @dragover="dragOver(index)" 
+           @drop="drop" 
+           style="cursor: pointer">
+
+        <div class="card-content">
+          <div class="text-content">
+            <h5 class="card-title">{{ schedule.scheduleLocation }}</h5>
+            <p class="card-text">메모 : {{ schedule.scheduleMemo }}</p>
+          </div>
+          <button class="btn btn-secondary" @click="showScheduleModal(schedule)">수정</button>
+        </div>
       </div>
+    </div>
+    
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-light" style="margin-right: 10px" @click="updatePlan">
+        계획완료
+      </button>
+      <button class="btn btn-secondary" @click="deleteCurrentPlan">삭제</button>
     </div>
     <!-- 모달 -->
     <div v-if="showModal" class="modal is-active">
@@ -34,23 +46,10 @@
           장소 :
           <input
             type="text"
-            v-model="selectedSchedule.scheduleLocation"
+            :value="selectedSchedule.scheduleLocation"
             class="form-control mb-3"
             placeholder="장소"
-          />
-          위도 :
-          <input
-            type="text"
-            v-model="selectedSchedule.scheduleLat"
-            class="form-control mb-3"
-            placeholder="위도"
-          />
-          경도 :
-          <input
-            type="text"
-            v-model="selectedSchedule.scheduleLon"
-            class="form-control mb-3"
-            placeholder="경도"
+            readonly
           />
           메모 :
           <textarea
@@ -68,9 +67,14 @@
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
+import { useRoute, useRouter} from "vue-router"
 import { detailPlan, modifySchedule, deleteSchedule } from "@/api/plan.js";
 
-const schedules = ref([]);
+const route = useRoute()
+const planIdx = route.params.planIdx;
+const router = useRouter()
+
+const schedules = ref();
 const count = ref(1);
 const showModal = ref(false);
 
@@ -87,12 +91,11 @@ onMounted(() => {
 });
 
 const getPlan = () => {
-  const planIdx = parseInt(window.location.pathname.match(/\d+$/)[0]);
   detailPlan(
     planIdx,
     ({ data }) => {
-      schedules.value = data.schedules;
-      count.value = data.schedules.length;
+      schedules.value = data;
+      count.value = schedules.value.length;
     },
     (error) => {
       console.log(error);
@@ -106,6 +109,29 @@ const addButton = () => {
   }
 };
 
+
+
+// 드래그 앤 드랍
+let draggingIndex = null;
+
+const dragStart = (index) => {
+  draggingIndex = index;
+};
+
+const dragOver = (index) => {
+  if (draggingIndex !== index) {
+    const draggedItem = schedules.value[draggingIndex];
+    schedules.value.splice(draggingIndex, 1);
+    schedules.value.splice(index, 0, draggedItem);
+    draggingIndex = index;
+    schedules.value[draggingIndex].scheduleOrder = index
+  }
+};
+
+const drop = () => {
+  draggingIndex = null;
+};
+// 드래그 end
 const scrollToDay = (day) => {
   const targetDay = document.getElementById(`day-${day}`);
   if (targetDay) {
@@ -113,18 +139,16 @@ const scrollToDay = (day) => {
   }
 };
 
-const filteredSchedules = computed(() => {
-  const planIdx = parseInt(window.location.pathname.match(/\d+$/)[0]);
-  return schedules.value.filter((schedule) => schedule.planIdx === planIdx);
-});
+// const filteredSchedules = computed(() => {
+//   const planIdx = parseInt(window.location.pathname.match(/\d+$/)[0]);
+//   return schedules.value.filter((schedule) => schedule.planIdx === planIdx);
+// });
 
 // 모달 열기
 const showScheduleModal = (schedule) => {
   selectedSchedule.value = {
     scheduleIdx: schedule.scheduleIdx,
     scheduleLocation: schedule.scheduleLocation,
-    scheduleLat: schedule.scheduleLat,
-    scheduleLon: schedule.scheduleLon,
     scheduleMemo: schedule.scheduleMemo,
   };
   showModal.value = true;
@@ -137,20 +161,32 @@ const closeModal = () => {
 
 // 일정 업데이트
 const updateSchedule = () => {
-  // 사용자에게 한 번 더 확인을 받기 위한 프롬프트
   if (confirm("정말로 수정하시겠습니까?")) {
     modifySchedule(selectedSchedule.value, () => {
+      // schedules 배열에서 수정된 스케줄을 찾아 업데이트
+      const index = schedules.value.findIndex(
+        (schedule) => schedule.scheduleIdx === selectedSchedule.value.scheduleIdx
+      );
+      // 수정 인덱스 찾아 업데이트하기
+      if (index !== -1) {
+        schedules.value[index] = { ...selectedSchedule.value };
+      }
+
       // 업데이트 성공 시 모달 닫기
       closeModal();
-      // 다시 불러오거나 화면 갱신하는 등의 작업 수행
     });
   }
 };
-
 // 삭제 확인 창을 띄우고, 확인 시 삭제 실행
 const deleteScheduleConfirmation = () => {
   if (confirm("정말로 삭제하시겠습니까?")) {
     deleteSchedule(selectedSchedule.value.scheduleIdx, () => {
+
+      const idx = schedules.value.findIndex( schedule => schedule.scheduleIdx === selectedSchedule.value.scheduleIdx);
+      if(idx !== -1){
+        schedules.value.splice(idx,1)
+      }
+
       // 삭제 성공 시 모달 닫기
       closeModal();
       // 다시 불러오거나 화면 갱신하는 등의 작업 수행
@@ -178,6 +214,25 @@ const deleteScheduleConfirmation = () => {
 
 .number-buttons button {
   margin-right: 5px;
+}
+
+.card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.text-content {
+  flex-grow: 1;
+  margin-right: 5px; /* 간격을 더 줄이기 위해 마진 감소 */
+}
+
+.btn-secondary {
+  background-color: #e91e63;
+  flex-shrink: 0;
+  padding: 5px 10px; /* 버튼 크기를 줄이기 위해 패딩 조정 */
+  font-size: 0.9rem; /* 버튼 글꼴 크기를 줄이기 위해 폰트 사이즈 조정 */
+  margin-right: 7px; /* 수정 버튼의 오른쪽 마진 설정 */
 }
 
 /* 모달 스타일 */

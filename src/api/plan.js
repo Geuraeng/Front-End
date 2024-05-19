@@ -26,6 +26,12 @@ function detailSchedule(scheduleIdx, success, fail) {
   plan.get(`/read_schedule/${scheduleIdx}`).then(success).catch(fail);
 }
 
+function updateSchedulPlan(schedule, success, fail ){
+  plan.post('/update_scheduls_plan', JSON.stringify(schedule))
+  .then(success)
+  .catch(fail)
+}
+
 function modifySchedule(scheduleIdx, success, fail) {
   plan
     .post(`update_schedule`, JSON.stringify(scheduleIdx))
@@ -54,4 +60,5 @@ export {
   modifySchedule,
   deleteSchedule,
   registSchedule,
+  updateSchedulPlan
 };

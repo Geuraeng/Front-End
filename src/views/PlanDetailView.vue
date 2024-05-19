@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { detailPlan, modifyPlan, deletePlan, registSchedule } from "@/api/plan.js";
+import { detailPlan, modifyPlan, registSchedule } from "@/api/plan.js";
 import axios from "axios";
 
 // example components
@@ -76,26 +76,6 @@ const updatePlan = async () => {
   }
 };
 
-const deleteCurrentPlan = async () => {
-  if (confirm("정말로 삭제하시겠습니까?")) {
-    try {
-      await deletePlan(
-        planIdx,
-        () => {
-          alert("삭제가 완료되었습니다.");
-          router.push("/plan/list");
-        },
-        (error) => {
-          console.error("삭제 실패:", error);
-          alert("삭제에 실패했습니다.");
-        }
-      );
-    } catch (error) {
-      console.error("삭제 중 오류 발생:", error);
-      alert("삭제 중 오류가 발생했습니다.");
-    }
-  }
-};
 
 const addSchedule = async () => {
   try {
