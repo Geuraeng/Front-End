@@ -68,7 +68,7 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter} from "vue-router"
-import { detailPlan, modifySchedule, deleteSchedule } from "@/api/plan.js";
+import { detailPlan, modifySchedule, deleteSchedule, updateSchedulPlan, deletePlan } from "@/api/plan.js";
 
 const route = useRoute()
 const planIdx = route.params.planIdx;
@@ -109,7 +109,47 @@ const addButton = () => {
   }
 };
 
+const updatePlan = () =>{
+  try{
+    updateSchedulPlan(
+      schedules.value,
+      (response) =>{
+        if(response.status == 200){
+          alert("수정완료 되었습니다")
+          router.replace({name : 'planList'})
+        }
+      },
+      (error) => {
+            console.error("수정 실패:", error);
+            alert("수정에 실패했습니다.");
+          }
+        );
+      } catch (error) {
+        console.error("수정 중 오류 발생:", error);
+        alert("수정 중 오류가 발생했습니다.");
+    }
+}
 
+const deleteCurrentPlan = async () => {
+  if (confirm("정말로 삭제하시겠습니까?")) {
+    try {
+      await deletePlan(
+        planIdx,
+        () => {
+          alert("삭제가 완료되었습니다.");
+          router.push({name: 'planList'});
+        },
+        (error) => {
+          console.error("삭제 실패:", error);
+          alert("삭제에 실패했습니다.");
+        }
+      );
+    } catch (error) {
+      console.error("삭제 중 오류 발생:", error);
+      alert("삭제 중 오류가 발생했습니다.");
+    }
+  }
+};
 
 // 드래그 앤 드랍
 let draggingIndex = null;
