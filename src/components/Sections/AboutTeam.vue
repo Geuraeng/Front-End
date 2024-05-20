@@ -14,9 +14,7 @@ import marquez from "@/assets/img/ivana-square.jpg";
     <div class="container">
       <div class="row">
         <div class="col-md-8 text-start mb-5 mt-5">
-          <h3 class="text-white z-index-1 position-relative">
-            Community
-          </h3>
+          <h3 class="text-white z-index-1 position-relative">Community</h3>
           <p class="text-white opacity-8 mb-0">
             여행지 추천과 실제 후기, 팁 등을 공유할 수 있습니다.
           </p>
@@ -28,7 +26,7 @@ import marquez from "@/assets/img/ivana-square.jpg";
             class="mt-4"
             :image="emma"
             :profile="{ name: '정경원', link: 'javascript:;' }"
-            :position="{ label: '여행지 : 제주도', color: 'info' }"
+            :position="{ label: '여행지 : 제주도', color: 'muted' }"
             description="제주도는 카약이 재밌어요...................................................................."
           />
         </div>
@@ -37,7 +35,7 @@ import marquez from "@/assets/img/ivana-square.jpg";
             class="mt-lg-4 mt-5"
             :image="william"
             :profile="{ name: '박찬수', link: 'javascript:;' }"
-            :position="{ label: '여행지 : 부산', color: 'info' }"
+            :position="{ label: '여행지 : 부산', color: 'muted' }"
             description="광안리 최고........................................................................................"
           />
         </div>
@@ -48,7 +46,7 @@ import marquez from "@/assets/img/ivana-square.jpg";
             class="mt-4 z-index-2"
             :image="ivana"
             :profile="{ name: '라송연', link: 'javascript:;' }"
-            :position="{ label: '여행지 : 전주', color: 'info' }"
+            :position="{ label: '여행지 : 전주', color: 'muted' }"
             description="전주에서 비빔밥 먹으면 바보래요......................................................................"
           />
         </div>
@@ -57,7 +55,7 @@ import marquez from "@/assets/img/ivana-square.jpg";
             class="mt-lg-4 mt-5 z-index-2"
             :image="marquez"
             :profile="{ name: '정석영', link: 'javascript:;' }"
-            :position="{ label: '여행지 : 강릉', color: 'info' }"
+            :position="{ label: '여행지 : 강릉', color: 'muted' }"
             description="장칼국수 맛있어요................................................................................."
           />
         </div>

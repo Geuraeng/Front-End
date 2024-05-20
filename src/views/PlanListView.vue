@@ -96,7 +96,7 @@ const writePlan = () => {
     }"
     transparent
   />
-  <header class="bg-gradient-dark">
+  <header class="bg-gradient-dark no-select">
     <div
       class="page-header min-vh-75"
       :style="{ backgroundImage: `url(${bg0})` }"
@@ -105,12 +105,12 @@ const writePlan = () => {
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-lg-8 text-center mx-auto my-auto">
-            <h1 class="text-white">
-              Plan <span class="text-white" id="typed"></span>
+            <h1 class="text-white gamja-flower-regular">
+              나의 여행 목록 <span class="text-white" id="typed"></span>
             </h1>
-            <p class="lead mb-4 text-white opacity-8">
+            <h2 class="lead mb-4 text-white opacity-8 gamja-flower-regular">
               친구들과 여행 계획을 세우고 여행을 기록하세요.
-            </p>
+            </h2>
             <button
               type="button"
               class="btn bg-white text-dark"
@@ -127,7 +127,7 @@ const writePlan = () => {
   <!-- 모달 -->
   <div
     v-if="showModal"
-    class="modal fade show"
+    class="modal fade show no-select"
     tabindex="-1"
     style="display: block"
   >
@@ -171,12 +171,12 @@ const writePlan = () => {
     </div>
   </div>
 
-  <div class="card card-body shadow-xl mx-3 mx-md-4 mt-n6">
+  <div class="card card-body shadow-xl mx-3 mx-md-4 mt-n6 no-select">
     <section class="pb-5 position-relative bg-gradient-dark mx-n3">
       <div class="container">
         <div class="row">
           <div class="col-md-8 text-start mb-5 mt-5">
-            <h3 class="text-white z-index-1 position-relative">Plan List</h3>
+            <h3 class="text-white z-index-1 position-relative gamja-flower-regular">여행 목록</h3>
           </div>
         </div>
         <div class="row">
@@ -191,6 +191,14 @@ const writePlan = () => {
 </template>
 
 <style>
+.no-select {
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
 /* 모달 스타일 */
 .modal {
   position: fixed;
