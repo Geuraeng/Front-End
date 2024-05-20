@@ -18,6 +18,10 @@ defineProps({
     component: String,
     color: String,
   },
+  writer:{
+    type: String,
+    required: true,
+  },
   content: {
     type: String,
     required: true,
@@ -47,7 +51,7 @@ function backgroundColor(variant, color) {
       }}</i>
     </div>
     <div class="description ps-3">
-      <p class="mb-0" v-html="content" />
+      <p class="mb-0"> {{ writer }} : {{ content }}</p>
     </div>
   </div>
 </template>

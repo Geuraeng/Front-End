@@ -4,10 +4,8 @@ import { onMounted } from "vue";
 import MaterialInput from "@/components/MaterialInput.vue";
 import MaterialButton from "@/components/MaterialButton.vue";
 
-// material-input
-import setMaterialInput from "@/assets/js/material-input";
 onMounted(() => {
-  setMaterialInput();
+
 });
 </script>
 <template>
@@ -21,8 +19,10 @@ onMounted(() => {
               <MaterialInput
                 class="input-group-outline"
                 id="email"
-                :label="{ text: '댓글을 작성하세요.', class: 'form-label' }"
+                :label="{ class: 'form-label' }"
                 type="email"
+                placeholder="댓글을 작성하세요."
+                color="aliceblue"
               />
             </div>
             <div class="col-2 ps-0">
@@ -30,6 +30,7 @@ onMounted(() => {
                 variant="gradient"
                 color="info"
                 class="mb-0 h-100 position-relative z-index-2"
+                @click="commentInfo"
                 >Submit</MaterialButton
               >
             </div>

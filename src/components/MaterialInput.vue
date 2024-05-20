@@ -54,6 +54,10 @@ defineProps({
     type: String,
     default: "",
   },
+  color:{
+    type: String,
+    default: "black"
+  }
 });
 
 const input = ref("");
@@ -97,6 +101,7 @@ function getClasses(size, success, error) {
       :disabled="isDisabled"
       @input="myChange"
       v-model="input"
+      :style="{ color: color }"
     />
   </div>
 </template>

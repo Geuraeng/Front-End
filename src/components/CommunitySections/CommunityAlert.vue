@@ -31,7 +31,6 @@ const getArticle = () => {
     ({ data }) => {
       console.log(data);
       info.value = data;
-      console.log("여기" + info);
     },
     (error) => {
       console.log(error);
