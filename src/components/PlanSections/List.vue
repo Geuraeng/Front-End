@@ -4,7 +4,7 @@ import { onMounted } from "vue";
 import HorizontalTeamCard from "@/examples/cards/teamCards/HorizontalTeamCard.vue";
 
 // images
-import emma from "@/assets/img/team-5.jpg";
+import emma from "@/assets/img/travel.png";
 
 const props = defineProps({
   plan: {
@@ -33,7 +33,6 @@ const props = defineProps({
           <div class="col-lg-8 col-md-6 col-12 my-auto">
             <RouterLink :to="'/plan/detail/' + props.plan.planIdx" :planIdx="props.plan.planIdx">
               <div class="card-body ps-lg-0">
-                <h5 class="mb-0">{{ props.plan.planIdx }}</h5>
                 <h6>{{ props.plan.planTitle }}</h6>
                 <p class="mb-0">
                   {{ props.plan.planDate }}

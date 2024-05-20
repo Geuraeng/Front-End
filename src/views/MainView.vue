@@ -50,30 +50,42 @@ onUnmounted(() => {
     }"
     transparent
   />
-  <header class="bg-gradient-dark">
-    <div class="page-header min-vh-75" :style="{ backgroundImage: `url(${bg0})` }">
+  <header class="bg-gradient-dark no-select">
+    <div
+      class="page-header min-vh-75"
+      :style="{ backgroundImage: `url(${bg0})` }"
+    >
       <span class="mask bg-gradient-dark opacity-6"></span>
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-lg-8 text-center mx-auto my-auto">
-            <h1 class="text-white">Trip <span class="text-white" id="typed"></span></h1>
+            <h1 class="text-white">
+              Trip <span class="text-white" id="typed"></span>
+            </h1>
             <div id="typed-strings">
               <h1>Log</h1>
               <h1>History</h1>
               <h1>Record</h1>
             </div>
-            <p class="lead mb-4 text-white opacity-8">
+            <p class="lead mb-4 text-white opacity-8 gamja-flower-regular">
               친구들과 여행 계획을 세우고 여행을 기록하세요.
             </p>
             <RouterLink class="nav-link text-white" :to="{ name: 'planList' }">
-              <button type="submit" class="btn bg-white text-dark">Create New Schedule</button>
+              <button type="submit" class="btn bg-white text-dark">
+                Create New Schedule
+              </button>
             </RouterLink>
             <h6 class="text-white mb-2 mt-5">Invite</h6>
             <div class="d-flex justify-content-center">
-              <a href="javascript:;"><i class="fab fa-facebook text-lg text-white me-4"></i></a>
-              <a href="javascript:;"><i class="fab fa-instagram text-lg text-white me-4"></i></a>
-              <a href="javascript:;"><i class="fab fa-twitter text-lg text-white me-4"></i></a>
-              <a href="javascript:;"><i class="fab fa-google-plus text-lg text-white"></i></a>
+              <a href="https://github.com/Geuraeng"
+                ><i class="fab fa-github text-lg text-white me-4"></i
+              ></a>
+              <a href="https://www.instagram.com/hellossafy/"
+                ><i class="fab fa-instagram text-lg text-white me-4"></i
+              ></a>
+              <a href="https://www.youtube.com/channel/UC_XI3ByFO1uZIIH-g-zJZiw"
+                ><i class="fab fa-youtube text-lg text-white me-4"></i
+              ></a>
             </div>
           </div>
         </div>
@@ -81,7 +93,7 @@ onUnmounted(() => {
     </div>
   </header>
 
-  <div class="card card-body shadow-xl mx-3 mx-md-4 mt-n6">
+  <div class="card card-body shadow-xl mx-3 mx-md-4 mt-n6 no-select">
     <PresentationInformation />
     <Information />
     <AboutTeam />
@@ -89,3 +101,13 @@ onUnmounted(() => {
   </div>
   <DefaultFooter />
 </template>
+
+<style>
+.no-select {
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+</style>

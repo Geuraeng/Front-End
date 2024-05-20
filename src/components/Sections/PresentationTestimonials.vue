@@ -7,7 +7,7 @@ import DefaultReviewCard from "@/examples/cards/reviewCards/DefaultReviewCard.vu
       <div class="row">
         <div class="col-lg-6 mx-auto text-center">
           <h2 class="mb-0">Trusted by over</h2>
-          <h2 class="text-gradient text-info mb-3">
+          <h2 class="text-gradient text-dark mb-3">
             1,679,477+ web developers
           </h2>
           <p class="lead">
@@ -24,7 +24,7 @@ import DefaultReviewCard from "@/examples/cards/reviewCards/DefaultReviewCard.vu
         />
         <DefaultReviewCard
           class="ms-md-auto"
-          color="bg-gradient-info"
+          color="bg-gradient-secondary"
           name="최용훈"
           date="1 week ago"
           review='"제가 사용했던 여행 기록 서비스 중 최고예요!"'

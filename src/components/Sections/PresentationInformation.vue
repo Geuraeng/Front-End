@@ -20,11 +20,11 @@ import DefaultInfoCard from "../../examples/cards/infoCards/DefaultInfoCard.vue"
             <RotatingCardBack
               image="https://images.unsplash.com/photo-1498889444388-e67ea62c464b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1365&q=80"
               title="여행 계획하기"
-              description="친구를 초대해서 여행 일정을 공유해 보세요."
+              description="친구를 초대해서 여행 일정을 계획해 보세요."
               :action="[
                 {
-                  route: './/sections/page-sections/hero-sections.html',
-                  label: 'New Schedule',
+                  route: '/plan/list',
+                  label: 'New Plan',
                 },
               ]"
             />
@@ -45,7 +45,7 @@ import DefaultInfoCard from "../../examples/cards/infoCards/DefaultInfoCard.vue"
               description="나만의 추천 여행지가 있다면 공유해 주세요."
               :action="[
                 {
-                  route: './/sections/page-sections/hero-sections.html',
+                  route: '/community',
                   label: 'Community',
                 },
               ]"
@@ -67,7 +67,7 @@ import DefaultInfoCard from "../../examples/cards/infoCards/DefaultInfoCard.vue"
               description="다른 사용자들에게 보이는 프로필을 만들어 보세요."
               :action="[
                 {
-                  route: './/sections/page-sections/hero-sections.html',
+                  route: '/myPage',
                   label: 'My Page',
                 },
               ]"
