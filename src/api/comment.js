@@ -10,4 +10,8 @@ function postCommentInfo(boardId, info, success, fail) {
   local.post(`/write/${boardId}`, info).then(success).catch(fail);
 }
 
-export { getCommentList, postCommentInfo};
+function deleteCommentInfo(idx, success, fail) {
+  local.get(`/delete/${idx}`).then(success).catch(fail);
+}
+
+export { getCommentList, postCommentInfo, deleteCommentInfo};
