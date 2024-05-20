@@ -6,4 +6,8 @@ function getCommentList(boardId, success, fail) {
   local.get(`/list/${boardId}`).then(success).catch(fail);
 }
 
-export { getCommentList};
+function postCommentInfo(boardId, info, success, fail) {
+  local.post(`/write/${boardId}`, info).then(success).catch(fail);
+}
+
+export { getCommentList, postCommentInfo};
