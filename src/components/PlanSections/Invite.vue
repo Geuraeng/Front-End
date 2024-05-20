@@ -13,6 +13,10 @@
         </button>
       </div>
       <button class="btn btn-primary" @click="openModal">친구 초대하기</button>
+      <div class="p-1"></div>
+      <RouterLink :to="{ name: 'openAI' }">
+        <button class="btn btn-primary">AI와 채팅하기</button>
+      </RouterLink>
     </div>
     <!-- Modal -->
     <div
@@ -26,25 +30,13 @@
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalCenterTitle">
-              친구 초대하기
-            </h5>
-            <button
-              type="button"
-              class="close"
-              @click="showModal = false"
-              aria-label="Close"
-            >
+            <h5 class="modal-title" id="exampleModalCenterTitle">친구 초대하기</h5>
+            <button type="button" class="close" @click="showModal = false" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <input
-              type="text"
-              class="form-control"
-              v-model="searchQuery"
-              placeholder="친구 검색"
-            />
+            <input type="text" class="form-control" v-model="searchQuery" placeholder="친구 검색" />
             <ul v-if="showModal" class="list-group mt-3">
               <li
                 v-for="friend in filteredFriends"
@@ -52,23 +44,12 @@
                 class="list-group-item d-flex justify-content-between align-items-center"
               >
                 {{ friend.userName }}
-                <button
-                  class="btn btn-primary btn-sm"
-                  @click="inviteFriend(friend)"
-                >
-                  초대
-                </button>
+                <button class="btn btn-primary btn-sm" @click="inviteFriend(friend)">초대</button>
               </li>
             </ul>
           </div>
           <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              @click="showModal = false"
-            >
-              닫기
-            </button>
+            <button type="button" class="btn btn-secondary" @click="showModal = false">닫기</button>
           </div>
         </div>
       </div>
@@ -115,9 +96,7 @@ onMounted(async () => {
         .filter((join) => join.planIdx === planIdx)
         .map((join) => {
           // listUser에서 userId가 동일한 칼럼의 userName
-          const friend = friends.value.find(
-            (user) => user.userId === join.userId
-          );
+          const friend = friends.value.find((user) => user.userId === join.userId);
           if (friend) {
             return {
               userId: join.userId,
@@ -143,9 +122,7 @@ const openModal = () => {
 
 const filteredFriends = computed(() => {
   if (searchQuery.value) {
-    return friends.value.filter(
-      (friend) => friend.userId === searchQuery.value
-    );
+    return friends.value.filter((friend) => friend.userId === searchQuery.value);
   }
   return [];
 });
@@ -157,9 +134,7 @@ const user = ref({
 });
 
 const inviteFriend = async (friend) => {
-  if (
-    !invitedFriends.value.some((invited) => invited.userId === friend.userId)
-  ) {
+  if (!invitedFriends.value.some((invited) => invited.userId === friend.userId)) {
     invitedFriends.value.push(friend);
     user.value.planIdx = parseInt(window.location.pathname.match(/\d+$/)[0]);
     user.value.userId = friend.userId;
@@ -177,13 +152,9 @@ const inviteFriend = async (friend) => {
 
 const removeFriend = (friendId) => {
   if (confirm("초대를 삭제하시겠습니까?")) {
-    const friend = invitedFriends.value.find(
-      (friend) => friend.userId === friendId
-    );
+    const friend = invitedFriends.value.find((friend) => friend.userId === friendId);
     if (friend) {
-      invitedFriends.value = invitedFriends.value.filter(
-        (friend) => friend.userId !== friendId
-      );
+      invitedFriends.value = invitedFriends.value.filter((friend) => friend.userId !== friendId);
 
       // listJoin 호출하여 join 테이블의 리스트 가져오기
       listJoin(
@@ -192,9 +163,7 @@ const removeFriend = (friendId) => {
 
           // user.value.userId와 user.value.planIdx가 모두 일치하는 join 객체 찾기
           const matchingJoin = joinList.find(
-            (join) =>
-              join.userId === user.value.userId &&
-              join.planIdx === user.value.planIdx
+            (join) => join.userId === user.value.userId && join.planIdx === user.value.planIdx
           );
 
           if (matchingJoin) {
