@@ -11,6 +11,7 @@ import CommunityDetailView from "../views/CommunityDetailView.vue";
 import CommunityAlertView from "@/views/CommunityAlertView.vue";
 import PlanListView from "@/views/PlanListView.vue";
 import PlanDetailView from "@/views/PlanDetailView.vue";
+import OpenAIView from "@/views/OpenAIView.vue";
 
 import { storeToRefs } from "pinia";
 
@@ -97,6 +98,11 @@ const router = createRouter({
       path: "/plan/detail/:planIdx",
       name: "planDetail",
       component: PlanDetailView,
+    },
+    {
+      path: "/openAI",
+      name: "openAI",
+      component: OpenAIView,
     },
   ],
 });

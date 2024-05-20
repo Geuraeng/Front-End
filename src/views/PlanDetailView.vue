@@ -13,6 +13,7 @@ import Header from "@/examples/Header.vue";
 import { KakaoMap, KakaoMapMarker } from "vue3-kakao-maps";
 import PlanSidebar from "@/components/PlanSections/PlanSidebar.vue";
 import Invite from "@/components/PlanSections/Invite.vue";
+import UserChat from "@/components/PlanSections/UserChat.vue";
 const { VITE_OPEN_API_SERVICE_KEY, VITE_SEARCH_TRIP_URL } = import.meta.env;
 
 //route 플랜 가져오기
@@ -76,7 +77,6 @@ const updatePlan = async () => {
   }
 };
 
-
 const addSchedule = async () => {
   try {
     await registSchedule(
@@ -131,7 +131,7 @@ const placesSearchCB = (data, status) => {
           content: marker.place_name,
           visible: false,
         },
-        data: marker // Marker의 모든 데이터를 저장
+        data: marker, // Marker의 모든 데이터를 저장
       };
       markerList.value.push(markerItem);
       bounds.extend(new kakao.maps.LatLng(Number(marker.y), Number(marker.x)));
@@ -150,17 +150,17 @@ const onClickMapMarker = (markerItem) => {
 
   latitude.value = markerItem.lat;
   longitude.value = markerItem.lng;
-  
+
   // Marker의 데이터를 출력
-  console.log('Marker Data:', markerItem.data);
-  if(markerItem.data.title != null){
-    schedule.value.scheduleLocation = markerItem.data.title
-    schedule.value.scheduleLat = markerItem.data.mapy
-    schedule.value.scheduleLon = markerItem.data.mapx
-  }else{
-    schedule.value.scheduleLocation = markerItem.data['place_name']
-    schedule.value.scheduleLat = markerItem.data.y
-    schedule.value.scheduleLon = markerItem.data.x
+  console.log("Marker Data:", markerItem.data);
+  if (markerItem.data.title != null) {
+    schedule.value.scheduleLocation = markerItem.data.title;
+    schedule.value.scheduleLat = markerItem.data.mapy;
+    schedule.value.scheduleLon = markerItem.data.mapx;
+  } else {
+    schedule.value.scheduleLocation = markerItem.data["place_name"];
+    schedule.value.scheduleLat = markerItem.data.y;
+    schedule.value.scheduleLon = markerItem.data.x;
   }
 };
 
@@ -209,7 +209,7 @@ const load1 = () => {
         content: item.title,
         visible: false,
       },
-      data: item // Marker의 모든 데이터를 저장
+      data: item, // Marker의 모든 데이터를 저장
     }));
   });
 };
@@ -229,7 +229,7 @@ const load2 = () => {
         content: item.title,
         visible: false,
       },
-      data: item // Marker의 모든 데이터를 저장
+      data: item, // Marker의 모든 데이터를 저장
     }));
   });
 };
@@ -249,7 +249,7 @@ const load3 = () => {
         content: item.title,
         visible: false,
       },
-      data: item // Marker의 모든 데이터를 저장
+      data: item, // Marker의 모든 데이터를 저장
     }));
   });
 };
@@ -269,7 +269,7 @@ const load4 = () => {
         content: item.title,
         visible: false,
       },
-      data: item // Marker의 모든 데이터를 저장
+      data: item, // Marker의 모든 데이터를 저장
     }));
   });
 };
@@ -289,7 +289,7 @@ const load5 = () => {
         content: item.title,
         visible: false,
       },
-      data: item // Marker의 모든 데이터를 저장
+      data: item, // Marker의 모든 데이터를 저장
     }));
   });
 };
@@ -363,7 +363,7 @@ const load5 = () => {
                               class="form-control"
                               id="scheduleLocation"
                               v-model="schedule.scheduleLocation"
-                              style="color: brown; background-color: antiquewhite;"
+                              style="color: brown; background-color: antiquewhite"
                               readonly
                             />
                           </div>
@@ -443,6 +443,7 @@ const load5 = () => {
       </section>
     </div>
   </Header>
+  <UserChat />
   <DefaultFooter />
 </template>
 
