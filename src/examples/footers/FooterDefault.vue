@@ -18,24 +18,16 @@ defineProps({
     link: String,
     default: () => [
       {
-        icon: '<i class="fab fa-facebook text-lg opacity-8"></i>',
-        link: "https://www.facebook.com/CreativeTim/",
-      },
-      {
-        icon: '<i class="fab fa-twitter text-lg opacity-8"></i>',
-        link: "https://twitter.com/creativetim",
-      },
-      {
-        icon: '<i class="fab fa-dribbble text-lg opacity-8"></i>',
-        link: "https://dribbble.com/creativetim",
-      },
-      {
         icon: '<i class="fab fa-github text-lg opacity-8"></i>',
-        link: "https://github.com/creativetimofficial",
+        link: "https://github.com/Geuraeng",
+      },
+      {
+        icon: '<i class="fab fa-instagram text-lg opacity-8"></i>',
+        link: "https://www.instagram.com/hellossafy/",
       },
       {
         icon: '<i class="fab fa-youtube text-lg opacity-8"></i>',
-        link: "https://www.youtube.com/channel/UCVyTG4sCw-rOvB9oHkzZD1w",
+        link: "https://www.youtube.com/channel/UC_XI3ByFO1uZIIH-g-zJZiw",
       },
     ],
   },
@@ -70,17 +62,17 @@ defineProps({
         items: [
           {
             name: "SSAFY",
-            href: "https://www.creative-tim.com/presentation",
+            href: "https://www.ssafy.com/",
           },
           {
             name: "About Us",
-            href: "https://www.creative-tim.com/templates/free",
+            href: "https://github.com/Geuraeng",
           },
           {
             name: "YoungSeo Github",
-            href: "https://www.creative-tim.com/templates/premium",
+            href: "https://github.com/ch00me",
           },
-          { name: "Taemin Github", href: "https://www.creative-tim.com/blog" },
+          { name: "Taemin Github", href: "https://github.com/tam31" },
         ],
       },
       {
@@ -88,8 +80,8 @@ defineProps({
         items: [
           { name: "Home", href: "/" },
           {
-            name: "My Schedule",
-            href: "https://www.creative-tim.com/bits",
+            name: "My Plan",
+            href: "/plan/list",
           },
           {
             name: "Community",
@@ -105,16 +97,16 @@ defineProps({
         name: "Project",
         items: [
           {
-            name: "Stack",
-            href: "https://www.creative-tim.com/contact-us",
+            name: "Front-End",
+            href: "https://github.com/Geuraeng/Front-End",
           },
           {
-            name: "Tool",
-            href: "https://www.creative-tim.com/knowledge-center",
+            name: "Back-End",
+            href: "https://github.com/Geuraeng/Back-End",
           },
           {
             name: "GIT",
-            href: "https://services.creative-tim.com/",
+            href: "https://github.com/Geuraeng",
           },
         ],
       },
@@ -123,7 +115,7 @@ defineProps({
 });
 </script>
 <template>
-  <footer class="footer pt-5 mt-5">
+  <footer class="footer pt-5 mt-5 no-select">
     <div class="container">
       <div class="row">
         <div class="col-md-3 mb-4 ms-auto">
@@ -135,13 +127,27 @@ defineProps({
           </div>
           <div>
             <ul class="d-flex flex-row ms-n3 nav">
-              <li class="nav-item" v-for="{ icon, link } of socials" :key="link">
-                <a class="nav-link pe-1" :href="link" target="_blank" v-html="icon"> </a>
+              <li
+                class="nav-item"
+                v-for="{ icon, link } of socials"
+                :key="link"
+              >
+                <a
+                  class="nav-link pe-1"
+                  :href="link"
+                  target="_blank"
+                  v-html="icon"
+                >
+                </a>
               </li>
             </ul>
           </div>
         </div>
-        <div class="col-md-2 col-sm-6 col-6 mb-4" v-for="{ name, items } of menus" :key="name">
+        <div
+          class="col-md-2 col-sm-6 col-6 mb-4"
+          v-for="{ name, items } of menus"
+          :key="name"
+        >
           <h6 class="text-sm">{{ name }}</h6>
           <ul class="flex-column ms-n3 nav">
             <li class="nav-item" v-for="item of items" :key="item.name">
@@ -155,7 +161,7 @@ defineProps({
         <div class="col-12">
           <div class="text-center">
             <p class="text-dark my-4 text-sm font-weight-normal">
-              All rights reserved. Copyright ©
+              Copyright ©
               {{ new Date().getFullYear() }}
               by SSAFY 11th 조영서, 최태민
             </p>
@@ -165,3 +171,13 @@ defineProps({
     </div>
   </footer>
 </template>
+
+<style>
+.no-select {
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+</style>

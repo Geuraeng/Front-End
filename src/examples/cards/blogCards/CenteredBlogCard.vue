@@ -19,7 +19,7 @@ defineProps({
     label: String,
     default: () => ({
       color: "bg-gradient-info",
-      label: "Find Out More",
+      label: "New Plan",
     }),
   },
 });
@@ -33,14 +33,11 @@ defineProps({
     </div>
     <div class="card-body text-center">
       <h5 class="font-weight-normal">
-        <a href="javascript:;">{{ title }}</a>
+        <a href="/plan/list">{{ title }}</a>
       </h5>
       <p class="mb-0">
-        {{ description }}
+        <a href="/plan/list">{{ description }}</a>
       </p>
-      <button type="button" class="btn btn-sm mb-0 mt-3" :class="action.color">
-        {{ action.label }}
-      </button>
     </div>
   </div>
 </template>
