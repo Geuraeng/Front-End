@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { detailPlan, modifyPlan, deletePlan, registSchedule } from "@/api/plan.js";
+import { detailPlan, modifyPlan, registSchedule } from "@/api/plan.js";
 import axios from "axios";
 
 // example components
@@ -76,26 +76,6 @@ const updatePlan = async () => {
   }
 };
 
-const deleteCurrentPlan = async () => {
-  if (confirm("정말로 삭제하시겠습니까?")) {
-    try {
-      await deletePlan(
-        planIdx,
-        () => {
-          alert("삭제가 완료되었습니다.");
-          router.push("/plan/list");
-        },
-        (error) => {
-          console.error("삭제 실패:", error);
-          alert("삭제에 실패했습니다.");
-        }
-      );
-    } catch (error) {
-      console.error("삭제 중 오류 발생:", error);
-      alert("삭제 중 오류가 발생했습니다.");
-    }
-  }
-};
 
 const addSchedule = async () => {
   try {
@@ -151,6 +131,7 @@ const placesSearchCB = (data, status) => {
           content: marker.place_name,
           visible: false,
         },
+        data: marker // Marker의 모든 데이터를 저장
       };
       markerList.value.push(markerItem);
       bounds.extend(new kakao.maps.LatLng(Number(marker.y), Number(marker.x)));
@@ -169,6 +150,18 @@ const onClickMapMarker = (markerItem) => {
 
   latitude.value = markerItem.lat;
   longitude.value = markerItem.lng;
+  
+  // Marker의 데이터를 출력
+  console.log('Marker Data:', markerItem.data);
+  if(markerItem.data.title != null){
+    schedule.value.scheduleLocation = markerItem.data.title
+    schedule.value.scheduleLat = markerItem.data.mapy
+    schedule.value.scheduleLon = markerItem.data.mapx
+  }else{
+    schedule.value.scheduleLocation = markerItem.data['place_name']
+    schedule.value.scheduleLat = markerItem.data.y
+    schedule.value.scheduleLon = markerItem.data.x
+  }
 };
 
 // SearchInput에서 입력값이 변경될 때마다 호출될 함수
@@ -216,6 +209,7 @@ const load1 = () => {
         content: item.title,
         visible: false,
       },
+      data: item // Marker의 모든 데이터를 저장
     }));
   });
 };
@@ -235,6 +229,7 @@ const load2 = () => {
         content: item.title,
         visible: false,
       },
+      data: item // Marker의 모든 데이터를 저장
     }));
   });
 };
@@ -254,6 +249,7 @@ const load3 = () => {
         content: item.title,
         visible: false,
       },
+      data: item // Marker의 모든 데이터를 저장
     }));
   });
 };
@@ -273,6 +269,7 @@ const load4 = () => {
         content: item.title,
         visible: false,
       },
+      data: item // Marker의 모든 데이터를 저장
     }));
   });
 };
@@ -292,6 +289,7 @@ const load5 = () => {
         content: item.title,
         visible: false,
       },
+      data: item // Marker의 모든 데이터를 저장
     }));
   });
 };
@@ -365,27 +363,8 @@ const load5 = () => {
                               class="form-control"
                               id="scheduleLocation"
                               v-model="schedule.scheduleLocation"
-                              style="color: white"
-                            />
-                          </div>
-                          <div class="mb-3">
-                            <label for="scheduleLat" class="form-label">위도</label>
-                            <input
-                              type="text"
-                              class="form-control"
-                              id="scheduleLat"
-                              v-model="schedule.scheduleLat"
-                              style="color: white"
-                            />
-                          </div>
-                          <div class="mb-3">
-                            <label for="scheduleLon" class="form-label">경도</label>
-                            <input
-                              type="text"
-                              class="form-control"
-                              id="scheduleLon"
-                              v-model="schedule.scheduleLon"
-                              style="color: white"
+                              style="color: brown; background-color: antiquewhite;"
+                              readonly
                             />
                           </div>
                           <div class="mb-3">
@@ -396,15 +375,6 @@ const load5 = () => {
                               v-model="schedule.scheduleMemo"
                               style="color: white"
                             ></textarea>
-                          </div>
-                          <div class="mb-3">
-                            <label for="planIdx" class="form-label">플랜 넘버</label>
-                            <input
-                              class="form-control"
-                              id="scheduleMemo"
-                              :value="schedule.planIdx"
-                              style="color: white"
-                            />
                           </div>
                           <input type="hidden" v-model="schedule.planIdx" />
                           <button type="submit" class="btn btn-primary">일정 추가하기</button>
@@ -454,7 +424,7 @@ const load5 = () => {
                           :lng="marker.lng"
                           :infoWindow="marker.infoWindow"
                           :clickable="true"
-                          @onClickKakaoMapMarker="onClickMapMarker(marker)"
+                          @onClickKakaoMapMarker="() => onClickMapMarker(marker)"
                         />
                       </KakaoMap>
                     </div>

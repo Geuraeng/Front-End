@@ -1,11 +1,10 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-</script>
-
 <template>
   <RouterView />
+  <UserChat />
 </template>
 
-<style scoped>
+<script setup>
+import UserChat from "./components/PlanSections/UserChat.vue";
+</script>
 
-</style>
+<style scoped></style>

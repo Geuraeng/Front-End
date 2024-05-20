@@ -63,7 +63,7 @@ const router = createRouter({
       component: MyPageView,
     },
     {
-      path: "/myPage/update/:userId",
+      path: "/myPage/update",
       name: "update",
       component: MyPageUpdateView,
     },

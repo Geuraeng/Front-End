@@ -32,8 +32,16 @@ async function getMyPage(success, fail) {
   await local.get(`/mypage`).then(success).catch(fail);
 }
 
+async function detailInfo(userId, success, fail) {
+  await local.get(`/detail/${userId}`).then(success).catch(fail);
+}
+
 async function listUser(success, fail) {
   await local.get("/list").then(success).catch(fail);
+}
+
+async function updateUserdata(userId, user, success, fail){
+  await local.post(`/update/${userId}`, user).then(success).catch(fail)
 }
 
 export {
@@ -43,5 +51,7 @@ export {
   tokenRegeneration,
   logout,
   getMyPage,
+  detailInfo,
   listUser,
+  updateUserdata,
 };
