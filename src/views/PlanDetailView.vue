@@ -2,6 +2,7 @@
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { detailPlan, modifyPlan, registSchedule } from "@/api/plan.js";
+import { send, connect } from "@/api/socketSetup.js";
 import axios from "axios";
 
 // example components
@@ -37,6 +38,9 @@ const schedule = ref({
 
 onMounted(() => {
   getPlan();
+  connect(() => {
+    window.location.reload(true);
+  });
 });
 
 const getPlan = () => {
@@ -44,6 +48,7 @@ const getPlan = () => {
     planIdx,
     ({ data }) => {
       plan.value = data;
+      console.log("!!!!!!!!" + planIdx);
     },
     (error) => {
       console.log(error);
@@ -83,7 +88,7 @@ const addSchedule = async () => {
       schedule.value,
       () => {
         alert("일정이 추가되었습니다.");
-        // 추가 후 필요한 동작을 여기에 작성하세요
+        send(schedule.value);
       },
       (error) => {
         console.error("일정 추가 실패:", error);
@@ -142,7 +147,10 @@ const placesSearchCB = (data, status) => {
 
 // 마커 클릭 시 인포윈도우의 visible 값을 반전시킵니다
 const onClickMapMarker = (markerItem) => {
-  if (markerItem.infoWindow?.visible !== null && markerItem.infoWindow?.visible !== undefined) {
+  if (
+    markerItem.infoWindow?.visible !== null &&
+    markerItem.infoWindow?.visible !== undefined
+  ) {
     markerItem.infoWindow.visible = !markerItem.infoWindow.visible;
   } else {
     markerItem.infoWindow.visible = true;
@@ -357,18 +365,25 @@ const load5 = () => {
                       <div class="mask bg-dark opacity-8">
                         <form @submit.prevent="addSchedule" class="p-3">
                           <div class="mb-3">
-                            <label for="scheduleLocation" class="form-label">장소</label>
+                            <label for="scheduleLocation" class="form-label"
+                              >장소</label
+                            >
                             <input
                               type="text"
                               class="form-control"
                               id="scheduleLocation"
                               v-model="schedule.scheduleLocation"
-                              style="color: brown; background-color: antiquewhite"
+                              style="
+                                color: brown;
+                                background-color: antiquewhite;
+                              "
                               readonly
                             />
                           </div>
                           <div class="mb-3">
-                            <label for="scheduleMemo" class="form-label">메모</label>
+                            <label for="scheduleMemo" class="form-label"
+                              >메모</label
+                            >
                             <textarea
                               class="form-control"
                               id="scheduleMemo"
@@ -377,7 +392,9 @@ const load5 = () => {
                             ></textarea>
                           </div>
                           <input type="hidden" v-model="schedule.planIdx" />
-                          <button type="submit" class="btn btn-primary">일정 추가하기</button>
+                          <button type="submit" class="btn btn-primary">
+                            일정 추가하기
+                          </button>
                         </form>
                       </div>
                     </div>
@@ -397,19 +414,29 @@ const load5 = () => {
                       <p>아래 버튼을 눌러 근처 정보를 조회하세요.</p>
                       <div class="row">
                         <div class="col">
-                          <button class="btn btn-primary" @click="load1">관광</button>
+                          <button class="btn btn-primary" @click="load1">
+                            관광
+                          </button>
                         </div>
                         <div class="col">
-                          <button class="btn btn-primary" @click="load2">축제</button>
+                          <button class="btn btn-primary" @click="load2">
+                            축제
+                          </button>
                         </div>
                         <div class="col">
-                          <button class="btn btn-primary" @click="load3">숙박</button>
+                          <button class="btn btn-primary" @click="load3">
+                            숙박
+                          </button>
                         </div>
                         <div class="col">
-                          <button class="btn btn-primary" @click="load4">쇼핑</button>
+                          <button class="btn btn-primary" @click="load4">
+                            쇼핑
+                          </button>
                         </div>
                         <div class="col">
-                          <button class="btn btn-primary" @click="load5">음식</button>
+                          <button class="btn btn-primary" @click="load5">
+                            음식
+                          </button>
                         </div>
                       </div>
                       <KakaoMap
@@ -424,7 +451,9 @@ const load5 = () => {
                           :lng="marker.lng"
                           :infoWindow="marker.infoWindow"
                           :clickable="true"
-                          @onClickKakaoMapMarker="() => onClickMapMarker(marker)"
+                          @onClickKakaoMapMarker="
+                            () => onClickMapMarker(marker)
+                          "
                         />
                       </KakaoMap>
                     </div>
@@ -434,10 +463,16 @@ const load5 = () => {
             </div>
           </div>
           <div class="d-flex justify-content-end">
-            <button class="btn btn-light" style="margin-right: 10px" @click="updatePlan">
+            <button
+              class="btn btn-light"
+              style="margin-right: 10px"
+              @click="updatePlan"
+            >
               수정완료
             </button>
-            <button class="btn btn-secondary" @click="deleteCurrentPlan">삭제</button>
+            <button class="btn btn-secondary" @click="deleteCurrentPlan">
+              삭제
+            </button>
           </div>
         </div>
       </section>
