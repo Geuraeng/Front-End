@@ -103,9 +103,9 @@ const inputComment = () => {
 
 .comment-section {
   width: 600px;
-  height: 650px;
+  height: 720px;
   margin: 0 auto;
-  max-height: 650px; /* Set the maximum height */
+  max-height: 800px; /* Set the maximum height */
   overflow-y: auto; /* Add vertical scroll if content exceeds max-height */
 }
 
