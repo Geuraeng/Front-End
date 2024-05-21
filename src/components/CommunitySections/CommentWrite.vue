@@ -3,80 +3,61 @@ import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useMemberStore } from "@/stores/member";
-import { postCommentInfo } from "@/api/comment"
+import { postCommentInfo } from "@/api/comment";
 import { httpStatusCode } from "@/util/http-status";
+import CommunityComments from "@/components/CommunitySections/CommunityComments.vue";
 
-//Vue Material Kit 2 components
-import MaterialInput from "@/components/MaterialInput.vue";
-import MaterialButton from "@/components/MaterialButton.vue";
-
-const route = useRoute()
-const router = useRouter()
+const route = useRoute();
+const router = useRouter();
 const boardId = route.params.boardId;
 const memberStore = useMemberStore();
-const { userInfo} = storeToRefs(memberStore);
+const { userInfo } = storeToRefs(memberStore);
 
 const info = ref({
-  commentId:"",
-  commentContent:"",
-  boardIdx: ""
+  commentId: "",
+  commentContent: "",
+  boardIdx: "",
 });
 
-const commentInput = (input) =>{
-  info.value.commentContent = input
-}
-
-const commentSave = () =>{
-  info.value.commentId = userInfo.value.userId
-  info.value.boardIdx = boardId
-  inputComment()
-}
+const commentSave = () => {
+  info.value.commentId = userInfo.value.userId;
+  info.value.boardIdx = boardId;
+  inputComment();
+};
 
 const inputComment = () => {
   postCommentInfo(
-    boardId, info.value,
+    boardId,
+    info.value,
     (response) => {
-      if(httpStatusCode.OK == response.status){
-        alert("댓글을 달았습니다")
-      }else{
-        alert("다시 시도해주세요")
+      if (httpStatusCode.OK == response.status) {
+        alert("댓글을 달았습니다");
+      } else {
+        alert("다시 시도해주세요");
       }
-      router.replace({name : 'community'})
+      router.replace({ name: "community" });
     },
     (error) => {
-      alert("다시 시도해주세요")
-      router.replace({name : 'community'})
+      alert("다시 시도해주세요");
+      router.replace({ name: "community" });
     }
   );
 };
-
 </script>
+
 <template>
-  <section class="my-5">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12 m-auto position-relative">
-          <h4 class="mb-4 text-white">Comment</h4>
-          <div class="row justify-content-center">
-            <div class="col-8">
-              <MaterialInput
-                class="input-group-outline"
-                id="email"
-                :label="{ class: 'form-label' }"
-                type="email"
-                placeholder="댓글을 작성하세요."
-                color="aliceblue"
-                @my-change="commentInput"
-              />
-            </div>
-            <div class="col-2 ps-0">
-              <MaterialButton
-                variant="gradient"
-                color="info"
-                class="mb-0 h-100 position-relative z-index-2"
-                @click="commentSave"
-                >Submit</MaterialButton
-              >
+  <section class="py-lg-7">
+    <div class="card box-shadow-xl overflow-hidden mb-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 m-auto position-relative">
+            <div class="comment-section">
+              <div class="comment-form">
+                <textarea placeholder="댓글을 입력하세요." v-model="info.commentContent"></textarea>
+                <button type="button" @click="commentSave">등록</button>
+              </div>
+
+              <CommunityComments />
             </div>
           </div>
         </div>
@@ -84,3 +65,97 @@ const inputComment = () => {
     </div>
   </section>
 </template>
+
+<style scoped>
+.comment {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.author-date {
+  display: flex;
+  display: flex;
+  align-items: center;
+}
+
+.author-date .author {
+  font-weight: bold;
+  margin-right: 10px; /* 작성자 이름과 작성 날짜 사이의 간격 조정 */
+}
+
+.buttons {
+  display: flex;
+  margin-right: 100px;
+}
+.author-btn {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+  margin-left: 15px;
+}
+
+.comment-content {
+  margin-top: 10px; /* 댓글 내용 위의 간격 조정 */
+  display: block;
+  text-align: left;
+}
+
+.comment-section {
+  width: 600px;
+  height: 650px;
+  margin: 0 auto;
+  max-height: 650px; /* Set the maximum height */
+  overflow-y: auto; /* Add vertical scroll if content exceeds max-height */
+}
+
+/* Hide scrollbar for WebKit-based browsers */
+.comment-section::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for other browsers */
+.comment-section {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.comment-form {
+  margin-top: 20px;
+  display: flex; /* Use flexbox to align items */
+  flex-direction: column; /* Align children vertically */
+}
+
+.comment-form textarea {
+  width: 100%;
+  height: 100px;
+  margin-bottom: 10px; /* Add some space between textarea and button */
+}
+
+.comment-form button {
+  align-self: flex-end; /* Align button to the right */
+  padding: 10px 20px;
+}
+
+.comments {
+  margin-top: 20px; /* Add some space between form and comments */
+}
+
+.comment {
+  border-top: 1px solid #ddd;
+  padding-top: 20px;
+  margin-top: 20px;
+}
+
+.comment .author {
+  font-weight: bold;
+}
+
+.comment .date {
+  color: #777;
+}
+
+.comment .content {
+  margin-top: 10px;
+}
+</style>

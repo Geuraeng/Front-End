@@ -14,4 +14,8 @@ function deleteCommentInfo(idx, success, fail) {
   local.get(`/delete/${idx}`).then(success).catch(fail);
 }
 
-export { getCommentList, postCommentInfo, deleteCommentInfo};
+function updateCommentInfo(idx, info, success, fail) {
+  local.post(`/update/${idx}`, info).then(success).catch(fail);
+}
+
+export { getCommentList, postCommentInfo, deleteCommentInfo, updateCommentInfo };

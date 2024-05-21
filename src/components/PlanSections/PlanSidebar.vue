@@ -8,15 +8,16 @@
         <button v-if="count < 10" @click="addButton" class="btn btn-success">+</button>
       </div>
       <div v-for="n in count" :key="n" :id="'day-' + n">{{ n }}일차</div>
-      <div v-for="(schedule, index) in schedules" 
-           :key="schedule.scheduleIdx" 
-           class="card mb-3 text-dark" 
-           :draggable="true" 
-           @dragstart="dragStart(index)" 
-           @dragover="dragOver(index)" 
-           @drop="drop" 
-           style="cursor: pointer">
-
+      <div
+        v-for="(schedule, index) in schedules"
+        :key="schedule.scheduleIdx"
+        class="card mb-3 text-dark"
+        :draggable="true"
+        @dragstart="dragStart(index)"
+        @dragover="dragOver(index)"
+        @drop="drop"
+        style="cursor: pointer"
+      >
         <div class="card-content">
           <div class="text-content">
             <h5 class="card-title">{{ schedule.scheduleLocation }}</h5>
@@ -26,11 +27,9 @@
         </div>
       </div>
     </div>
-    
+
     <div class="d-flex justify-content-end">
-      <button class="btn btn-light" style="margin-right: 10px" @click="updatePlan">
-        계획완료
-      </button>
+      <button class="btn btn-light" style="margin-right: 10px" @click="updatePlan">계획완료</button>
       <button class="btn btn-secondary" @click="deleteCurrentPlan">삭제</button>
     </div>
     <!-- 모달 -->
@@ -67,12 +66,18 @@
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { useRoute, useRouter} from "vue-router"
-import { detailPlan, modifySchedule, deleteSchedule, updateSchedulPlan, deletePlan } from "@/api/plan.js";
+import { useRoute, useRouter } from "vue-router";
+import {
+  detailPlan,
+  modifySchedule,
+  deleteSchedule,
+  updateSchedulPlan,
+  deletePlan,
+} from "@/api/plan.js";
 
-const route = useRoute()
+const route = useRoute();
 const planIdx = route.params.planIdx;
-const router = useRouter()
+const router = useRouter();
 
 const schedules = ref();
 const count = ref(1);
@@ -109,26 +114,26 @@ const addButton = () => {
   }
 };
 
-const updatePlan = () =>{
-  try{
+const updatePlan = () => {
+  try {
     updateSchedulPlan(
       schedules.value,
-      (response) =>{
-        if(response.status == 200){
-          alert("수정완료 되었습니다")
-          router.replace({name : 'planList'})
+      (response) => {
+        if (response.status == 200) {
+          alert("수정완료 되었습니다");
+          router.replace({ name: "planList" });
         }
       },
       (error) => {
-            console.error("수정 실패:", error);
-            alert("수정에 실패했습니다.");
-          }
-        );
-      } catch (error) {
-        console.error("수정 중 오류 발생:", error);
-        alert("수정 중 오류가 발생했습니다.");
-    }
-}
+        console.error("수정 실패:", error);
+        alert("수정에 실패했습니다.");
+      }
+    );
+  } catch (error) {
+    console.error("수정 중 오류 발생:", error);
+    alert("수정 중 오류가 발생했습니다.");
+  }
+};
 
 const deleteCurrentPlan = async () => {
   if (confirm("정말로 삭제하시겠습니까?")) {
@@ -137,7 +142,7 @@ const deleteCurrentPlan = async () => {
         planIdx,
         () => {
           alert("삭제가 완료되었습니다.");
-          router.push({name: 'planList'});
+          router.push({ name: "planList" });
         },
         (error) => {
           console.error("삭제 실패:", error);
@@ -164,7 +169,7 @@ const dragOver = (index) => {
     schedules.value.splice(draggingIndex, 1);
     schedules.value.splice(index, 0, draggedItem);
     draggingIndex = index;
-    schedules.value[draggingIndex].scheduleOrder = index
+    schedules.value[draggingIndex].scheduleOrder = index;
   }
 };
 
@@ -221,10 +226,11 @@ const updateSchedule = () => {
 const deleteScheduleConfirmation = () => {
   if (confirm("정말로 삭제하시겠습니까?")) {
     deleteSchedule(selectedSchedule.value.scheduleIdx, () => {
-
-      const idx = schedules.value.findIndex( schedule => schedule.scheduleIdx === selectedSchedule.value.scheduleIdx);
-      if(idx !== -1){
-        schedules.value.splice(idx,1)
+      const idx = schedules.value.findIndex(
+        (schedule) => schedule.scheduleIdx === selectedSchedule.value.scheduleIdx
+      );
+      if (idx !== -1) {
+        schedules.value.splice(idx, 1);
       }
 
       // 삭제 성공 시 모달 닫기
