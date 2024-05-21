@@ -2,10 +2,17 @@
   <div class="sidebar mt-9">
     <div class="sidebar-menu">
       <div class="number-buttons">
-        <button v-for="n in count" :key="n" class="btn btn-primary" @click="scrollToDay(n)">
+        <button
+          v-for="n in count"
+          :key="n"
+          class="btn btn-primary"
+          @click="scrollToDay(n)"
+        >
           {{ n }}
         </button>
-        <button v-if="count < 10" @click="addButton" class="btn btn-success">+</button>
+        <button v-if="count < 10" @click="addButton" class="btn btn-success">
+          +
+        </button>
       </div>
       <div v-for="n in count" :key="n" :id="'day-' + n">{{ n }}일차</div>
       <div
@@ -23,13 +30,24 @@
             <h5 class="card-title">{{ schedule.scheduleLocation }}</h5>
             <p class="card-text">메모 : {{ schedule.scheduleMemo }}</p>
           </div>
-          <button class="btn btn-secondary" @click="showScheduleModal(schedule)">수정</button>
+          <button
+            class="btn btn-secondary"
+            @click="showScheduleModal(schedule)"
+          >
+            수정
+          </button>
         </div>
       </div>
     </div>
 
     <div class="d-flex justify-content-end">
-      <button class="btn btn-light" style="margin-right: 10px" @click="updatePlan">계획완료</button>
+      <button
+        class="btn btn-light"
+        style="margin-right: 10px"
+        @click="updatePlan"
+      >
+        계획완료
+      </button>
       <button class="btn btn-secondary" @click="deleteCurrentPlan">삭제</button>
     </div>
     <!-- 모달 -->
@@ -38,7 +56,9 @@
       <div class="modal-card text-dark">
         <header class="modal-card-head d-flex">
           <p class="modal-card-title">스케줄 상세 정보</p>
-          <button class="delete" aria-label="close" @click="closeModal">X</button>
+          <button class="delete" aria-label="close" @click="closeModal">
+            X
+          </button>
         </header>
         <section class="modal-card-body">
           <!-- 수정 가능한 입력 필드 -->
@@ -57,7 +77,9 @@
             placeholder="메모"
           ></textarea>
           <button class="btn btn-primary" @click="updateSchedule">수정</button>
-          <button class="btn btn-danger" @click="deleteScheduleConfirmation">삭제</button>
+          <button class="btn btn-danger" @click="deleteScheduleConfirmation">
+            삭제
+          </button>
         </section>
       </div>
     </div>
@@ -81,6 +103,7 @@ import SockJS from "sockjs-client/dist/sockjs";
 
 const recvList = reactive([]);
 const stompClient = ref(null);
+const stompSubscription = ref(null);
 let isReceiving = false;
 
 // connect 함수
@@ -94,18 +117,29 @@ const connect = () => {
     {},
     (frame) => {
       console.log("소켓 연결 성공", frame);
-      stompClient.value.subscribe("/send", (res) => {
+      // 이전 구독 취소
+      if (stompSubscription.value) {
+        stompSubscription.value.unsubscribe();
+      }
+      // 새로운 구독 등록
+      stompSubscription.value = stompClient.value.subscribe("/send", (res) => {
         console.log("구독으로 받은 메시지 입니다.", res.body);
         isReceiving = true;
         recvList.push(JSON.parse(res.body));
         console.log(recvList);
         isReceiving = false;
+        // 화면 새로고침 대신 schedules 업데이트
+        updateSchedules();
       });
     },
     (error) => {
       console.log("소켓 연결 실패", error);
     }
   );
+};
+
+const updateSchedules = () => {
+  schedules.value = [...recvList];
 };
 
 // send 함수
@@ -261,7 +295,8 @@ const updateSchedule = () => {
     modifySchedule(selectedSchedule.value, () => {
       // schedules 배열에서 수정된 스케줄을 찾아 업데이트
       const index = schedules.value.findIndex(
-        (schedule) => schedule.scheduleIdx === selectedSchedule.value.scheduleIdx
+        (schedule) =>
+          schedule.scheduleIdx === selectedSchedule.value.scheduleIdx
       );
       // 수정 인덱스 찾아 업데이트하기
       if (index !== -1) {
@@ -316,7 +351,6 @@ watch(
         }
       } else {
         schedules.value.push(newSchedule);
-        console.log("!!!!!");
       }
     });
   },

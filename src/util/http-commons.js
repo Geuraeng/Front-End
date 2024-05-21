@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const { VITE_VUE_API_URL, VITE_VUE_USER_API_URL, VITE_VUE_PLAN_API_URL, VITE_VUE_JOIN_API_URL } =
+const { VITE_VUE_API_URL, VITE_VUE_USER_API_URL, VITE_VUE_PLAN_API_URL, VITE_VUE_JOIN_API_URL, VITE_VUE_COMMENT_API_URL } =
   import.meta.env;
 
 // local vue api axios instance
@@ -47,4 +47,15 @@ function joinAxios() {
   return instance;
 }
 
-export { localAxios, userAxios, planAxios, joinAxios };
+// local comment vue api axios instance
+function commentAxios() {
+  const instance = axios.create({
+    baseURL: VITE_VUE_COMMENT_API_URL,
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+  });
+  return instance;
+}
+
+export { localAxios, userAxios, planAxios, joinAxios, commentAxios };
