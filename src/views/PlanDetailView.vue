@@ -14,7 +14,6 @@ import Header from "@/examples/Header.vue";
 import { KakaoMap, KakaoMapMarker } from "vue3-kakao-maps";
 import PlanSidebar from "@/components/PlanSections/PlanSidebar.vue";
 import Invite from "@/components/PlanSections/Invite.vue";
-import UserChat from "@/components/PlanSections/UserChat.vue";
 const { VITE_OPEN_API_SERVICE_KEY, VITE_SEARCH_TRIP_URL } = import.meta.env;
 
 //route 플랜 가져오기
@@ -322,7 +321,7 @@ const load5 = () => {
     >
       <span class="mask bg-gradient-dark opacity-6"> </span>
       <PlanSidebar />
-      <section class="py-lg-5">
+      <section class="py-lg-5 mt-5">
         <div class="container">
           <div class="row">
             <div class="col-12 d-flex justify-content-end">
@@ -334,15 +333,18 @@ const load5 = () => {
           <div class="row">
             <div class="col">
               <div class="card box-shadow-xl overflow-hidden mb-5">
-                <div class="d-flex justify-content-center align-items-center">
+                <div
+                  class="bg-dark opacity-9 d-flex justify-content-center align-items-center"
+                >
                   <div class="input-container">
-                    <div class="col-md-12 pe-2 mb-3">
+                    <div class="col-md-12 pe-2">
                       <input
                         label="Title"
                         type="text"
                         placeholder="제목"
                         v-model="plan.planTitle"
-                        class="form-control input-lg"
+                        class="form-control input-lg text-white text-center gamja-flower-regular"
+                        style="font-size: 35px"
                       />
                     </div>
                     <div class="col-md-12 pe-2 mb-3">
@@ -351,7 +353,8 @@ const load5 = () => {
                         type="text"
                         placeholder="여행 일자"
                         v-model="plan.planDate"
-                        class="form-control input-lg"
+                        class="form-control input-lg text-white text-center gamja-flower-regular"
+                        style="font-size: 20px"
                       />
                     </div>
                   </div>
@@ -365,7 +368,9 @@ const load5 = () => {
                       <div class="mask bg-dark opacity-8">
                         <form @submit.prevent="addSchedule" class="p-3">
                           <div class="mb-3">
-                            <label for="scheduleLocation" class="form-label"
+                            <label
+                              for="scheduleLocation"
+                              class="form-label text-white"
                               >장소</label
                             >
                             <input
@@ -381,18 +386,23 @@ const load5 = () => {
                             />
                           </div>
                           <div class="mb-3">
-                            <label for="scheduleMemo" class="form-label"
+                            <label
+                              for="scheduleMemo"
+                              class="form-label text-white"
                               >메모</label
                             >
                             <textarea
                               class="form-control"
                               id="scheduleMemo"
                               v-model="schedule.scheduleMemo"
-                              style="color: white"
+                              style="
+                                color: brown;
+                                background-color: antiquewhite;
+                              "
                             ></textarea>
                           </div>
                           <input type="hidden" v-model="schedule.planIdx" />
-                          <button type="submit" class="btn btn-primary">
+                          <button type="submit" class="btn btn-white">
                             일정 추가하기
                           </button>
                         </form>
@@ -414,27 +424,27 @@ const load5 = () => {
                       <p>아래 버튼을 눌러 근처 정보를 조회하세요.</p>
                       <div class="row">
                         <div class="col">
-                          <button class="btn btn-primary" @click="load1">
+                          <button class="btn btn-dark" @click="load1">
                             관광
                           </button>
                         </div>
                         <div class="col">
-                          <button class="btn btn-primary" @click="load2">
+                          <button class="btn btn-dark" @click="load2">
                             축제
                           </button>
                         </div>
                         <div class="col">
-                          <button class="btn btn-primary" @click="load3">
+                          <button class="btn btn-dark" @click="load3">
                             숙박
                           </button>
                         </div>
                         <div class="col">
-                          <button class="btn btn-primary" @click="load4">
+                          <button class="btn btn-dark" @click="load4">
                             쇼핑
                           </button>
                         </div>
                         <div class="col">
-                          <button class="btn btn-primary" @click="load5">
+                          <button class="btn btn-dark" @click="load5">
                             음식
                           </button>
                         </div>
@@ -478,7 +488,6 @@ const load5 = () => {
       </section>
     </div>
   </Header>
-  <UserChat />
   <DefaultFooter />
 </template>
 
