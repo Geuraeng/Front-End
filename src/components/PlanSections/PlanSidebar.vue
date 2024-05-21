@@ -1,16 +1,16 @@
 <template>
-  <div class="sidebar mt-9">
+  <div class="sidebar mt-11">
     <div class="sidebar-menu">
       <div class="number-buttons">
         <button
           v-for="n in count"
           :key="n"
-          class="btn btn-primary"
+          class="btn btn-white"
           @click="scrollToDay(n)"
         >
           {{ n }}
         </button>
-        <button v-if="count < 10" @click="addButton" class="btn btn-success">
+        <button v-if="count < 10" @click="addButton" class="btn btn-secondary">
           +
         </button>
       </div>
@@ -30,6 +30,8 @@
             <h5 class="card-title">{{ schedule.scheduleLocation }}</h5>
             <p class="card-text">메모 : {{ schedule.scheduleMemo }}</p>
           </div>
+        </div>
+        <div>
           <button
             class="btn btn-secondary"
             @click="showScheduleModal(schedule)"
@@ -53,8 +55,8 @@
     <!-- 모달 -->
     <div v-if="showModal" class="modal is-active">
       <div class="modal-background opacity-0" style="z-index: -1"></div>
-      <div class="modal-card text-dark">
-        <header class="modal-card-head d-flex">
+      <div class="modal-card text-dark" style="border: 3px solid navy">
+        <header class="modal-card-head d-flex justify-content-center">
           <p class="modal-card-title">스케줄 상세 정보</p>
           <button class="delete" aria-label="close" @click="closeModal">
             X
@@ -76,13 +78,14 @@
             class="form-control mb-3"
             placeholder="메모"
           ></textarea>
-          <button class="btn btn-primary" @click="updateSchedule">수정</button>
-          <button class="btn btn-danger" @click="deleteScheduleConfirmation">
+          <button class="btn btn-dark" @click="updateSchedule">수정</button>
+          <button class="btn btn-secondary" @click="deleteScheduleConfirmation">
             삭제
           </button>
         </section>
       </div>
     </div>
+    <div class="modal-backdrop fade show" v-if="showModal"></div>
   </div>
 </template>
 
@@ -181,7 +184,8 @@ const getPlan = () => {
   detailPlan(
     planIdx,
     ({ data }) => {
-      schedules.value = data;
+      schedules.value = data.schedules;
+      console.log(data);
       count.value = schedules.value.length;
     },
     (error) => {
@@ -402,14 +406,6 @@ watch(
 .text-content {
   flex-grow: 1;
   margin-right: 5px; /* 간격을 더 줄이기 위해 마진 감소 */
-}
-
-.btn-secondary {
-  background-color: #e91e63;
-  flex-shrink: 0;
-  padding: 5px 10px; /* 버튼 크기를 줄이기 위해 패딩 조정 */
-  font-size: 0.9rem; /* 버튼 글꼴 크기를 줄이기 위해 폰트 사이즈 조정 */
-  margin-right: 7px; /* 수정 버튼의 오른쪽 마진 설정 */
 }
 
 /* 모달 스타일 */
