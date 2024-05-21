@@ -1,17 +1,53 @@
 <script setup>
-import AboutUsOption from "./components/AboutUsOption.vue";
+import { onMounted, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { getCommentList, deleteCommentInfo } from "@/api/comment";
+
+import { storeToRefs } from "pinia";
+import { useMemberStore } from "@/stores/member";
+import CommentInfo from "./components/CommentInfo.vue";
+
+const memberStore = useMemberStore();
+const { userInfo } = storeToRefs(memberStore);
+
+const route = useRoute();
+const boardId = route.params.boardId;
+
+const commentInfo = ref();
+
+onMounted(() => {
+  commentList();
+});
+const commentList = () => {
+  getCommentList(
+    boardId,
+    ({ data }) => {
+      commentInfo.value = data.commentInfo;
+      console.log(commentInfo.value);
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
+};
+
+const checkUserId = (commendId) => {
+  if (userInfo.value.userId == commendId) {
+    return true;
+  }
+};
 </script>
 <template>
-  <section class="py-4">
-    <div class="container">
-      <div class="row position-relative text-white">
-        <div class="mt-lg-0 mt-5 ps-lg-6 ps-0">
-          <AboutUsOption icon="mediation" content="최태민 : 재밌네요." />
-          <AboutUsOption icon="settings_overscan" content="이주희 : 잘 봤습니다." />
-
-          <AboutUsOption icon="token" content="박상천 : 추천 감사합니다." />
-        </div>
-      </div>
-    </div>
-  </section>
+  <div
+    v-for="(item, index) in commentInfo"
+    :key="item.commentIdx"
+    class="d-flex align-items-center justify-content-between mb-3"
+  >
+    <CommentInfo
+      :writer="item.commentWriter"
+      :content="item.commentContent"
+      :regdate="item.commentRegDate"
+      :commentIdx="item.commentIdx"
+    />
+  </div>
 </template>
