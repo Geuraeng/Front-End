@@ -70,19 +70,6 @@ const sendMessage = () => {
   }
 };
 
-// editMessage 함수
-const editMessage = (item) => {
-  const updatedMessage = prompt("수정할 내용을 입력하세요", item.content);
-  if (updatedMessage !== null && updatedMessage !== "") {
-    // 수정된 메시지를 서버로 전송
-    const editedMsg = {
-      userName: userName.value,
-      content: updatedMessage,
-    };
-    stompClient.value.send("/edit", JSON.stringify(editedMsg), {});
-  }
-};
-
 // getMessages 함수: 서버로부터 전체 리스트를 받아옴
 const getMessages = () => {
   console.log("메시지를 다시 받아옵니다.");
