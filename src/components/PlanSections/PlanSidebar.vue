@@ -65,11 +65,7 @@
 </template>
 
 <script setup>
-<<<<<<< HEAD
 import { ref, onMounted, computed } from "vue";
-=======
-import { ref, onMounted, watch, reactive } from "vue";
->>>>>>> a4c327ee6f69dcf29f4a018d8091aa1bfbae375c
 import { useRoute, useRouter } from "vue-router";
 import {
   detailPlan,
@@ -79,71 +75,20 @@ import {
   deletePlan,
 } from "@/api/plan.js";
 
-<<<<<<< HEAD
-=======
-// 소켓
-import Stomp from "webstomp-client";
-import SockJS from "sockjs-client/dist/sockjs";
-
-const recvList = reactive([]);
-const stompClient = ref(null);
-let isReceiving = false;
-
-// connect 함수
-const connect = () => {
-  const serverURL = "http://localhost:8089/app/ws";
-  let socket = new SockJS(serverURL);
-  stompClient.value = Stomp.over(socket);
-
-  console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`);
-  stompClient.value.connect(
-    {},
-    (frame) => {
-      console.log("소켓 연결 성공", frame);
-      stompClient.value.subscribe("/send", (res) => {
-        console.log("구독으로 받은 메시지 입니다.", res.body);
-        isReceiving = true;
-        recvList.push(JSON.parse(res.body));
-        console.log(recvList);
-        isReceiving = false;
-      });
-    },
-    (error) => {
-      console.log("소켓 연결 실패", error);
-    }
-  );
-};
-
-// send 함수
-const send = (msg) => {
-  console.log("Send message:", msg);
-  if (stompClient.value && stompClient.value.connected) {
-    stompClient.value.send("/receive", JSON.stringify(msg), {});
-  }
-};
-
-// 컴포넌트가 마운트되면 소켓 연결을 시도합니다.
-onMounted(() => {
-  connect();
-});
-
->>>>>>> a4c327ee6f69dcf29f4a018d8091aa1bfbae375c
 const route = useRoute();
 const planIdx = route.params.planIdx;
 const router = useRouter();
 
-const schedules = ref([]);
+const schedules = ref();
 const count = ref(1);
 const showModal = ref(false);
 
 const selectedSchedule = ref({
-  planIdx: "",
   scheduleIdx: "",
   scheduleLocation: "",
   scheduleLat: "",
   scheduleLon: "",
   scheduleMemo: "",
-  scheduleOrder: "",
 });
 
 onMounted(() => {
@@ -214,7 +159,6 @@ const deleteCurrentPlan = async () => {
 // 드래그 앤 드랍
 let draggingIndex = null;
 
-// 드래그 앤 드랍
 const dragStart = (index) => {
   draggingIndex = index;
 };
@@ -225,24 +169,13 @@ const dragOver = (index) => {
     schedules.value.splice(draggingIndex, 1);
     schedules.value.splice(index, 0, draggedItem);
     draggingIndex = index;
-<<<<<<< HEAD
     schedules.value[draggingIndex].scheduleOrder = index;
-=======
-    schedules.value.forEach((schedule, index) => {
-      schedule.scheduleOrder = index; // 드래그 후 스케줄 순서를 업데이트
-    });
->>>>>>> a4c327ee6f69dcf29f4a018d8091aa1bfbae375c
   }
 };
 
 const drop = () => {
   draggingIndex = null;
-  // 변경된 스케줄 데이터를 서버로 전송
-  schedules.value.forEach((schedule) => {
-    send(schedule);
-  });
 };
-
 // 드래그 end
 const scrollToDay = (day) => {
   const targetDay = document.getElementById(`day-${day}`);
@@ -250,6 +183,11 @@ const scrollToDay = (day) => {
     targetDay.scrollIntoView({ behavior: "smooth" });
   }
 };
+
+// const filteredSchedules = computed(() => {
+//   const planIdx = parseInt(window.location.pathname.match(/\d+$/)[0]);
+//   return schedules.value.filter((schedule) => schedule.planIdx === planIdx);
+// });
 
 // 모달 열기
 const showScheduleModal = (schedule) => {
@@ -281,78 +219,26 @@ const updateSchedule = () => {
 
       // 업데이트 성공 시 모달 닫기
       closeModal();
-
-      send(selectedSchedule.value);
     });
   }
 };
-
+// 삭제 확인 창을 띄우고, 확인 시 삭제 실행
 const deleteScheduleConfirmation = () => {
   if (confirm("정말로 삭제하시겠습니까?")) {
-<<<<<<< HEAD
     deleteSchedule(selectedSchedule.value.scheduleIdx, () => {
       const idx = schedules.value.findIndex(
         (schedule) => schedule.scheduleIdx === selectedSchedule.value.scheduleIdx
-=======
-    const deletedScheduleIdx = selectedSchedule.value.scheduleIdx; // 삭제된 스케줄의 인덱스 저장
-    deleteSchedule(deletedScheduleIdx, () => {
-      const idx = schedules.value.findIndex(
-        (schedule) => schedule.scheduleIdx === deletedScheduleIdx
->>>>>>> a4c327ee6f69dcf29f4a018d8091aa1bfbae375c
       );
       if (idx !== -1) {
         schedules.value.splice(idx, 1);
       }
 
-      // 삭제된 스케줄의 정보를 제외하고 소켓으로 데이터를 전송합니다.
-      const schedulesToSend = schedules.value.filter(
-        (schedule) => schedule.scheduleIdx !== deletedScheduleIdx
-      );
-      schedulesToSend.forEach((schedule) => {
-        send(schedule);
-      });
-
       // 삭제 성공 시 모달 닫기
       closeModal();
+      // 다시 불러오거나 화면 갱신하는 등의 작업 수행
     });
   }
 };
-
-// recvList 배열을 감시하여 업데이트될 때마다 schedules에 반영합니다.
-watch(
-  recvList,
-  (newList) => {
-    newList.forEach((newSchedule) => {
-      const index = schedules.value.findIndex(
-        (schedule) => schedule.scheduleIdx === newSchedule.scheduleIdx
-      );
-      if (index !== -1) {
-        // 변경 사항을 적용하기 전에 소켓 수신 중인지 확인
-        if (!isReceiving) {
-          schedules.value[index] = newSchedule;
-        }
-      } else {
-        schedules.value.push(newSchedule);
-        console.log("!!!!!");
-      }
-    });
-  },
-  { deep: true }
-);
-
-// // schedules 배열을 감시하여 업데이트될 때마다 소켓으로 데이터를 전송합니다.
-// watch(
-//   schedules,
-//   (newSchedules) => {
-//     // 변경 사항을 소켓으로 전송할 때는 isReceiving이 false인 경우에만 전송합니다.
-//     if (!isReceiving) {
-//       newSchedules.forEach((schedule) => {
-//         send(schedule);
-//       });
-//     }
-//   },
-//   { deep: true }
-// );
 </script>
 
 <style scoped>
