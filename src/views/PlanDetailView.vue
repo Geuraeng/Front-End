@@ -28,11 +28,13 @@ const plan = ref({
 });
 
 const schedule = ref({
+  scheduleIdx: "",
   scheduleLocation: "",
   scheduleLat: "",
   scheduleLon: "",
   scheduleMemo: "",
   planIdx: route.params.planIdx,
+  scheduleOrder: "",
 });
 
 onMounted(() => {
@@ -80,15 +82,15 @@ const updatePlan = async () => {
     }
   }
 };
-
+const toPlanSidebar = ref(null);
 const addSchedule = async () => {
   try {
     await registSchedule(
       schedule.value,
-      () => {
+      (res) => {
         alert("일정이 추가되었습니다.");
-        send(schedule.value);
-        window.location.reload(true);
+        console.log("detail send schedule");
+        toPlanSidebar.value = res.data;
       },
       (error) => {
         console.error("일정 추가 실패:", error);
@@ -319,7 +321,7 @@ const load5 = () => {
     >
       <span class="mask bg-gradient-dark opacity-6"> </span>
       <div style="overflow-y: auto; margin-top: 230px; margin-left: 10px; height: 80%">
-        <PlanSidebar />
+        <PlanSidebar :schedule="toPlanSidebar" />
       </div>
       <section class="py-lg-5 mt-5">
         <div class="container">
