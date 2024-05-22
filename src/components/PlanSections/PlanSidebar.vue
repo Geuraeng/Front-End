@@ -2,12 +2,32 @@
   <div class="sidebar">
     <div class="sidebar-menu">
       <div class="number-buttons">
-        <button v-for="n in count" :key="n" class="btn btn-white" @click="scrollToDay(n)">
+        <button
+          v-for="n in count"
+          :key="n"
+          class="btn btn-white"
+          @click="scrollToDay(n)"
+        >
           {{ n }}
         </button>
-        <button v-if="count < 10" @click="addButton" class="btn btn-secondary">+</button>
+        <button v-if="count < 10" @click="addButton" class="btn btn-secondary">
+          +
+        </button>
       </div>
-      <div v-for="n in count" :key="n" :id="'day-' + n">{{ n }}일차</div>
+      <div
+        class="card mb-3 text-dark"
+        :draggable="true"
+        @dragstart="dragStart(index)"
+        @dragover="dragOver(index)"
+        @drop="drop"
+        style="cursor: pointer"
+      >
+        <div class="card-content">
+          <div class="text-content">
+            <h4 class="card-title text-center">1일차</h4>
+          </div>
+        </div>
+      </div>
       <div
         v-for="(schedule, index) in schedules"
         :key="schedule.scheduleIdx"
@@ -20,11 +40,21 @@
       >
         <div class="card-content">
           <div class="text-content">
-            <h5 class="card-title">{{ schedule.scheduleLocation }}</h5>
-            <p class="card-text">메모 : {{ schedule.scheduleMemo }}</p>
+            <h5 class="card-title" v-if="schedule.scheduleLat !== 0">
+              {{ schedule.scheduleLocation }}
+            </h5>
+            <h4 class="card-title text-center" v-else>
+              {{ schedule.scheduleLocation }}
+            </h4>
+            <p class="card-text" v-if="schedule.scheduleLat !== 0">
+              메모 : {{ schedule.scheduleMemo }}
+            </p>
           </div>
         </div>
-        <div style="display: flex; justify-content: space-between">
+        <div
+          v-if="schedule.scheduleLat !== 0"
+          style="display: flex; justify-content: space-between"
+        >
           <button
             class="btn btn-secondary"
             style="margin-left: 5px"
@@ -35,7 +65,12 @@
           <img
             src="@/assets/img/kakaomap.png"
             alt="Kakao Map Icon"
-            style="width: 100px; height: 35px; margin-right: 5px; margin-top: 3px"
+            style="
+              width: 100px;
+              height: 35px;
+              margin-right: 5px;
+              margin-top: 3px;
+            "
             @click="findRoute(index)"
           />
         </div>
@@ -43,7 +78,13 @@
     </div>
 
     <div class="d-flex justify-content-end">
-      <button class="btn btn-light" style="margin-right: 10px" @click="updatePlan">계획완료</button>
+      <button
+        class="btn btn-light"
+        style="margin-right: 10px"
+        @click="updatePlan"
+      >
+        계획완료
+      </button>
       <button class="btn btn-secondary" @click="deleteCurrentPlan">삭제</button>
     </div>
     <!-- 모달 -->
@@ -52,7 +93,9 @@
       <div class="modal-card text-dark" style="border: 3px solid navy">
         <header class="modal-card-head d-flex justify-content-center">
           <p class="modal-card-title">스케줄 상세 정보</p>
-          <button class="delete" aria-label="close" @click="closeModal">X</button>
+          <button class="delete" aria-label="close" @click="closeModal">
+            X
+          </button>
         </header>
         <section class="modal-card-body">
           <!-- 수정 가능한 입력 필드 -->
@@ -71,7 +114,9 @@
             placeholder="메모"
           ></textarea>
           <button class="btn btn-dark" @click="updateSchedule">수정</button>
-          <button class="btn btn-secondary" @click="deleteScheduleConfirmation">삭제</button>
+          <button class="btn btn-secondary" @click="deleteScheduleConfirmation">
+            삭제
+          </button>
         </section>
       </div>
     </div>
@@ -188,6 +233,7 @@ const selectedSchedule = ref({
   scheduleLon: "",
   scheduleMemo: "",
   scheduleOrder: "",
+  scheduleDate: "",
 });
 
 onMounted(() => {
@@ -199,7 +245,6 @@ const getPlan = () => {
     planIdx,
     ({ data }) => {
       schedules.value = data.schedules;
-      count.value = schedules.value.length;
     },
     (error) => {
       console.log(error);
@@ -207,9 +252,17 @@ const getPlan = () => {
   );
 };
 
+const idx = ref(-1);
 const addButton = () => {
   if (count.value < 10) {
     count.value++;
+    const newSchedule = {
+      scheduleIdx: idx.value,
+      scheduleLocation: `${count.value}일차`, // Set the schedule location based on the day number
+    };
+    idx.value = idx.value - 1;
+    schedules.value.push(newSchedule);
+    send(schedules.value);
   }
 };
 
@@ -299,6 +352,7 @@ const showScheduleModal = (schedule) => {
     scheduleLon: schedule.scheduleLon,
     scheduleOrder: schedule.scheduleOrder,
     planIdx: schedule.planIdx,
+    scheduleDate: schedule.scheduleDate,
   };
   showModal.value = true;
 };
@@ -336,7 +390,8 @@ const updateSchedule = () => {
     modifySchedule(selectedSchedule.value, () => {
       // schedules 배열에서 수정된 스케줄을 찾아 업데이트
       const index = schedules.value.findIndex(
-        (schedule) => schedule.scheduleIdx === selectedSchedule.value.scheduleIdx
+        (schedule) =>
+          schedule.scheduleIdx === selectedSchedule.value.scheduleIdx
       );
       // 수정 인덱스 찾아 업데이트하기
       if (index !== -1) {
