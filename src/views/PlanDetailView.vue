@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, provide } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { detailPlan, modifyPlan, registSchedule } from "@/api/plan.js";
 import { send, connect } from "@/api/socketSetup.js";
@@ -28,17 +28,19 @@ const plan = ref({
 });
 
 const schedule = ref({
+  scheduleIdx: "",
   scheduleLocation: "",
   scheduleLat: "",
   scheduleLon: "",
   scheduleMemo: "",
   planIdx: route.params.planIdx,
+  scheduleOrder: "",
 });
 
 onMounted(() => {
   getPlan();
   connect(() => {
-    window.location.reload(true);
+    // window.location.reload(true);
   });
 });
 
@@ -80,14 +82,15 @@ const updatePlan = async () => {
     }
   }
 };
-
+const toPlanSidebar = ref(null);
 const addSchedule = async () => {
   try {
     await registSchedule(
       schedule.value,
-      () => {
+      (res) => {
         alert("일정이 추가되었습니다.");
-        send(schedule.value);
+        console.log("detail send schedule");
+        toPlanSidebar.value = res.data;
       },
       (error) => {
         console.error("일정 추가 실패:", error);
@@ -146,10 +149,7 @@ const placesSearchCB = (data, status) => {
 
 // 마커 클릭 시 인포윈도우의 visible 값을 반전시킵니다
 const onClickMapMarker = (markerItem) => {
-  if (
-    markerItem.infoWindow?.visible !== null &&
-    markerItem.infoWindow?.visible !== undefined
-  ) {
+  if (markerItem.infoWindow?.visible !== null && markerItem.infoWindow?.visible !== undefined) {
     markerItem.infoWindow.visible = !markerItem.infoWindow.visible;
   } else {
     markerItem.infoWindow.visible = true;
@@ -320,7 +320,9 @@ const load5 = () => {
       loading="lazy"
     >
       <span class="mask bg-gradient-dark opacity-6"> </span>
-      <PlanSidebar />
+      <div style="overflow-y: auto; margin-top: 230px; margin-left: 10px; height: 80%">
+        <PlanSidebar :schedule="toPlanSidebar" />
+      </div>
       <section class="py-lg-5 mt-5">
         <div class="container">
           <div class="row">
@@ -333,9 +335,7 @@ const load5 = () => {
           <div class="row">
             <div class="col">
               <div class="card box-shadow-xl overflow-hidden mb-5">
-                <div
-                  class="bg-dark opacity-9 d-flex justify-content-center align-items-center"
-                >
+                <div class="bg-dark opacity-9 d-flex justify-content-center align-items-center">
                   <div class="input-container">
                     <div class="col-md-12 pe-2">
                       <input
@@ -368,43 +368,27 @@ const load5 = () => {
                       <div class="mask bg-dark opacity-8">
                         <form @submit.prevent="addSchedule" class="p-3">
                           <div class="mb-3">
-                            <label
-                              for="scheduleLocation"
-                              class="form-label text-white"
-                              >장소</label
-                            >
+                            <label for="scheduleLocation" class="form-label text-white">장소</label>
                             <input
                               type="text"
                               class="form-control"
                               id="scheduleLocation"
                               v-model="schedule.scheduleLocation"
-                              style="
-                                color: brown;
-                                background-color: antiquewhite;
-                              "
+                              style="color: brown; background-color: antiquewhite"
                               readonly
                             />
                           </div>
                           <div class="mb-3">
-                            <label
-                              for="scheduleMemo"
-                              class="form-label text-white"
-                              >메모</label
-                            >
+                            <label for="scheduleMemo" class="form-label text-white">메모</label>
                             <textarea
                               class="form-control"
                               id="scheduleMemo"
                               v-model="schedule.scheduleMemo"
-                              style="
-                                color: brown;
-                                background-color: antiquewhite;
-                              "
+                              style="color: brown; background-color: antiquewhite"
                             ></textarea>
                           </div>
                           <input type="hidden" v-model="schedule.planIdx" />
-                          <button type="submit" class="btn btn-white">
-                            일정 추가하기
-                          </button>
+                          <button type="submit" class="btn btn-white">일정 추가하기</button>
                         </form>
                       </div>
                     </div>
@@ -424,29 +408,19 @@ const load5 = () => {
                       <p>아래 버튼을 눌러 근처 정보를 조회하세요.</p>
                       <div class="row">
                         <div class="col">
-                          <button class="btn btn-dark" @click="load1">
-                            관광
-                          </button>
+                          <button class="btn btn-dark" @click="load1">관광</button>
                         </div>
                         <div class="col">
-                          <button class="btn btn-dark" @click="load2">
-                            축제
-                          </button>
+                          <button class="btn btn-dark" @click="load2">축제</button>
                         </div>
                         <div class="col">
-                          <button class="btn btn-dark" @click="load3">
-                            숙박
-                          </button>
+                          <button class="btn btn-dark" @click="load3">숙박</button>
                         </div>
                         <div class="col">
-                          <button class="btn btn-dark" @click="load4">
-                            쇼핑
-                          </button>
+                          <button class="btn btn-dark" @click="load4">쇼핑</button>
                         </div>
                         <div class="col">
-                          <button class="btn btn-dark" @click="load5">
-                            음식
-                          </button>
+                          <button class="btn btn-dark" @click="load5">음식</button>
                         </div>
                       </div>
                       <KakaoMap
@@ -461,9 +435,7 @@ const load5 = () => {
                           :lng="marker.lng"
                           :infoWindow="marker.infoWindow"
                           :clickable="true"
-                          @onClickKakaoMapMarker="
-                            () => onClickMapMarker(marker)
-                          "
+                          @onClickKakaoMapMarker="() => onClickMapMarker(marker)"
                         />
                       </KakaoMap>
                     </div>
@@ -473,16 +445,10 @@ const load5 = () => {
             </div>
           </div>
           <div class="d-flex justify-content-end">
-            <button
-              class="btn btn-light"
-              style="margin-right: 10px"
-              @click="updatePlan"
-            >
+            <button class="btn btn-light" style="margin-right: 10px" @click="updatePlan">
               수정완료
             </button>
-            <button class="btn btn-secondary" @click="deleteCurrentPlan">
-              삭제
-            </button>
+            <button class="btn btn-secondary" @click="deleteCurrentPlan">삭제</button>
           </div>
         </div>
       </section>
