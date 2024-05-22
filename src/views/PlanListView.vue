@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { listPlan, modifyPlan, registPlan } from "@/api/plan.js";
+import { listPlan, getIdx, registPlan } from "@/api/plan.js";
+import { registJoin } from "@/api/join.js";
 
 //example components
 import DefaultNavbar from "../examples/navbars/NavbarDefault.vue";
@@ -11,6 +12,14 @@ import bg0 from "@/assets/img/bg9.jpg";
 
 //sections
 import List from "../components/PlanSections/List.vue";
+
+//pinia
+import { storeToRefs } from "pinia";
+import { useMemberStore } from "@/stores/member";
+const memberStore = useMemberStore();
+const { userInfo } = storeToRefs(memberStore);
+
+const memberId = userInfo.value.userId;
 
 const plans = ref([]);
 const showModal = ref(false);
@@ -25,34 +34,9 @@ onMounted(() => {
   getPlanList();
 });
 
-// onMounted(async () => {
-//   // listJoin 호출하여 세션에 저장된 userId와 join 테이블에 있는 userId가 일치하는 데이터 가져오기
-//   await listJoin(
-//     (response) => {
-//       const joinList = response.data;
-//       const sessionUserId = ''; // 세션에 저장된 userId 가져오기 (예: localStorage.getItem('userId'))
-
-//       // joinList에서 세션에 저장된 userId와 일치하는 데이터만 필터링하여 userId를 포함하는 planList 가져오기
-//       const planList = joinList.filter(join => join.userId === sessionUserId).map(join => join.planIdx);
-
-//       // listPlan 호출하여 planList에 해당하는 plan 정보 가져오기
-//       listPlan(
-//         ({ data }) => {
-//           plans.value = data.planList.filter(plan => planList.includes(plan.planIdx));
-//         },
-//         (error) => {
-//           console.log(error);
-//         }
-//       );
-//     },
-//     (error) => {
-//       console.log(error);
-//     }
-//   );
-// });
-
 const getPlanList = () => {
   listPlan(
+    memberId,
     ({ data }) => {
       plans.value = data.planList;
     },
@@ -63,11 +47,11 @@ const getPlanList = () => {
 };
 
 // 모달 열기
-const showPlanModal = (selectedPlan) => {
+const showPlanModal = (plan) => {
   selectedPlan.value = {
-    planIdx: selectedPlan.planIdx,
-    planTitle: selectedPlan.planTitle,
-    planDate: selectedPlan.planDate,
+    planIdx: plan.planIdx,
+    planTitle: plan.planTitle,
+    planDate: plan.planDate,
   };
   showModal.value = true;
 };
@@ -77,16 +61,50 @@ const closeModal = () => {
   showModal.value = false;
 };
 
+const info = ref({
+  userId:"",
+  planIdx:""
+})
+
 // 일정 업데이트
 const writePlan = () => {
-  // 사용자에게 한 번 더 확인을 받기 위한 프롬프트
-  registPlan(selectedPlan.value, () => {
-    // 업데이트 성공 시 모달 닫기
-    closeModal();
-    // 다시 불러오거나 화면 갱신하는 등의 작업 수행
+  getPlanIdx().then(() => {
+    // 사용자에게 한 번 더 확인을 받기 위한 프롬프트
+    registPlan(selectedPlan.value, () => {
+      info.value.userId = memberId
+      registJoin(
+        info.value,
+        () => {
+          // 업데이트 성공 시 모달 닫기
+          closeModal();
+          // 새로 추가된 계획을 plans 배열에 추가
+          plans.value.push({ ...selectedPlan.value });
+        },
+        (error) => {
+          alert("수정에 실패했습니다.");
+        }
+      );
+    });
+  });
+};
+
+const getPlanIdx = () => {
+  return new Promise((resolve, reject) => {
+    getIdx(
+      ({ data }) => {
+        info.value.planIdx = data.idx + 1;
+        selectedPlan.value.planIdx = data.idx + 1; // 새 계획의 planIdx 설정
+        resolve();
+      },
+      (error) => {
+        console.log(error);
+        reject();
+      }
+    );
   });
 };
 </script>
+
 <template>
   <DefaultNavbar
     :action="{
@@ -97,10 +115,7 @@ const writePlan = () => {
     transparent
   />
   <header class="bg-gradient-dark no-select">
-    <div
-      class="page-header min-vh-75"
-      :style="{ backgroundImage: `url(${bg0})` }"
-    >
+    <div class="page-header min-vh-75" :style="{ backgroundImage: `url(${bg0})` }">
       <span class="mask bg-gradient-dark opacity-6"></span>
       <div class="container">
         <div class="row justify-content-center">
@@ -114,7 +129,7 @@ const writePlan = () => {
             <button
               type="button"
               class="btn bg-white text-dark"
-              @click="showPlanModal(selectedPlan)"
+              @click="showPlanModal({ planIdx: '', planTitle: '', planDate: '' })"
             >
               Create New Plan
             </button>
@@ -125,22 +140,12 @@ const writePlan = () => {
   </header>
 
   <!-- 모달 -->
-  <div
-    v-if="showModal"
-    class="modal fade show no-select"
-    tabindex="-1"
-    style="display: block"
-  >
+  <div v-if="showModal" class="modal fade show no-select" tabindex="-1" style="display: block">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">스케줄 상세 정보</h5>
-          <button
-            type="button"
-            class="btn-close"
-            aria-label="Close"
-            @click="closeModal"
-          ></button>
+          <button type="button" class="btn-close" aria-label="Close" @click="closeModal"></button>
         </div>
         <div class="modal-body">
           <!-- 수정 가능한 입력 필드 -->
@@ -160,12 +165,8 @@ const writePlan = () => {
           />
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" @click="writePlan">
-            등록
-          </button>
-          <button type="button" class="btn btn-secondary" @click="closeModal">
-            취소
-          </button>
+          <button type="button" class="btn btn-primary" @click="writePlan">등록</button>
+          <button type="button" class="btn btn-secondary" @click="closeModal">취소</button>
         </div>
       </div>
     </div>

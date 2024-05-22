@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar mt-11">
+  <div class="sidebar">
     <div class="sidebar-menu">
       <div class="number-buttons">
         <button
@@ -14,7 +14,20 @@
           +
         </button>
       </div>
-      <div v-for="n in count" :key="n" :id="'day-' + n">{{ n }}일차</div>
+      <div
+        class="card mb-3 text-dark"
+        :draggable="true"
+        @dragstart="dragStart(index)"
+        @dragover="dragOver(index)"
+        @drop="drop"
+        style="cursor: pointer"
+      >
+        <div class="card-content">
+          <div class="text-content">
+            <h4 class="card-title text-center">1일차</h4>
+          </div>
+        </div>
+      </div>
       <div
         v-for="(schedule, index) in schedules"
         :key="schedule.scheduleIdx"
@@ -27,17 +40,39 @@
       >
         <div class="card-content">
           <div class="text-content">
-            <h5 class="card-title">{{ schedule.scheduleLocation }}</h5>
-            <p class="card-text">메모 : {{ schedule.scheduleMemo }}</p>
+            <h5 class="card-title" v-if="schedule.scheduleLat !== 0">
+              {{ schedule.scheduleLocation }}
+            </h5>
+            <h4 class="card-title text-center" v-else>
+              {{ schedule.scheduleLocation }}
+            </h4>
+            <p class="card-text" v-if="schedule.scheduleLat !== 0">
+              메모 : {{ schedule.scheduleMemo }}
+            </p>
           </div>
         </div>
-        <div>
+        <div
+          v-if="schedule.scheduleLat !== 0"
+          style="display: flex; justify-content: space-between"
+        >
           <button
             class="btn btn-secondary"
+            style="margin-left: 5px"
             @click="showScheduleModal(schedule)"
           >
             수정
           </button>
+          <img
+            src="@/assets/img/kakaomap.png"
+            alt="Kakao Map Icon"
+            style="
+              width: 100px;
+              height: 35px;
+              margin-right: 5px;
+              margin-top: 3px;
+            "
+            @click="findRoute(index)"
+          />
         </div>
       </div>
     </div>
@@ -109,6 +144,20 @@ const stompClient = ref(null);
 const stompSubscription = ref(null);
 let isReceiving = false;
 
+const props = defineProps(["schedule"]);
+console.log("init props", props.schedule);
+watch(
+  () => props.schedule,
+  (nv) => {
+    if (nv && nv.scheduleIdx) {
+      console.log("side bar receive data", nv);
+      schedules.value.push(nv);
+      console.log("schedules", schedules.value);
+      send(schedules.value); // Assuming send is a method to notify changes to the server or other components
+    }
+  }
+);
+
 // connect 함수
 const connect = () => {
   const serverURL = "http://localhost:8089/app/ws";
@@ -127,8 +176,18 @@ const connect = () => {
       // 새로운 구독 등록
       stompSubscription.value = stompClient.value.subscribe("/send", (res) => {
         console.log("구독으로 받은 메시지 입니다.", res.body);
-        isReceiving = true;
-        recvList.push(JSON.parse(res.body));
+        const messages = JSON.parse(res.body);
+        recvList.splice(0, recvList.length);
+        if (Array.isArray(messages)) {
+          console;
+          // 배열 형태의 메시지일 경우 각 요소를 처리
+          for (const message of messages) {
+            recvList.push(message);
+          }
+        } else {
+          // 배열 형태가 아닌 경우 그대로 추가
+          recvList.push(messages);
+        }
         console.log(recvList);
         isReceiving = false;
         // 화면 새로고침 대신 schedules 업데이트
@@ -174,6 +233,7 @@ const selectedSchedule = ref({
   scheduleLon: "",
   scheduleMemo: "",
   scheduleOrder: "",
+  scheduleDate: "",
 });
 
 onMounted(() => {
@@ -185,8 +245,6 @@ const getPlan = () => {
     planIdx,
     ({ data }) => {
       schedules.value = data.schedules;
-      console.log(data);
-      count.value = schedules.value.length;
     },
     (error) => {
       console.log(error);
@@ -194,9 +252,17 @@ const getPlan = () => {
   );
 };
 
+const idx = ref(-1);
 const addButton = () => {
   if (count.value < 10) {
     count.value++;
+    const newSchedule = {
+      scheduleIdx: idx.value,
+      scheduleLocation: `${count.value}일차`, // Set the schedule location based on the day number
+    };
+    idx.value = idx.value - 1;
+    schedules.value.push(newSchedule);
+    send(schedules.value);
   }
 };
 
@@ -259,15 +325,13 @@ const dragOver = (index) => {
     schedules.value.forEach((schedule, index) => {
       schedule.scheduleOrder = index; // 드래그 후 스케줄 순서를 업데이트
     });
+
+    send(schedules.value);
   }
 };
 
 const drop = () => {
   draggingIndex = null;
-  // 변경된 스케줄 데이터를 서버로 전송
-  schedules.value.forEach((schedule) => {
-    send(schedule);
-  });
 };
 
 // 드래그 end
@@ -284,6 +348,11 @@ const showScheduleModal = (schedule) => {
     scheduleIdx: schedule.scheduleIdx,
     scheduleLocation: schedule.scheduleLocation,
     scheduleMemo: schedule.scheduleMemo,
+    scheduleLat: schedule.scheduleLat,
+    scheduleLon: schedule.scheduleLon,
+    scheduleOrder: schedule.scheduleOrder,
+    planIdx: schedule.planIdx,
+    scheduleDate: schedule.scheduleDate,
   };
   showModal.value = true;
 };
@@ -291,6 +360,28 @@ const showScheduleModal = (schedule) => {
 // 모달 닫기
 const closeModal = () => {
   showModal.value = false;
+};
+
+const findRoute = function (index) {
+  if (index + 1 < this.schedules.length) {
+    const startSchedule = this.schedules[index];
+    const endSchedule = this.schedules[index + 1];
+    const sY = startSchedule.scheduleLat;
+    const sX = startSchedule.scheduleLon;
+    const eY = endSchedule.scheduleLat;
+    const eX = endSchedule.scheduleLon;
+    const startLocation = encodeURIComponent(startSchedule.scheduleLocation);
+    const endLocation = encodeURIComponent(endSchedule.scheduleLocation);
+    const url = `https://map.kakao.com/link/to/${endLocation},${eY},${eX}/from/${startLocation},${sY},${sX}`;
+    window.open(url, "_blank");
+  } else {
+    const startSchedule = this.schedules[index];
+    const sY = startSchedule.scheduleLat;
+    const sX = startSchedule.scheduleLon;
+    const startLocation = encodeURIComponent(startSchedule.scheduleLocation);
+    const url = `https://map.kakao.com/link/from/${startLocation},${sY},${sX}`;
+    window.open(url, "_blank");
+  }
 };
 
 // 일정 업데이트
@@ -310,7 +401,7 @@ const updateSchedule = () => {
       // 업데이트 성공 시 모달 닫기
       closeModal();
 
-      send(selectedSchedule.value);
+      send(schedules.value);
     });
   }
 };
@@ -326,13 +417,7 @@ const deleteScheduleConfirmation = () => {
         schedules.value.splice(idx, 1);
       }
 
-      // 삭제된 스케줄의 정보를 제외하고 소켓으로 데이터를 전송합니다.
-      const schedulesToSend = schedules.value.filter(
-        (schedule) => schedule.scheduleIdx !== deletedScheduleIdx
-      );
-      schedulesToSend.forEach((schedule) => {
-        send(schedule);
-      });
+      send(schedules.value);
 
       // 삭제 성공 시 모달 닫기
       closeModal();

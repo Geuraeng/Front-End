@@ -26,7 +26,7 @@ onMounted(() => {
     console.error("Error fetching posts:", error);
   }
 });
-console.log("목록")
+console.log("목록");
 </script>
 <template>
   <DefaultNavbar transparent />

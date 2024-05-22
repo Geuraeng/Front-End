@@ -1,5 +1,8 @@
 <script setup>
-defineProps({
+import { defineProps } from "vue";
+import { RouterLink } from "vue-router";
+
+const props = defineProps({
   image: {
     type: String,
     required: true,
@@ -14,13 +17,11 @@ defineProps({
   },
   action: {
     type: Array,
-    route: String,
-    label: String,
-    color: String,
     required: true,
   },
 });
 </script>
+
 <template>
   <div
     class="back back-background"
@@ -35,14 +36,13 @@ defineProps({
         {{ description }}
       </p>
       <div class="buttons-group">
-        <a
-          v-for="({ route, color, label }, index) of action"
+        <RouterLink
+          v-for="(item, index) of action"
           :key="index"
-          :href="route"
-          target="_blank"
+          :to="item.route"
           class="btn btn-sm mt-3 inline-block ms-1"
-          :class="`${color ? `btn-${color}` : 'btn-white'}`"
-          >{{ label }}</a
+          :class="`${item.color ? `btn-${item.color}` : 'btn-white'}`"
+          >{{ item.label }}</RouterLink
         >
       </div>
     </div>

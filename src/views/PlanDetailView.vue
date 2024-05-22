@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, provide } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { detailPlan, modifyPlan, registSchedule } from "@/api/plan.js";
 import { send, connect } from "@/api/socketSetup.js";
@@ -28,17 +28,20 @@ const plan = ref({
 });
 
 const schedule = ref({
+  scheduleIdx: "",
   scheduleLocation: "",
   scheduleLat: "",
   scheduleLon: "",
   scheduleMemo: "",
   planIdx: route.params.planIdx,
+  scheduleOrder: "",
+  scheduleDate: "",
 });
 
 onMounted(() => {
   getPlan();
   connect(() => {
-    window.location.reload(true);
+    // window.location.reload(true);
   });
 });
 
@@ -80,14 +83,15 @@ const updatePlan = async () => {
     }
   }
 };
-
+const toPlanSidebar = ref(null);
 const addSchedule = async () => {
   try {
     await registSchedule(
       schedule.value,
-      () => {
+      (res) => {
         alert("일정이 추가되었습니다.");
-        send(schedule.value);
+        console.log("detail send schedule");
+        toPlanSidebar.value = res.data;
       },
       (error) => {
         console.error("일정 추가 실패:", error);
@@ -320,7 +324,16 @@ const load5 = () => {
       loading="lazy"
     >
       <span class="mask bg-gradient-dark opacity-6"> </span>
-      <PlanSidebar />
+      <div
+        style="
+          overflow-y: auto;
+          margin-top: 230px;
+          margin-left: 10px;
+          height: 80%;
+        "
+      >
+        <PlanSidebar :schedule="toPlanSidebar" />
+      </div>
       <section class="py-lg-5 mt-5">
         <div class="container">
           <div class="row">
