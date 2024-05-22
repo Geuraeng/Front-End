@@ -7,7 +7,6 @@ import DefaultFooter from "../examples/footers/FooterDefault.vue";
 // sections
 import Profile from "../components/MyPageSections/AuthorProfile.vue";
 import Posts from "../components/MyPageSections/AuthorPosts.vue";
-import Contact from "../components/MyPageSections/AuthorContact.vue";
 
 // image
 import image from "@/assets/img/city-profile.jpg";
@@ -23,12 +22,9 @@ import image from "@/assets/img/city-profile.jpg";
       <span class="mask bg-gradient-dark opacity-8"></span>
     </div>
   </Header>
-  <div
-    class="card card-body blur shadow-blur mx-3 mx-md-4 mt-n6 mb-4 no-select"
-  >
+  <div class="card card-body blur shadow-blur mx-3 mx-md-4 mt-n6 mb-4 no-select">
     <Profile />
     <Posts />
-    <Contact />
   </div>
   <DefaultFooter />
 </template>

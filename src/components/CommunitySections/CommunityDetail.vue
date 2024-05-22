@@ -89,11 +89,6 @@ const checkUserId = (checkUserId) => {
                   class="z-index-2 text-center d-flex h-100 w-100 d-flex m-auto justify-content-center"
                 >
                   <div class="mask bg-gradient-dark opacity-8"></div>
-                  <div
-                    class="p-5 ps-sm-8 position-relative text-start text-center my-auto z-index-2"
-                  >
-                    <h3 class="text-white">사진</h3>
-                  </div>
                 </div>
               </div>
               <div class="col-lg-7">

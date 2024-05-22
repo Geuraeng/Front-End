@@ -68,7 +68,7 @@ const moveList = () => {
 };
 </script>
 <template>
-  <section class="py-lg-7">
+  <section class="py-lg-7 mt-6">
     <div class="container">
       <div class="row">
         <div class="col">
@@ -86,8 +86,6 @@ const moveList = () => {
                   <div
                     class="p-5 ps-sm-8 position-relative text-start text-center my-auto z-index-2"
                   >
-                    <h3 class="text-white">사진 추가하기</h3>
-                    <p class="text-white opacity-8 mb-4">올리고 싶은 사진을 추가하세요.</p>
                     <div class="mt-4 text-center">
                       <!-- <MaterialButton variant="outline" color="light" class="w-auto me-2"
                         >파일 업로드</MaterialButton
