@@ -72,7 +72,6 @@ const router = createRouter({
     {
       path: "/community",
       name: "community",
-      beforeEnter: onlyAuthUser,
       component: CommunityView,
     },
     {

@@ -11,7 +11,7 @@ function modifyArticle(article, success, fail) {
 }
 
 function deleteArticle(article, success, fail) {
-  local.delete(`/delete/${article}`).then(success).catch(fail);
+  local.get(`/delete/${article}`).then(success).catch(fail);
 }
 
 function registArticle(article, success, fail) {

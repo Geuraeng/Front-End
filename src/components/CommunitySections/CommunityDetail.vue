@@ -50,24 +50,17 @@ const alertBtn = () => {
 const deleteButton = () => {
   alert("삭제하시겠습니까?");
   onDeleteArticle();
-  moveList();
+  router.push("/community");
 };
 
-const onDeleteArticle = () => {
+const onDeleteArticle = async () => {
   deleteArticle(
     boardId,
-    (response) => {
-      if (response.status == 200) {
-      }
-    },
+    (response) => {},
     (error) => {
       console.log(error);
     }
   );
-};
-
-const moveList = () => {
-  router.replace({ name: "community" });
 };
 </script>
 <template>
@@ -101,9 +94,15 @@ const moveList = () => {
                   </div>
                   <div class="card-body pt-1">
                     <div class="row">
-                      <div class="row" style="margin-bottom: -10px;"> 
-                        <div class="col-md-12 pe-2 mb-1" style="text-align: left; margin-bottom: -5px;"> 
-                          <p class="d-inline me-2" style="font-size: 20px; font-weight: bolder; margin-right: 10px;">
+                      <div class="row" style="margin-bottom: -10px">
+                        <div
+                          class="col-md-12 pe-2 mb-1"
+                          style="text-align: left; margin-bottom: -5px"
+                        >
+                          <p
+                            class="d-inline me-2"
+                            style="font-size: 20px; font-weight: bolder; margin-right: 10px"
+                          >
                             제목:
                           </p>
                           <input
@@ -113,13 +112,22 @@ const moveList = () => {
                             placeholder="작성자"
                             readonly
                             :value="article.boardTitle"
-                            style="border:none; font-size: 20px; padding: 5px 10px; height: auto; width: auto;"
+                            style="
+                              border: none;
+                              font-size: 20px;
+                              padding: 5px 10px;
+                              height: auto;
+                              width: auto;
+                            "
                           />
                         </div>
                       </div>
-                      <div class="row" style="margin-top: -10px;">
-                        <div class="col-md-12 pe-2 mb-0" style="text-align: left;"> 
-                          <p class="d-inline me-2" style="font-size: 20px; font-weight: bolder; margin-right: 10px;">
+                      <div class="row" style="margin-top: -10px">
+                        <div class="col-md-12 pe-2 mb-0" style="text-align: left">
+                          <p
+                            class="d-inline me-2"
+                            style="font-size: 20px; font-weight: bolder; margin-right: 10px"
+                          >
                             사용자:
                           </p>
                           <input
@@ -129,20 +137,37 @@ const moveList = () => {
                             placeholder="작성자"
                             readonly
                             :value="article.userId"
-                            style="border:none; font-size: 20px; padding: 5px 10px; height: auto; width: auto;"
+                            style="
+                              border: none;
+                              font-size: 20px;
+                              padding: 5px 10px;
+                              height: auto;
+                              width: auto;
+                            "
                           />
                         </div>
                       </div>
-                      <div class="row" style="margin-top: 26px;">
+                      <div class="row" style="margin-top: 26px">
                         <div class="col-md-12 pe-2 mb-3">
-                          <p class="writer" style="font-size: 20px; font-weight: bolder; display: block; text-align: left">내용</p>
+                          <p
+                            class="writer"
+                            style="
+                              font-size: 20px;
+                              font-weight: bolder;
+                              display: block;
+                              text-align: left;
+                            "
+                          >
+                            내용
+                          </p>
                           <textarea
                             class="input-group-static mb-4"
                             placeholder="내용"
                             :rows="6"
                             readonly
                             :value="article.boardContent"
-                            style="display: block; width: 100%; border:none; font-size: 20px;"></textarea>
+                            style="display: block; width: 100%; border: none; font-size: 20px"
+                          ></textarea>
                         </div>
                       </div>
                     </div>
@@ -162,7 +187,8 @@ const moveList = () => {
                           type="submit"
                           class="mb-0"
                           @click="deleteButton"
-                          >삭제</MaterialButton>
+                          >삭제</MaterialButton
+                        >
                       </div>
                     </div>
                   </div>
