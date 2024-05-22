@@ -1,16 +1,20 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import axios from "axios";
+
 //Vue Material Kit 2 components
 import MaterialButton from "@/components/MaterialButton.vue";
-import MaterialInput from "@/components/MaterialInput.vue";
-import MaterialTextArea from "@/components/MaterialTextArea.vue";
 
 import { detailArticle, deleteArticle } from "@/api/board.js";
 
 // image
 import bgContact from "@/assets/img/examples/blog2.jpg";
+
+import { storeToRefs } from "pinia";
+import { useMemberStore } from "@/stores/member";
+const memberStore = useMemberStore();
+const { userInfo } = storeToRefs(memberStore);
+const userId = userInfo.value.userId;
 
 const article = ref({
   boardTitle: "",
@@ -61,6 +65,12 @@ const onDeleteArticle = async () => {
       console.log(error);
     }
   );
+};
+
+const checkUserId = (checkUserId) => {
+  if (checkUserId == userId) {
+    return true;
+  }
 };
 </script>
 <template>
@@ -171,7 +181,7 @@ const onDeleteArticle = async () => {
                         </div>
                       </div>
                     </div>
-                    <div class="row">
+                    <div class="row" v-if="checkUserId(article.userId)">
                       <div class="col-md-6 text-end ms-auto">
                         <MaterialButton
                           variant="gradient"
