@@ -1,4 +1,6 @@
 <script setup>
+import { useRouter} from "vue-router"
+const router = useRouter(); 
 defineProps({
   image: {
     type: String,
@@ -19,14 +21,19 @@ defineProps({
     color: String,
     default: () => ({
       route: "javascript:;",
-      label: "Read more",
+      label: "상세 보기",
       color: "white",
     }),
   },
 });
+
+const planList = () =>{
+  console.log(11)
+  router.push({name : 'planList'})
+}
 </script>
 <template>
-  <div class="card card-blog card-background cursor-pointer">
+  <div class="card card-blog card-background cursor-pointer" @click="planList">
     <div
       class="full-background"
       :style="{ backgroundImage: `url(${image})` }"
@@ -39,7 +46,6 @@ defineProps({
           {{ description }}
         </p>
         <a
-          href="javascript:;"
           class="text-sm icon-move-right"
           :class="`text-${action.color}`"
           >{{ action.label }}
