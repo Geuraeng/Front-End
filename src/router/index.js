@@ -61,6 +61,7 @@ const router = createRouter({
     {
       path: "/myPage",
       name: "myPage",
+      beforeEnter: onlyAuthUser,
       component: MyPageView,
     },
     {
@@ -71,6 +72,7 @@ const router = createRouter({
     {
       path: "/community",
       name: "community",
+      beforeEnter: onlyAuthUser,
       component: CommunityView,
     },
     {
@@ -92,6 +94,7 @@ const router = createRouter({
     {
       path: "/plan/list",
       name: "planList",
+      beforeEnter: onlyAuthUser,
       component: PlanListView,
     },
     {
