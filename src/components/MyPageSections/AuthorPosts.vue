@@ -8,6 +8,35 @@ import post1 from "@/assets/img/examples/testimonial-6-2.jpg";
 import post2 from "@/assets/img/examples/testimonial-6-3.jpg";
 import post3 from "@/assets/img/examples/blog-9-4.jpg";
 import post4 from "@/assets/img/examples/blog2.jpg";
+
+import { ref, onMounted } from "vue";
+import { listPlan } from "@/api/plan.js";
+//pinia
+import { storeToRefs } from "pinia";
+import { useMemberStore } from "@/stores/member";
+const memberStore = useMemberStore();
+const { userInfo } = storeToRefs(memberStore);
+
+const memberId = userInfo.value.userId;
+const plans = ref([]);
+
+onMounted(() => {
+  getPlanList();
+});
+
+const getPlanList = () => {
+  listPlan(
+    memberId,
+    ({ data }) => {
+      plans.value = data.planList;
+      console.log(plans.value)
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
+};
+
 </script>
 <template>
   <section class="py-3">
@@ -19,24 +48,27 @@ import post4 from "@/assets/img/examples/blog2.jpg";
       </div>
       <div class="row">
         <div class="col-lg-3 col-sm-6">
-          <TransparentBlogCard
+          <TransparentBlogCard v-if="plans[0]"
             :image="post1"
-            title="제주도 여행"
-            description="2024-05-10 ~ 2024-05-20"
+            :idx = "plans[0].planIdx"
+            :title= "plans[0].planTitle"
+            :description= "plans[0].planDate"
           />
         </div>
         <div class="col-lg-3 col-sm-6">
-          <TransparentBlogCard
+          <TransparentBlogCard v-if="plans[1]"
             :image="post2"
-            title="동해 여행"
-            description="2023-09-01 ~ 2023-09-03"
+            :idx = "plans[1].planIdx"
+            :title= "plans[1].planTitle"
+            :description= "plans[1].planDate"
           />
         </div>
         <div class="col-lg-3 col-sm-6">
-          <TransparentBlogCard
+          <TransparentBlogCard v-if="plans[2]"
             :image="post3"
-            title="대전 여행"
-            description="2023-03-09 ~ 2023-03-14"
+            :idx = "plans[2].planIdx"
+            :title= "plans[2].planTitle"
+            :description= "plans[2].planDate"
           />
         </div>
         <div class="col-lg-3 col-md-12 col-12">
@@ -44,6 +76,7 @@ import post4 from "@/assets/img/examples/blog2.jpg";
             :image="post4"
             title="나의 여행 더보기"
             description="이전 여행 기록"
+            @onclick="planList"
           />
         </div>
       </div>
