@@ -101,34 +101,49 @@ const moveList = () => {
                   </div>
                   <div class="card-body pt-1">
                     <div class="row">
-                      <div class="col-md-12 pe-2 mb-3">
-                        <input
-                          class="input-group-static mb-4"
-                          label="Title"
-                          type="text"
-                          placeholder="제목"
-                          readonly
-                          :value="article.boardTitle"
-                        />
+                      <div class="row" style="margin-bottom: -10px;"> 
+                        <div class="col-md-12 pe-2 mb-1" style="text-align: left; margin-bottom: -5px;"> 
+                          <p class="d-inline me-2" style="font-size: 20px; font-weight: bolder; margin-right: 10px;">
+                            제목:
+                          </p>
+                          <input
+                            class="input-group-static mb-4 d-inline"
+                            label="Writer"
+                            type="text"
+                            placeholder="작성자"
+                            readonly
+                            :value="article.boardTitle"
+                            style="border:none; font-size: 20px; padding: 5px 10px; height: auto; width: auto;"
+                          />
+                        </div>
                       </div>
-                      <div class="col-md-12 pe-2 mb-3">
-                        <input
-                          class="input-group-static mb-4"
-                          label="Writer"
-                          type="text"
-                          placeholder="작성자"
-                          readonly
-                          :value="article.userId"
-                        />
+                      <div class="row" style="margin-top: -10px;">
+                        <div class="col-md-12 pe-2 mb-0" style="text-align: left;"> 
+                          <p class="d-inline me-2" style="font-size: 20px; font-weight: bolder; margin-right: 10px;">
+                            사용자:
+                          </p>
+                          <input
+                            class="input-group-static mb-4 d-inline"
+                            label="Writer"
+                            type="text"
+                            placeholder="작성자"
+                            readonly
+                            :value="article.userId"
+                            style="border:none; font-size: 20px; padding: 5px 10px; height: auto; width: auto;"
+                          />
+                        </div>
                       </div>
-                      <div class="col-md-12 pe-2 mb-3">
-                        <textarea
-                          class="input-group-static mb-4"
-                          placeholder="내용"
-                          :rows="6"
-                          readonly
-                          :value="article.boardContent"
-                        ></textarea>
+                      <div class="row" style="margin-top: 26px;">
+                        <div class="col-md-12 pe-2 mb-3">
+                          <p class="writer" style="font-size: 20px; font-weight: bolder; display: block; text-align: left">내용</p>
+                          <textarea
+                            class="input-group-static mb-4"
+                            placeholder="내용"
+                            :rows="6"
+                            readonly
+                            :value="article.boardContent"
+                            style="display: block; width: 100%; border:none; font-size: 20px;"></textarea>
+                        </div>
                       </div>
                     </div>
                     <div class="row">
@@ -147,8 +162,7 @@ const moveList = () => {
                           type="submit"
                           class="mb-0"
                           @click="deleteButton"
-                          >삭제</MaterialButton
-                        >
+                          >삭제</MaterialButton>
                       </div>
                     </div>
                   </div>
