@@ -99,6 +99,20 @@ const stompClient = ref(null);
 const stompSubscription = ref(null);
 let isReceiving = false;
 
+const props = defineProps(["schedule"]);
+console.log("init props", props.schedule);
+watch(
+  () => props.schedule,
+  (nv) => {
+    if (nv && nv.scheduleIdx) {
+      console.log("side bar receive data", nv);
+      schedules.value.push(nv);
+      console.log("schedules", schedules.value);
+      send(schedules.value); // Assuming send is a method to notify changes to the server or other components
+    }
+  }
+);
+
 // connect 함수
 const connect = () => {
   const serverURL = "http://localhost:8089/app/ws";
@@ -258,15 +272,13 @@ const dragOver = (index) => {
     schedules.value.forEach((schedule, index) => {
       schedule.scheduleOrder = index; // 드래그 후 스케줄 순서를 업데이트
     });
+
+    send(schedules.value);
   }
 };
 
 const drop = () => {
   draggingIndex = null;
-  // 변경된 스케줄 데이터를 서버로 전송
-  schedules.value.forEach((schedule) => {
-    send(schedule);
-  });
 };
 
 // 드래그 end

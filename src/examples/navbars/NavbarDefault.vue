@@ -112,13 +112,16 @@ const routeCommit = () => {
 const myPage = () => {
   router.push({ name: "myPage" });
 };
+
+const routePlan = () => {
+  router.push({ name: "planList" });
+};
 </script>
 <template>
   <nav
     class="navbar navbar-expand-lg top-0 no-select"
     :class="{
-      'z-index-3 w-100 shadow-none navbar-transparent position-absolute my-3':
-        props.transparent,
+      'z-index-3 w-100 shadow-none navbar-transparent position-absolute my-3': props.transparent,
       'my-3 blur border-radius-lg z-index-3 py-2 shadow py-2 start-0 end-0 mx-4 position-absolute mt-4':
         props.sticky,
       'navbar-light bg-white py-3': props.light,
@@ -126,11 +129,7 @@ const myPage = () => {
     }"
   >
     <div
-      :class="
-        props.transparent || props.light || props.dark
-          ? 'container'
-          : 'container-fluid px-0'
-      "
+      :class="props.transparent || props.light || props.dark ? 'container' : 'container-fluid px-0'"
     >
       <RouterLink
         class="navbar-brand d-none d-md-block"
@@ -162,23 +161,16 @@ const myPage = () => {
           <span class="navbar-toggler-bar bar3"></span>
         </span>
       </button>
-      <div
-        class="collapse navbar-collapse w-100 pt-3 pb-2 py-lg-0"
-        id="navigation"
-      >
+      <div class="collapse navbar-collapse w-100 pt-3 pb-2 py-lg-0" id="navigation">
         <ul class="navbar-nav navbar-nav-hover ms-auto">
           <li class="nav-item dropdown dropdown-hover mx-2">
             <a
-              href="/plan/list"
               role="button"
               class="nav-link ps-2 d-flex cursor-pointer align-items-center"
               :class="getTextColor()"
+              @click="routePlan"
             >
-              <i
-                class="material-icons opacity-6 me-2 text-md"
-                :class="getTextColor()"
-                >dashboard</i
-              >
+              <i class="material-icons opacity-6 me-2 text-md" :class="getTextColor()">dashboard</i>
               My Plan
             </a>
           </li>
@@ -189,11 +181,7 @@ const myPage = () => {
               class="nav-link ps-2 d-flex cursor-pointer align-items-center"
               :class="getTextColor()"
             >
-              <i
-                class="material-icons opacity-6 me-2 text-md"
-                :class="getTextColor()"
-                >view_day</i
-              >
+              <i class="material-icons opacity-6 me-2 text-md" :class="getTextColor()">view_day</i>
               Community
             </a>
           </li>
@@ -204,11 +192,7 @@ const myPage = () => {
               :class="getTextColor()"
               @click="myPage"
             >
-              <i
-                class="material-icons opacity-6 me-2 text-md"
-                :class="getTextColor()"
-                >article</i
-              >
+              <i class="material-icons opacity-6 me-2 text-md" :class="getTextColor()">article</i>
               My Page
             </a>
           </li>
@@ -220,11 +204,7 @@ const myPage = () => {
               :class="getTextColor()"
               @click="logout"
             >
-              <i
-                class="material-icons opacity-6 me-2 text-md"
-                :class="getTextColor()"
-                >article</i
-              >
+              <i class="material-icons opacity-6 me-2 text-md" :class="getTextColor()">article</i>
               로그아웃
             </a>
           </li>
