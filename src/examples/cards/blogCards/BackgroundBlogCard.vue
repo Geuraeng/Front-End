@@ -21,7 +21,7 @@ defineProps({
     color: String,
     default: () => ({
       route: "javascript:;",
-      label: "Read more",
+      label: "상세 보기",
       color: "white",
     }),
   },
@@ -46,7 +46,6 @@ const planList = () =>{
           {{ description }}
         </p>
         <a
-          href="javascript:;"
           class="text-sm icon-move-right"
           :class="`text-${action.color}`"
           >{{ action.label }}
