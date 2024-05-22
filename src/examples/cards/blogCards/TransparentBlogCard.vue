@@ -24,7 +24,7 @@ defineProps({
     default: () => ({
       route: "javascript:;",
       color: "info",
-      label: "Read more",
+      label: "상세 보기",
     }),
   },
 });

@@ -107,6 +107,13 @@ const router = createRouter({
       component: OpenAIView,
     },
   ],
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition;
+    } else {
+      return { top: 2 };
+    }
+  },
 });
 
 export default router;
