@@ -1,4 +1,6 @@
 <script setup>
+import { useRouter} from "vue-router"
+const router = useRouter(); 
 defineProps({
   image: {
     type: String,
@@ -24,9 +26,14 @@ defineProps({
     }),
   },
 });
+
+const planList = () =>{
+  console.log(11)
+  router.push({name : 'planList'})
+}
 </script>
 <template>
-  <div class="card card-blog card-background cursor-pointer">
+  <div class="card card-blog card-background cursor-pointer" @click="planList">
     <div
       class="full-background"
       :style="{ backgroundImage: `url(${image})` }"
