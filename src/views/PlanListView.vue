@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { listPlan, modifyPlan, registPlan } from "@/api/plan.js";
+import { listPlan, getIdx, registPlan } from "@/api/plan.js";
+import { registJoin } from "@/api/join.js";
 
 //example components
 import DefaultNavbar from "../examples/navbars/NavbarDefault.vue";
@@ -12,6 +13,15 @@ import bg0 from "@/assets/img/bg9.jpg";
 //sections
 import List from "../components/PlanSections/List.vue";
 
+//pinia
+import { storeToRefs } from "pinia";
+import { useMemberStore } from "@/stores/member";
+const memberStore = useMemberStore();
+const { userInfo } = storeToRefs(memberStore);
+
+const userId = userInfo.value.userId;
+
+console.log(userId);
 const plans = ref([]);
 const showModal = ref(false);
 
@@ -52,14 +62,15 @@ onMounted(() => {
 // });
 
 const getPlanList = () => {
-  listPlan(
-    ({ data }) => {
-      plans.value = data.planList;
-    },
-    (error) => {
-      console.log(error);
-    }
-  );
+  userId,
+    listPlan(
+      ({ data }) => {
+        plans.value = data.planList;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
 };
 
 // 모달 열기
@@ -81,10 +92,33 @@ const closeModal = () => {
 const writePlan = () => {
   // 사용자에게 한 번 더 확인을 받기 위한 프롬프트
   registPlan(selectedPlan.value, () => {
+    const planIdx = getPlanIdx();
+    console.log(planIdx);
+
+    registJoin(
+      userId,
+      planIdx,
+      () => {},
+      (error) => {
+        alert("수정에 실패했습니다.");
+      }
+    );
     // 업데이트 성공 시 모달 닫기
     closeModal();
     // 다시 불러오거나 화면 갱신하는 등의 작업 수행
   });
+};
+
+const getPlanIdx = () => {
+  getIdx(
+    ({ data }) => {
+      console.log(data.idx);
+      return data.idx;
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
 };
 </script>
 <template>
@@ -97,10 +131,7 @@ const writePlan = () => {
     transparent
   />
   <header class="bg-gradient-dark no-select">
-    <div
-      class="page-header min-vh-75"
-      :style="{ backgroundImage: `url(${bg0})` }"
-    >
+    <div class="page-header min-vh-75" :style="{ backgroundImage: `url(${bg0})` }">
       <span class="mask bg-gradient-dark opacity-6"></span>
       <div class="container">
         <div class="row justify-content-center">
@@ -125,22 +156,12 @@ const writePlan = () => {
   </header>
 
   <!-- 모달 -->
-  <div
-    v-if="showModal"
-    class="modal fade show no-select"
-    tabindex="-1"
-    style="display: block"
-  >
+  <div v-if="showModal" class="modal fade show no-select" tabindex="-1" style="display: block">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">스케줄 상세 정보</h5>
-          <button
-            type="button"
-            class="btn-close"
-            aria-label="Close"
-            @click="closeModal"
-          ></button>
+          <button type="button" class="btn-close" aria-label="Close" @click="closeModal"></button>
         </div>
         <div class="modal-body">
           <!-- 수정 가능한 입력 필드 -->
@@ -160,12 +181,8 @@ const writePlan = () => {
           />
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" @click="writePlan">
-            등록
-          </button>
-          <button type="button" class="btn btn-secondary" @click="closeModal">
-            취소
-          </button>
+          <button type="button" class="btn btn-primary" @click="writePlan">등록</button>
+          <button type="button" class="btn btn-secondary" @click="closeModal">취소</button>
         </div>
       </div>
     </div>

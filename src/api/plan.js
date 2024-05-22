@@ -2,8 +2,16 @@ import { planAxios } from "@/util/http-commons";
 
 const plan = planAxios();
 
-function listPlan(success, fail) {
+function listAllPlan(success, fail) {
   plan.get(`/list`).then(success).catch(fail);
+}
+
+function listPlan(userId, success, fail) {
+  plan.get(`/list/${userId}`).then(success).catch(fail);
+}
+
+function getIdx(success, fail) {
+  plan.get(`/getIdx`).then(success).catch(fail);
 }
 
 function detailPlan(planIdx, success, fail) {
@@ -26,17 +34,12 @@ function detailSchedule(scheduleIdx, success, fail) {
   plan.get(`/read_schedule/${scheduleIdx}`).then(success).catch(fail);
 }
 
-function updateSchedulPlan(schedule, success, fail ){
-  plan.post('/update_scheduls_plan', JSON.stringify(schedule))
-  .then(success)
-  .catch(fail)
+function updateSchedulPlan(schedule, success, fail) {
+  plan.post("/update_scheduls_plan", JSON.stringify(schedule)).then(success).catch(fail);
 }
 
 function modifySchedule(scheduleIdx, success, fail) {
-  plan
-    .post(`update_schedule`, JSON.stringify(scheduleIdx))
-    .then(success)
-    .catch(fail);
+  plan.post(`update_schedule`, JSON.stringify(scheduleIdx)).then(success).catch(fail);
 }
 
 function deleteSchedule(scheduleIdx, success, fail) {
@@ -44,14 +47,13 @@ function deleteSchedule(scheduleIdx, success, fail) {
 }
 
 function registSchedule(scheduleIdx, success, fail) {
-  plan
-    .post("write_schedule", JSON.stringify(scheduleIdx))
-    .then(success)
-    .catch(fail);
+  plan.post("write_schedule", JSON.stringify(scheduleIdx)).then(success).catch(fail);
 }
 
 export {
+  listAllPlan,
   listPlan,
+  getIdx,
   detailPlan,
   registPlan,
   modifyPlan,
@@ -60,5 +62,5 @@ export {
   modifySchedule,
   deleteSchedule,
   registSchedule,
-  updateSchedulPlan
+  updateSchedulPlan,
 };
