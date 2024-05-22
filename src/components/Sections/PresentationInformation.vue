@@ -23,7 +23,7 @@ import DefaultInfoCard from "../../examples/cards/infoCards/DefaultInfoCard.vue"
               description="친구를 초대해서 여행 일정을 계획해 보세요."
               :action="[
                 {
-                  route: '/plan/list',
+                  route: { name: 'planList' },
                   label: 'New Plan',
                 },
               ]"
