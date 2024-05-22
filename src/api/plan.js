@@ -2,10 +2,6 @@ import { planAxios } from "@/util/http-commons";
 
 const plan = planAxios();
 
-function listAllPlan(success, fail) {
-  plan.get(`/list`).then(success).catch(fail);
-}
-
 function listPlan(userId, success, fail) {
   plan.get(`/list/${userId}`).then(success).catch(fail);
 }
@@ -51,7 +47,6 @@ function registSchedule(scheduleIdx, success, fail) {
 }
 
 export {
-  listAllPlan,
   listPlan,
   getIdx,
   detailPlan,

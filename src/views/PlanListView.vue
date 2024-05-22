@@ -19,9 +19,8 @@ import { useMemberStore } from "@/stores/member";
 const memberStore = useMemberStore();
 const { userInfo } = storeToRefs(memberStore);
 
-const userId = userInfo.value.userId;
+const memberId = userInfo.value.userId;
 
-console.log(userId);
 const plans = ref([]);
 const showModal = ref(false);
 
@@ -35,50 +34,24 @@ onMounted(() => {
   getPlanList();
 });
 
-// onMounted(async () => {
-//   // listJoin 호출하여 세션에 저장된 userId와 join 테이블에 있는 userId가 일치하는 데이터 가져오기
-//   await listJoin(
-//     (response) => {
-//       const joinList = response.data;
-//       const sessionUserId = ''; // 세션에 저장된 userId 가져오기 (예: localStorage.getItem('userId'))
-
-//       // joinList에서 세션에 저장된 userId와 일치하는 데이터만 필터링하여 userId를 포함하는 planList 가져오기
-//       const planList = joinList.filter(join => join.userId === sessionUserId).map(join => join.planIdx);
-
-//       // listPlan 호출하여 planList에 해당하는 plan 정보 가져오기
-//       listPlan(
-//         ({ data }) => {
-//           plans.value = data.planList.filter(plan => planList.includes(plan.planIdx));
-//         },
-//         (error) => {
-//           console.log(error);
-//         }
-//       );
-//     },
-//     (error) => {
-//       console.log(error);
-//     }
-//   );
-// });
-
 const getPlanList = () => {
-  userId,
-    listPlan(
-      ({ data }) => {
-        plans.value = data.planList;
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+  listPlan(
+    memberId,
+    ({ data }) => {
+      plans.value = data.planList;
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
 };
 
 // 모달 열기
-const showPlanModal = (selectedPlan) => {
+const showPlanModal = (plan) => {
   selectedPlan.value = {
-    planIdx: selectedPlan.planIdx,
-    planTitle: selectedPlan.planTitle,
-    planDate: selectedPlan.planDate,
+    planIdx: plan.planIdx,
+    planTitle: plan.planTitle,
+    planDate: plan.planDate,
   };
   showModal.value = true;
 };
@@ -88,39 +61,50 @@ const closeModal = () => {
   showModal.value = false;
 };
 
+const info = ref({
+  userId:"",
+  planIdx:""
+})
+
 // 일정 업데이트
 const writePlan = () => {
-  // 사용자에게 한 번 더 확인을 받기 위한 프롬프트
-  registPlan(selectedPlan.value, () => {
-    const planIdx = getPlanIdx();
-    console.log(planIdx);
-
-    registJoin(
-      userId,
-      planIdx,
-      () => {},
-      (error) => {
-        alert("수정에 실패했습니다.");
-      }
-    );
-    // 업데이트 성공 시 모달 닫기
-    closeModal();
-    // 다시 불러오거나 화면 갱신하는 등의 작업 수행
+  getPlanIdx().then(() => {
+    // 사용자에게 한 번 더 확인을 받기 위한 프롬프트
+    registPlan(selectedPlan.value, () => {
+      info.value.userId = memberId
+      registJoin(
+        info.value,
+        () => {
+          // 업데이트 성공 시 모달 닫기
+          closeModal();
+          // 새로 추가된 계획을 plans 배열에 추가
+          plans.value.push({ ...selectedPlan.value });
+        },
+        (error) => {
+          alert("수정에 실패했습니다.");
+        }
+      );
+    });
   });
 };
 
 const getPlanIdx = () => {
-  getIdx(
-    ({ data }) => {
-      console.log(data.idx);
-      return data.idx;
-    },
-    (error) => {
-      console.log(error);
-    }
-  );
+  return new Promise((resolve, reject) => {
+    getIdx(
+      ({ data }) => {
+        info.value.planIdx = data.idx + 1;
+        selectedPlan.value.planIdx = data.idx + 1; // 새 계획의 planIdx 설정
+        resolve();
+      },
+      (error) => {
+        console.log(error);
+        reject();
+      }
+    );
+  });
 };
 </script>
+
 <template>
   <DefaultNavbar
     :action="{
@@ -145,7 +129,7 @@ const getPlanIdx = () => {
             <button
               type="button"
               class="btn bg-white text-dark"
-              @click="showPlanModal(selectedPlan)"
+              @click="showPlanModal({ planIdx: '', planTitle: '', planDate: '' })"
             >
               Create New Plan
             </button>
