@@ -1,18 +1,11 @@
 <template>
-  <div class="sidebar mt-11">
+  <div class="sidebar">
     <div class="sidebar-menu">
       <div class="number-buttons">
-        <button
-          v-for="n in count"
-          :key="n"
-          class="btn btn-white"
-          @click="scrollToDay(n)"
-        >
+        <button v-for="n in count" :key="n" class="btn btn-white" @click="scrollToDay(n)">
           {{ n }}
         </button>
-        <button v-if="count < 10" @click="addButton" class="btn btn-secondary">
-          +
-        </button>
+        <button v-if="count < 10" @click="addButton" class="btn btn-secondary">+</button>
       </div>
       <div v-for="n in count" :key="n" :id="'day-' + n">{{ n }}일차</div>
       <div
@@ -31,25 +24,26 @@
             <p class="card-text">메모 : {{ schedule.scheduleMemo }}</p>
           </div>
         </div>
-        <div>
+        <div style="display: flex; justify-content: space-between">
           <button
             class="btn btn-secondary"
+            style="margin-left: 5px"
             @click="showScheduleModal(schedule)"
           >
             수정
           </button>
+          <img
+            src="@/assets/img/kakaomap.png"
+            alt="Kakao Map Icon"
+            style="width: 100px; height: 35px; margin-right: 5px; margin-top: 3px"
+            @click="findRoute(index)"
+          />
         </div>
       </div>
     </div>
 
     <div class="d-flex justify-content-end">
-      <button
-        class="btn btn-light"
-        style="margin-right: 10px"
-        @click="updatePlan"
-      >
-        계획완료
-      </button>
+      <button class="btn btn-light" style="margin-right: 10px" @click="updatePlan">계획완료</button>
       <button class="btn btn-secondary" @click="deleteCurrentPlan">삭제</button>
     </div>
     <!-- 모달 -->
@@ -58,9 +52,7 @@
       <div class="modal-card text-dark" style="border: 3px solid navy">
         <header class="modal-card-head d-flex justify-content-center">
           <p class="modal-card-title">스케줄 상세 정보</p>
-          <button class="delete" aria-label="close" @click="closeModal">
-            X
-          </button>
+          <button class="delete" aria-label="close" @click="closeModal">X</button>
         </header>
         <section class="modal-card-body">
           <!-- 수정 가능한 입력 필드 -->
@@ -79,9 +71,7 @@
             placeholder="메모"
           ></textarea>
           <button class="btn btn-dark" @click="updateSchedule">수정</button>
-          <button class="btn btn-secondary" @click="deleteScheduleConfirmation">
-            삭제
-          </button>
+          <button class="btn btn-secondary" @click="deleteScheduleConfirmation">삭제</button>
         </section>
       </div>
     </div>
@@ -127,8 +117,18 @@ const connect = () => {
       // 새로운 구독 등록
       stompSubscription.value = stompClient.value.subscribe("/send", (res) => {
         console.log("구독으로 받은 메시지 입니다.", res.body);
-        isReceiving = true;
-        recvList.push(JSON.parse(res.body));
+        const messages = JSON.parse(res.body);
+        recvList.splice(0, recvList.length);
+        if (Array.isArray(messages)) {
+          console;
+          // 배열 형태의 메시지일 경우 각 요소를 처리
+          for (const message of messages) {
+            recvList.push(message);
+          }
+        } else {
+          // 배열 형태가 아닌 경우 그대로 추가
+          recvList.push(messages);
+        }
         console.log(recvList);
         isReceiving = false;
         // 화면 새로고침 대신 schedules 업데이트
@@ -185,7 +185,6 @@ const getPlan = () => {
     planIdx,
     ({ data }) => {
       schedules.value = data.schedules;
-      console.log(data);
       count.value = schedules.value.length;
     },
     (error) => {
@@ -284,6 +283,10 @@ const showScheduleModal = (schedule) => {
     scheduleIdx: schedule.scheduleIdx,
     scheduleLocation: schedule.scheduleLocation,
     scheduleMemo: schedule.scheduleMemo,
+    scheduleLat: schedule.scheduleLat,
+    scheduleLon: schedule.scheduleLon,
+    scheduleOrder: schedule.scheduleOrder,
+    planIdx: schedule.planIdx,
   };
   showModal.value = true;
 };
@@ -293,14 +296,35 @@ const closeModal = () => {
   showModal.value = false;
 };
 
+const findRoute = function (index) {
+  if (index + 1 < this.schedules.length) {
+    const startSchedule = this.schedules[index];
+    const endSchedule = this.schedules[index + 1];
+    const sY = startSchedule.scheduleLat;
+    const sX = startSchedule.scheduleLon;
+    const eY = endSchedule.scheduleLat;
+    const eX = endSchedule.scheduleLon;
+    const startLocation = encodeURIComponent(startSchedule.scheduleLocation);
+    const endLocation = encodeURIComponent(endSchedule.scheduleLocation);
+    const url = `https://map.kakao.com/link/to/${endLocation},${eY},${eX}/from/${startLocation},${sY},${sX}`;
+    window.open(url, "_blank");
+  } else {
+    const startSchedule = this.schedules[index];
+    const sY = startSchedule.scheduleLat;
+    const sX = startSchedule.scheduleLon;
+    const startLocation = encodeURIComponent(startSchedule.scheduleLocation);
+    const url = `https://map.kakao.com/link/from/${startLocation},${sY},${sX}`;
+    window.open(url, "_blank");
+  }
+};
+
 // 일정 업데이트
 const updateSchedule = () => {
   if (confirm("정말로 수정하시겠습니까?")) {
     modifySchedule(selectedSchedule.value, () => {
       // schedules 배열에서 수정된 스케줄을 찾아 업데이트
       const index = schedules.value.findIndex(
-        (schedule) =>
-          schedule.scheduleIdx === selectedSchedule.value.scheduleIdx
+        (schedule) => schedule.scheduleIdx === selectedSchedule.value.scheduleIdx
       );
       // 수정 인덱스 찾아 업데이트하기
       if (index !== -1) {
@@ -310,7 +334,7 @@ const updateSchedule = () => {
       // 업데이트 성공 시 모달 닫기
       closeModal();
 
-      send(selectedSchedule.value);
+      send(schedules.value);
     });
   }
 };
@@ -326,13 +350,7 @@ const deleteScheduleConfirmation = () => {
         schedules.value.splice(idx, 1);
       }
 
-      // 삭제된 스케줄의 정보를 제외하고 소켓으로 데이터를 전송합니다.
-      const schedulesToSend = schedules.value.filter(
-        (schedule) => schedule.scheduleIdx !== deletedScheduleIdx
-      );
-      schedulesToSend.forEach((schedule) => {
-        send(schedule);
-      });
+      send(schedules.value);
 
       // 삭제 성공 시 모달 닫기
       closeModal();
