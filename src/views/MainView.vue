@@ -56,17 +56,19 @@ onUnmounted(() => {
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-lg-8 text-center mx-auto my-auto">
-            <h1 class="text-white">Trip <span class="text-white" id="typed"></span></h1>
-            <div id="typed-strings">
-              <h1>Log</h1>
-              <h1>History</h1>
-              <h1>Record</h1>
+            <h1 class="text-white gamja-flower-regular">
+              여행 <span class="text-white" id="typed"></span>
+            </h1>
+            <div id="typed-strings" class="gamja-flower-regular">
+              <h1>갈래?</h1>
+              <h1>좋아</h1>
+              <h1>신나</h1>
             </div>
             <p class="lead mb-4 text-white opacity-8 gamja-flower-regular">
               친구들과 여행 계획을 세우고 여행을 기록하세요.
             </p>
             <RouterLink class="nav-link text-white" :to="{ name: 'planList' }">
-              <button type="submit" class="btn bg-white text-dark">Create New Schedule</button>
+              <button type="submit" class="btn bg-white text-dark">Create New Plan</button>
             </RouterLink>
             <h6 class="text-white mb-2 mt-5"></h6>
             <div class="d-flex justify-content-center">

@@ -16,14 +16,14 @@ const props = defineProps({
 
 <template>
   <div class="row" style="overflow: auto">
-    <div class="col-8">
+    <div class="col-12">
       <div class="card card-profile">
         <div class="row">
           <div class="col-lg-4 col-md-6 col-12 mt-n5">
             <a :href="props.plan.planIdx">
               <div class="p-3 pe-md-0">
                 <img
-                  class="w-100 border-radius-md shadow-lg"
+                  class="w-70 border-radius-md shadow-lg"
                   :src="emma"
                   :alt="props.plan.planIdx"
                 />
@@ -33,7 +33,8 @@ const props = defineProps({
           <div class="col-lg-8 col-md-6 col-12 my-auto">
             <RouterLink :to="'/plan/detail/' + props.plan.planIdx" :planIdx="props.plan.planIdx">
               <div class="card-body ps-lg-0">
-                <h6>{{ props.plan.planTitle }}</h6>
+                <h3>{{ props.plan.planTitle }}</h3>
+                <br />
                 <p class="mb-0">
                   {{ props.plan.planDate }}
                 </p>

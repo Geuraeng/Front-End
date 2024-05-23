@@ -41,7 +41,7 @@ const getPlanList = () => {
       plans.value = data.planList;
     },
     (error) => {
-      console.log(error);
+      alert("error");
     }
   );
 };
@@ -62,16 +62,16 @@ const closeModal = () => {
 };
 
 const info = ref({
-  userId:"",
-  planIdx:""
-})
+  userId: "",
+  planIdx: "",
+});
 
 // 일정 업데이트
 const writePlan = () => {
   getPlanIdx().then(() => {
     // 사용자에게 한 번 더 확인을 받기 위한 프롬프트
     registPlan(selectedPlan.value, () => {
-      info.value.userId = memberId
+      info.value.userId = memberId;
       registJoin(
         info.value,
         () => {
@@ -97,7 +97,6 @@ const getPlanIdx = () => {
         resolve();
       },
       (error) => {
-        console.log(error);
         reject();
       }
     );
@@ -181,7 +180,7 @@ const getPlanIdx = () => {
           </div>
         </div>
         <div class="row">
-          <div class="col-12">
+          <div class="col">
             <List v-for="(plan, index) in plans" :key="index" :plan="plan" />
           </div>
         </div>

@@ -37,10 +37,9 @@ const getArticle = () => {
     boardId,
     ({ data }) => {
       article.value = data;
-      console.log(article.value);
     },
     (error) => {
-      console.log(error);
+      alert("error");
     }
   );
 };
@@ -62,7 +61,7 @@ const onDeleteArticle = async () => {
     boardId,
     (response) => {},
     (error) => {
-      console.log(error);
+      alert("error");
     }
   );
 };

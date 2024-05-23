@@ -7,14 +7,9 @@
           <div class="card-body">
             <div v-for="(msg, index) in messages" :key="index" class="mb-3">
               <div :class="msg.role === 'user' ? 'text-end' : 'text-start'">
-                <span
-                  :class="
-                    msg.role === 'user'
-                      ? 'badge bg-primary'
-                      : 'badge bg-secondary'
-                  "
-                  >{{ msg.role }}</span
-                >
+                <span :class="msg.role === 'user' ? 'badge bg-primary' : 'badge bg-secondary'">{{
+                  msg.role
+                }}</span>
                 <div
                   :class="
                     msg.role === 'user'
@@ -54,33 +49,20 @@
                   :disabled="!selectedProvince"
                 >
                   <option disabled value="">시/군을 선택하세요</option>
-                  <option
-                    v-for="city in sortedCities"
-                    :key="city"
-                    :value="city"
-                  >
+                  <option v-for="city in sortedCities" :key="city" :value="city">
                     {{ city }}
                   </option>
                 </select>
               </div>
               <br />
               <div class="btn-group btn-group-sm" role="group">
-                <button
-                  class="btn btn-outline-dark"
-                  @click="setCategory('여행 계획')"
-                >
+                <button class="btn btn-outline-dark" @click="setCategory('여행 계획')">
                   여행 계획
                 </button>
-                <button
-                  class="btn btn-outline-dark"
-                  @click="setCategory('추천 음식')"
-                >
+                <button class="btn btn-outline-dark" @click="setCategory('추천 음식')">
                   추천 음식
                 </button>
-                <button
-                  class="btn btn-outline-dark"
-                  @click="setCategory('추천 활동')"
-                >
+                <button class="btn btn-outline-dark" @click="setCategory('추천 활동')">
                   추천 활동
                 </button>
               </div>
@@ -92,13 +74,7 @@
                 placeholder="여행 관련 내용을 입력하세요"
                 class="form-control"
               />
-              <button
-                class="btn btn-dark"
-                @click="sendMessage"
-                style="width: 100px"
-              >
-                보내기
-              </button>
+              <button class="btn btn-dark" @click="sendMessage" style="width: 100px">보내기</button>
             </div>
           </div>
         </div>
@@ -347,7 +323,7 @@ const sendMessage = async () => {
     const reply = response.choices[0].message.content;
     messages.value.push({ role: "ChatGPT", content: reply });
   } catch (error) {
-    console.log("chatGPT: 🚨 에러가 발생했습니다.", error);
+    alert("error");
   } finally {
     // 사용자 입력 초기화
     userInput.value = "";

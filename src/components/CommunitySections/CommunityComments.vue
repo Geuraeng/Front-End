@@ -23,10 +23,9 @@ const commentList = () => {
     boardId,
     ({ data }) => {
       commentInfo.value = data.commentInfo;
-      console.log(commentInfo.value);
     },
     (error) => {
-      console.log(error);
+      alert("error");
     }
   );
 };

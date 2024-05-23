@@ -50,10 +50,9 @@ const getPlan = () => {
     planIdx,
     ({ data }) => {
       plan.value = data;
-      console.log("!!!!!!!!" + planIdx);
     },
     (error) => {
-      console.log(error);
+      alert("error");
     }
   );
 };
@@ -73,12 +72,10 @@ const updatePlan = async () => {
           alert("수정이 완료되었습니다.");
         },
         (error) => {
-          console.error("수정 실패:", error);
           alert("수정에 실패했습니다.");
         }
       );
     } catch (error) {
-      console.error("수정 중 오류 발생:", error);
       alert("수정 중 오류가 발생했습니다.");
     }
   }
@@ -90,16 +87,13 @@ const addSchedule = async () => {
       schedule.value,
       (res) => {
         alert("일정이 추가되었습니다.");
-        console.log("detail send schedule");
         toPlanSidebar.value = res.data;
       },
       (error) => {
-        console.error("일정 추가 실패:", error);
         alert("일정 추가에 실패했습니다.");
       }
     );
   } catch (error) {
-    console.error("일정 추가 중 오류 발생:", error);
     alert("일정 추가 중 오류가 발생했습니다.");
   }
 };
@@ -150,10 +144,7 @@ const placesSearchCB = (data, status) => {
 
 // 마커 클릭 시 인포윈도우의 visible 값을 반전시킵니다
 const onClickMapMarker = (markerItem) => {
-  if (
-    markerItem.infoWindow?.visible !== null &&
-    markerItem.infoWindow?.visible !== undefined
-  ) {
+  if (markerItem.infoWindow?.visible !== null && markerItem.infoWindow?.visible !== undefined) {
     markerItem.infoWindow.visible = !markerItem.infoWindow.visible;
   } else {
     markerItem.infoWindow.visible = true;
@@ -163,7 +154,6 @@ const onClickMapMarker = (markerItem) => {
   longitude.value = markerItem.lng;
 
   // Marker의 데이터를 출력
-  console.log("Marker Data:", markerItem.data);
   if (markerItem.data.title != null) {
     schedule.value.scheduleLocation = markerItem.data.title;
     schedule.value.scheduleLat = markerItem.data.mapy;
@@ -212,7 +202,6 @@ const load1 = () => {
 
   axios.get(VITE_SEARCH_TRIP_URL, { params: params.value }).then(({ data }) => {
     attractions.value = data.response.body.items.item;
-    console.log(attractions.value);
     markerList.value = Array.from(attractions.value).map((item) => ({
       lat: item.mapy,
       lng: item.mapx,
@@ -232,7 +221,6 @@ const load2 = () => {
 
   axios.get(VITE_SEARCH_TRIP_URL, { params: params.value }).then(({ data }) => {
     attractions.value = data.response.body.items.item;
-    console.log(attractions.value);
     markerList.value = Array.from(attractions.value).map((item) => ({
       lat: item.mapy,
       lng: item.mapx,
@@ -252,7 +240,6 @@ const load3 = () => {
 
   axios.get(VITE_SEARCH_TRIP_URL, { params: params.value }).then(({ data }) => {
     attractions.value = data.response.body.items.item;
-    console.log(attractions.value);
     markerList.value = Array.from(attractions.value).map((item) => ({
       lat: item.mapy,
       lng: item.mapx,
@@ -272,7 +259,6 @@ const load4 = () => {
 
   axios.get(VITE_SEARCH_TRIP_URL, { params: params.value }).then(({ data }) => {
     attractions.value = data.response.body.items.item;
-    console.log(attractions.value);
     markerList.value = Array.from(attractions.value).map((item) => ({
       lat: item.mapy,
       lng: item.mapx,
@@ -292,7 +278,6 @@ const load5 = () => {
 
   axios.get(VITE_SEARCH_TRIP_URL, { params: params.value }).then(({ data }) => {
     attractions.value = data.response.body.items.item;
-    console.log(attractions.value);
     markerList.value = Array.from(attractions.value).map((item) => ({
       lat: item.mapy,
       lng: item.mapx,
@@ -324,14 +309,7 @@ const load5 = () => {
       loading="lazy"
     >
       <span class="mask bg-gradient-dark opacity-6"> </span>
-      <div
-        style="
-          overflow-y: auto;
-          margin-top: 230px;
-          margin-left: 10px;
-          height: 80%;
-        "
-      >
+      <div style="overflow-y: auto; margin-top: 230px; margin-left: 10px; height: 80%">
         <PlanSidebar :schedule="toPlanSidebar" />
       </div>
       <section class="py-lg-5 mt-5">
@@ -346,9 +324,7 @@ const load5 = () => {
           <div class="row">
             <div class="col">
               <div class="card box-shadow-xl overflow-hidden mb-5">
-                <div
-                  class="bg-dark opacity-9 d-flex justify-content-center align-items-center"
-                >
+                <div class="bg-dark opacity-9 d-flex justify-content-center align-items-center">
                   <div class="input-container">
                     <div class="col-md-12 pe-2">
                       <input
@@ -357,7 +333,7 @@ const load5 = () => {
                         placeholder="제목"
                         v-model="plan.planTitle"
                         class="form-control input-lg text-white text-center gamja-flower-regular"
-                        style="font-size: 35px"
+                        style="font-size: 40px"
                       />
                     </div>
                     <div class="col-md-12 pe-2 mb-3">
@@ -372,6 +348,11 @@ const load5 = () => {
                     </div>
                   </div>
                 </div>
+                <div class="d-flex justify-content-end bg-dark opacity-9">
+                  <button class="btn btn-light" style="margin-right: 10px" @click="updatePlan">
+                    수정완료
+                  </button>
+                </div>
 
                 <div class="row">
                   <div class="col-lg-5 position-relative px-0" loading="lazy">
@@ -381,43 +362,27 @@ const load5 = () => {
                       <div class="mask bg-dark opacity-8">
                         <form @submit.prevent="addSchedule" class="p-3">
                           <div class="mb-3">
-                            <label
-                              for="scheduleLocation"
-                              class="form-label text-white"
-                              >장소</label
-                            >
+                            <label for="scheduleLocation" class="form-label text-white">장소</label>
                             <input
                               type="text"
                               class="form-control"
                               id="scheduleLocation"
                               v-model="schedule.scheduleLocation"
-                              style="
-                                color: brown;
-                                background-color: antiquewhite;
-                              "
+                              style="color: brown; background-color: antiquewhite"
                               readonly
                             />
                           </div>
                           <div class="mb-3">
-                            <label
-                              for="scheduleMemo"
-                              class="form-label text-white"
-                              >메모</label
-                            >
+                            <label for="scheduleMemo" class="form-label text-white">메모</label>
                             <textarea
                               class="form-control"
                               id="scheduleMemo"
                               v-model="schedule.scheduleMemo"
-                              style="
-                                color: brown;
-                                background-color: antiquewhite;
-                              "
+                              style="color: brown; background-color: antiquewhite"
                             ></textarea>
                           </div>
                           <input type="hidden" v-model="schedule.planIdx" />
-                          <button type="submit" class="btn btn-white">
-                            일정 추가하기
-                          </button>
+                          <button type="submit" class="btn btn-white">일정 추가하기</button>
                         </form>
                       </div>
                     </div>
@@ -437,29 +402,19 @@ const load5 = () => {
                       <p>아래 버튼을 눌러 근처 정보를 조회하세요.</p>
                       <div class="row">
                         <div class="col">
-                          <button class="btn btn-dark" @click="load1">
-                            관광
-                          </button>
+                          <button class="btn btn-dark" @click="load1">관광</button>
                         </div>
                         <div class="col">
-                          <button class="btn btn-dark" @click="load2">
-                            축제
-                          </button>
+                          <button class="btn btn-dark" @click="load2">축제</button>
                         </div>
                         <div class="col">
-                          <button class="btn btn-dark" @click="load3">
-                            숙박
-                          </button>
+                          <button class="btn btn-dark" @click="load3">숙박</button>
                         </div>
                         <div class="col">
-                          <button class="btn btn-dark" @click="load4">
-                            쇼핑
-                          </button>
+                          <button class="btn btn-dark" @click="load4">쇼핑</button>
                         </div>
                         <div class="col">
-                          <button class="btn btn-dark" @click="load5">
-                            음식
-                          </button>
+                          <button class="btn btn-dark" @click="load5">음식</button>
                         </div>
                       </div>
                       <KakaoMap
@@ -474,9 +429,7 @@ const load5 = () => {
                           :lng="marker.lng"
                           :infoWindow="marker.infoWindow"
                           :clickable="true"
-                          @onClickKakaoMapMarker="
-                            () => onClickMapMarker(marker)
-                          "
+                          @onClickKakaoMapMarker="() => onClickMapMarker(marker)"
                         />
                       </KakaoMap>
                     </div>
@@ -484,18 +437,6 @@ const load5 = () => {
                 </div>
               </div>
             </div>
-          </div>
-          <div class="d-flex justify-content-end">
-            <button
-              class="btn btn-light"
-              style="margin-right: 10px"
-              @click="updatePlan"
-            >
-              수정완료
-            </button>
-            <button class="btn btn-secondary" @click="deleteCurrentPlan">
-              삭제
-            </button>
           </div>
         </div>
       </section>

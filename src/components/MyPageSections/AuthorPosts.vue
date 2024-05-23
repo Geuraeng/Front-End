@@ -29,14 +29,12 @@ const getPlanList = () => {
     memberId,
     ({ data }) => {
       plans.value = data.planList;
-      console.log(plans.value)
     },
     (error) => {
-      console.log(error);
+      alert("error");
     }
   );
 };
-
 </script>
 <template>
   <section class="py-3">
@@ -48,27 +46,30 @@ const getPlanList = () => {
       </div>
       <div class="row">
         <div class="col-lg-3 col-sm-6">
-          <TransparentBlogCard v-if="plans[0]"
+          <TransparentBlogCard
+            v-if="plans[0]"
             :image="post1"
-            :idx = "plans[0].planIdx"
-            :title= "plans[0].planTitle"
-            :description= "plans[0].planDate"
+            :idx="plans[0].planIdx"
+            :title="plans[0].planTitle"
+            :description="plans[0].planDate"
           />
         </div>
         <div class="col-lg-3 col-sm-6">
-          <TransparentBlogCard v-if="plans[1]"
+          <TransparentBlogCard
+            v-if="plans[1]"
             :image="post2"
-            :idx = "plans[1].planIdx"
-            :title= "plans[1].planTitle"
-            :description= "plans[1].planDate"
+            :idx="plans[1].planIdx"
+            :title="plans[1].planTitle"
+            :description="plans[1].planDate"
           />
         </div>
         <div class="col-lg-3 col-sm-6">
-          <TransparentBlogCard v-if="plans[2]"
+          <TransparentBlogCard
+            v-if="plans[2]"
             :image="post3"
-            :idx = "plans[2].planIdx"
-            :title= "plans[2].planTitle"
-            :description= "plans[2].planDate"
+            :idx="plans[2].planIdx"
+            :title="plans[2].planTitle"
+            :description="plans[2].planDate"
           />
         </div>
         <div class="col-lg-3 col-md-12 col-12">
