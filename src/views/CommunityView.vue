@@ -23,10 +23,9 @@ onMounted(() => {
     });
     // boardList만 가져와서 할당합니다.
   } catch (error) {
-    console.error("Error fetching posts:", error);
+    alert("error");
   }
 });
-console.log("목록");
 </script>
 <template>
   <DefaultNavbar transparent />

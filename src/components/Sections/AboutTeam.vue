@@ -1,39 +1,48 @@
 <template>
-  
   <section class="pb-5 position-relative bg-gradient-dark mx-n3">
     <div class="container">
       <div class="row">
         <div class="col-md-8 text-start mb-5 mt-5">
           <h3 class="text-white z-index-1 position-relative">Youtube V-log</h3>
-          <p class="text-white opacity-8 mb-0">
-            최근 국내 여행 브이로그를 조회할 수 있습니다.
-          </p>
+          <p class="text-white opacity-8 mb-0">인기 국내 여행 브이로그를 조회할 수 있습니다.</p>
         </div>
       </div>
       <div class="row">
         <div class="search-container">
-    <div v-if="videoList.length > 0" class="video-list">
-      <div v-for="(video, index) in videoList" :key="index" class="video-item">
-        <img :src="video.snippet.thumbnails.medium.url" :alt="video.snippet.title" class="thumbnail" />
-        <div class="video-info">
-          <h2 class="video-title text-light">{{ video.snippet.title }}</h2>
-          <p class="video-description text-light">{{ video.snippet.description }}</p>
-          <p class="video-channel text-light">{{ video.snippet.channelTitle }}</p>
-          <p class="video-date text-light">{{ formatDate(video.snippet.publishedAt) }}</p>
+          <div v-if="videoList.length > 0" class="video-list">
+            <div v-for="(video, index) in videoList" :key="index" class="video-item">
+              <a
+                :href="
+                  'https://www.youtube.com/results?search_query=' +
+                  encodeURIComponent(video.snippet.title)
+                "
+                target="_blank"
+              >
+                <img
+                  :src="video.snippet.thumbnails.medium.url"
+                  :alt="video.snippet.title"
+                  class="thumbnail"
+                />
+                <div class="video-info">
+                  <h2 class="video-title text-light">{{ video.snippet.title }}</h2>
+                  <p class="video-description text-light">{{ video.snippet.description }}</p>
+                  <p class="video-channel text-light">{{ video.snippet.channelTitle }}</p>
+                  <p class="video-date text-light">{{ formatDate(video.snippet.publishedAt) }}</p>
+                </div>
+              </a>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </div>
       </div>
     </div>
   </section>
 </template>
 
 <script>
-import { onMounted } from 'vue';
 import axios from "axios";
+const { VITE_OPEN_API_YOUTUBE_KEY } = import.meta.env;
 
-const YOUTUBE_API_KEY = "API_KEY"; // 실제 YouTube API 키로 대체
+const YOUTUBE_API_KEY = VITE_OPEN_API_YOUTUBE_KEY;
 const YOUTUBE_API_URL = "https://www.googleapis.com/youtube/v3/search";
 
 export default {
@@ -59,7 +68,7 @@ export default {
         const response = await axios.get(YOUTUBE_API_URL, config);
         this.videoList = response.data.items;
       } catch (error) {
-        console.error("Error fetching videos:", error);
+        alert("error");
       }
     },
     addToSearchHistory(keyword) {
@@ -68,14 +77,14 @@ export default {
       }
     },
     formatDate(dateString) {
-      const options = { year: 'numeric', month: 'short', day: 'numeric' };
+      const options = { year: "numeric", month: "short", day: "numeric" };
       return new Date(dateString).toLocaleDateString(undefined, options);
-    }
+    },
   },
   mounted() {
     // 컴포넌트가 마운트될 때 기본 검색어로 동영상 목록을 가져옴
     this.fetchVideos("국내 여행 브이로그");
-  }
+  },
 };
 </script>
 

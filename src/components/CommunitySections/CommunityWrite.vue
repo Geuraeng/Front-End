@@ -31,7 +31,6 @@ const WInfo = ref({
 });
 
 const titleInput = (input) => {
-  console.log(input);
   WInfo.value.boardTitle = input;
 };
 const contentInput = (input) => {
@@ -47,7 +46,6 @@ const writeSbmit = () => {
 };
 
 function writeArticle() {
-  console.log("글등록하자!!", WInfo.value);
   registArticle(
     WInfo.value,
     (response) => {
@@ -56,7 +54,7 @@ function writeArticle() {
       alert(msg);
       moveList();
     },
-    (error) => console.log(error)
+    (error) => alert("error")
   );
 }
 

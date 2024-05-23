@@ -28,25 +28,13 @@
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalCenterTitle">
-              친구 초대하기
-            </h5>
-            <button
-              type="button"
-              class="close"
-              @click="showModal = false"
-              aria-label="Close"
-            >
+            <h5 class="modal-title" id="exampleModalCenterTitle">친구 초대하기</h5>
+            <button type="button" class="close" @click="showModal = false" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <input
-              type="text"
-              class="form-control"
-              v-model="searchQuery"
-              placeholder="친구 검색"
-            />
+            <input type="text" class="form-control" v-model="searchQuery" placeholder="친구 검색" />
             <ul v-if="showModal" class="list-group mt-3">
               <li
                 v-for="friend in filteredFriends"
@@ -54,23 +42,12 @@
                 class="list-group-item d-flex justify-content-between align-items-center"
               >
                 {{ friend.userName }}
-                <button
-                  class="btn btn-dark btn-sm"
-                  @click="inviteFriend(friend)"
-                >
-                  초대
-                </button>
+                <button class="btn btn-dark btn-sm" @click="inviteFriend(friend)">초대</button>
               </li>
             </ul>
           </div>
           <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              @click="showModal = false"
-            >
-              닫기
-            </button>
+            <button type="button" class="btn btn-secondary" @click="showModal = false">닫기</button>
           </div>
         </div>
       </div>
@@ -100,11 +77,7 @@
                 <div v-for="(msg, index) in messages" :key="index" class="mb-3">
                   <div :class="msg.role === 'user' ? 'text-end' : 'text-start'">
                     <span
-                      :class="
-                        msg.role === 'user'
-                          ? 'badge bg-primary'
-                          : 'badge bg-secondary'
-                      "
+                      :class="msg.role === 'user' ? 'badge bg-primary' : 'badge bg-secondary'"
                       >{{ msg.role }}</span
                     >
                     <div
@@ -146,33 +119,20 @@
                       :disabled="!selectedProvince"
                     >
                       <option disabled value="">시/군을 선택하세요</option>
-                      <option
-                        v-for="city in sortedCities"
-                        :key="city"
-                        :value="city"
-                      >
+                      <option v-for="city in sortedCities" :key="city" :value="city">
                         {{ city }}
                       </option>
                     </select>
                   </div>
                   <br />
                   <div class="btn-group btn-group-sm" role="group">
-                    <button
-                      class="btn btn-outline-dark"
-                      @click="setCategory('여행 계획')"
-                    >
+                    <button class="btn btn-outline-dark" @click="setCategory('여행 계획')">
                       여행 계획
                     </button>
-                    <button
-                      class="btn btn-outline-dark"
-                      @click="setCategory('추천 음식')"
-                    >
+                    <button class="btn btn-outline-dark" @click="setCategory('추천 음식')">
                       추천 음식
                     </button>
-                    <button
-                      class="btn btn-outline-dark"
-                      @click="setCategory('추천 활동')"
-                    >
+                    <button class="btn btn-outline-dark" @click="setCategory('추천 활동')">
                       추천 활동
                     </button>
                   </div>
@@ -184,11 +144,7 @@
                     placeholder="여행 관련 내용을 입력하세요"
                     class="form-control"
                   />
-                  <button
-                    class="btn btn-dark"
-                    @click="sendMessage"
-                    style="width: 100px"
-                  >
+                  <button class="btn btn-dark" @click="sendMessage" style="width: 100px">
                     보내기
                   </button>
                 </div>
@@ -241,9 +197,7 @@ onMounted(async () => {
         .filter((join) => join.planIdx === planIdx)
         .map((join) => {
           // listUser에서 userId가 동일한 칼럼의 userName
-          const friend = friends.value.find(
-            (user) => user.userId === join.userId
-          );
+          const friend = friends.value.find((user) => user.userId === join.userId);
           if (friend) {
             return {
               userId: join.userId,
@@ -277,9 +231,7 @@ const closeModal_ai = () => {
 
 const filteredFriends = computed(() => {
   if (searchQuery.value) {
-    return friends.value.filter(
-      (friend) => friend.userId === searchQuery.value
-    );
+    return friends.value.filter((friend) => friend.userId === searchQuery.value);
   }
   return [];
 });
@@ -291,9 +243,7 @@ const user = ref({
 });
 
 const inviteFriend = async (friend) => {
-  if (
-    !invitedFriends.value.some((invited) => invited.userId === friend.userId)
-  ) {
+  if (!invitedFriends.value.some((invited) => invited.userId === friend.userId)) {
     invitedFriends.value.push(friend);
     user.value.planIdx = parseInt(window.location.pathname.match(/\d+$/)[0]);
     user.value.userId = friend.userId;
@@ -311,13 +261,9 @@ const inviteFriend = async (friend) => {
 
 const removeFriend = (friendId) => {
   if (confirm("초대를 삭제하시겠습니까?")) {
-    const friend = invitedFriends.value.find(
-      (friend) => friend.userId === friendId
-    );
+    const friend = invitedFriends.value.find((friend) => friend.userId === friendId);
     if (friend) {
-      invitedFriends.value = invitedFriends.value.filter(
-        (friend) => friend.userId !== friendId
-      );
+      invitedFriends.value = invitedFriends.value.filter((friend) => friend.userId !== friendId);
 
       // listJoin 호출하여 join 테이블의 리스트 가져오기
       listJoin(
@@ -326,9 +272,7 @@ const removeFriend = (friendId) => {
 
           // user.value.userId와 user.value.planIdx가 모두 일치하는 join 객체 찾기
           const matchingJoin = joinList.find(
-            (join) =>
-              join.userId === user.value.userId &&
-              join.planIdx === user.value.planIdx
+            (join) => join.userId === user.value.userId && join.planIdx === user.value.planIdx
           );
 
           if (matchingJoin) {
@@ -592,7 +536,7 @@ const sendMessage = async () => {
     const reply = response.choices[0].message.content;
     messages.value.push({ role: "ChatGPT", content: reply });
   } catch (error) {
-    console.log("chatGPT: 🚨 에러가 발생했습니다.", error);
+    alert("chatGPT: 🚨 에러가 발생했습니다.");
   } finally {
     // 사용자 입력 초기화
     userInput.value = "";

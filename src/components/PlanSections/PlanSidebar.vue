@@ -2,17 +2,10 @@
   <div class="sidebar">
     <div class="sidebar-menu">
       <div class="number-buttons">
-        <button
-          v-for="n in count"
-          :key="n"
-          class="btn btn-white"
-          @click="scrollToDay(n)"
-        >
+        <button v-for="n in count" :key="n" class="btn btn-white" @click="scrollToDay(n)">
           {{ n }}
         </button>
-        <button v-if="count < 10" @click="addButton" class="btn btn-secondary">
-          +
-        </button>
+        <button v-if="count < 10" @click="addButton" class="btn btn-secondary">+</button>
       </div>
       <div
         class="card mb-3 text-dark"
@@ -65,12 +58,7 @@
           <img
             src="@/assets/img/kakaomap.png"
             alt="Kakao Map Icon"
-            style="
-              width: 100px;
-              height: 35px;
-              margin-right: 5px;
-              margin-top: 3px;
-            "
+            style="width: 100px; height: 35px; margin-right: 5px; margin-top: 3px"
             @click="findRoute(index)"
           />
         </div>
@@ -78,13 +66,7 @@
     </div>
 
     <div class="d-flex justify-content-end">
-      <button
-        class="btn btn-light"
-        style="margin-right: 10px"
-        @click="updatePlan"
-      >
-        계획완료
-      </button>
+      <button class="btn btn-light" style="margin-right: 10px" @click="updatePlan">계획완료</button>
       <button class="btn btn-secondary" @click="deleteCurrentPlan">삭제</button>
     </div>
     <!-- 모달 -->
@@ -93,9 +75,7 @@
       <div class="modal-card text-dark" style="border: 3px solid navy">
         <header class="modal-card-head d-flex justify-content-center">
           <p class="modal-card-title">스케줄 상세 정보</p>
-          <button class="delete" aria-label="close" @click="closeModal">
-            X
-          </button>
+          <button class="delete" aria-label="close" @click="closeModal">X</button>
         </header>
         <section class="modal-card-body">
           <!-- 수정 가능한 입력 필드 -->
@@ -114,9 +94,7 @@
             placeholder="메모"
           ></textarea>
           <button class="btn btn-dark" @click="updateSchedule">수정</button>
-          <button class="btn btn-secondary" @click="deleteScheduleConfirmation">
-            삭제
-          </button>
+          <button class="btn btn-secondary" @click="deleteScheduleConfirmation">삭제</button>
         </section>
       </div>
     </div>
@@ -145,14 +123,11 @@ const stompSubscription = ref(null);
 let isReceiving = false;
 
 const props = defineProps(["schedule"]);
-console.log("init props", props.schedule);
 watch(
   () => props.schedule,
   (nv) => {
     if (nv && nv.scheduleIdx) {
-      console.log("side bar receive data", nv);
       schedules.value.push(nv);
-      console.log("schedules", schedules.value);
       send(schedules.value); // Assuming send is a method to notify changes to the server or other components
     }
   }
@@ -164,22 +139,18 @@ const connect = () => {
   let socket = new SockJS(serverURL);
   stompClient.value = Stomp.over(socket);
 
-  console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`);
   stompClient.value.connect(
     {},
     (frame) => {
-      console.log("소켓 연결 성공", frame);
       // 이전 구독 취소
       if (stompSubscription.value) {
         stompSubscription.value.unsubscribe();
       }
       // 새로운 구독 등록
       stompSubscription.value = stompClient.value.subscribe("/send", (res) => {
-        console.log("구독으로 받은 메시지 입니다.", res.body);
         const messages = JSON.parse(res.body);
         recvList.splice(0, recvList.length);
         if (Array.isArray(messages)) {
-          console;
           // 배열 형태의 메시지일 경우 각 요소를 처리
           for (const message of messages) {
             recvList.push(message);
@@ -188,14 +159,13 @@ const connect = () => {
           // 배열 형태가 아닌 경우 그대로 추가
           recvList.push(messages);
         }
-        console.log(recvList);
         isReceiving = false;
         // 화면 새로고침 대신 schedules 업데이트
         updateSchedules();
       });
     },
     (error) => {
-      console.log("소켓 연결 실패", error);
+      alert("소켓 연결 실패");
     }
   );
 };
@@ -206,7 +176,6 @@ const updateSchedules = () => {
 
 // send 함수
 const send = (msg) => {
-  console.log("Send message:", msg);
   if (stompClient.value && stompClient.value.connected) {
     stompClient.value.send("/receive", JSON.stringify(msg), {});
   }
@@ -247,7 +216,7 @@ const getPlan = () => {
       schedules.value = data.schedules;
     },
     (error) => {
-      console.log(error);
+      alert("error");
     }
   );
 };
@@ -277,12 +246,10 @@ const updatePlan = () => {
         }
       },
       (error) => {
-        console.error("수정 실패:", error);
         alert("수정에 실패했습니다.");
       }
     );
   } catch (error) {
-    console.error("수정 중 오류 발생:", error);
     alert("수정 중 오류가 발생했습니다.");
   }
 };
@@ -297,12 +264,10 @@ const deleteCurrentPlan = async () => {
           router.push({ name: "planList" });
         },
         (error) => {
-          console.error("삭제 실패:", error);
           alert("삭제에 실패했습니다.");
         }
       );
     } catch (error) {
-      console.error("삭제 중 오류 발생:", error);
       alert("삭제 중 오류가 발생했습니다.");
     }
   }
@@ -390,8 +355,7 @@ const updateSchedule = () => {
     modifySchedule(selectedSchedule.value, () => {
       // schedules 배열에서 수정된 스케줄을 찾아 업데이트
       const index = schedules.value.findIndex(
-        (schedule) =>
-          schedule.scheduleIdx === selectedSchedule.value.scheduleIdx
+        (schedule) => schedule.scheduleIdx === selectedSchedule.value.scheduleIdx
       );
       // 수정 인덱스 찾아 업데이트하기
       if (index !== -1) {

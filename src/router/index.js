@@ -4,7 +4,6 @@ import SignInView from "../views/SignInView.vue";
 import SignUpView from "../views/SignUpView.vue";
 import MainView from "../views/MainView.vue";
 import MyPageView from "../views/MyPageView.vue";
-import MyPageUpdateView from "../views/MyPageUpdateView.vue";
 import CommunityView from "../views/CommunityView.vue";
 import CommunityWriteView from "../views/CommunityWriteView.vue";
 import CommunityDetailView from "../views/CommunityDetailView.vue";
@@ -63,11 +62,6 @@ const router = createRouter({
       name: "myPage",
       beforeEnter: onlyAuthUser,
       component: MyPageView,
-    },
-    {
-      path: "/myPage/update",
-      name: "update",
-      component: MyPageUpdateView,
     },
     {
       path: "/community",
