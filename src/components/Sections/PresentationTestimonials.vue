@@ -4,9 +4,7 @@
       <div class="row">
         <div class="col-md-8 text-start mb-3 mt-5">
           <h3 class="z-index-1 position-relative">Daum Blog</h3>
-          <p class="opacity-8 mb-0">
-            국내 여행 관련 게시물을 검색할 수 있습니다.
-          </p>
+          <p class="opacity-8 mb-0">국내 여행 관련 게시물을 검색할 수 있습니다.</p>
         </div>
       </div>
       <div class="row">
@@ -20,19 +18,18 @@
           />
           <div v-if="blogs.length > 0" class="blog-list">
             <div v-for="(blog, index) in blogs" :key="index" class="blog-item">
-              <img
-                :src="blog.thumbnail"
-                alt="thumbnail"
-                class="blog-thumbnail"
-                v-if="blog.thumbnail"
-              />
-              <div class="blog-content">
-                <h2 class="blog-title" v-html="blog.title"></h2>
-                <p class="blog-contents" v-html="blog.contents"></p>
-                <a :href="blog.url" target="_blank" class="blog-link"
-                  >보러 가기</a
-                >
-              </div>
+              <a :href="blog.url" target="_blank" class="blog-link">
+                <img
+                  :src="blog.thumbnail"
+                  alt="thumbnail"
+                  class="blog-thumbnail"
+                  v-if="blog.thumbnail"
+                />
+                <div class="blog-content">
+                  <h2 class="blog-title" v-html="blog.title"></h2>
+                  <p class="blog-contents" v-html="blog.contents"></p>
+                </div>
+              </a>
             </div>
           </div>
         </div>
@@ -66,13 +63,10 @@ export default {
       };
 
       try {
-        const response = await axios.get(
-          "https://dapi.kakao.com/v2/search/blog",
-          config
-        );
+        const response = await axios.get("https://dapi.kakao.com/v2/search/blog", config);
         this.blogs = response.data.documents;
       } catch (error) {
-        console.error("Error fetching blogs:", error);
+        alert("error");
       }
     },
   },
